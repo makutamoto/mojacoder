@@ -1,0 +1,7 @@
+{
+    "name": "MojaCoder",
+    "short_name": "MojaCoder",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "any"
+}
