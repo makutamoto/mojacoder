@@ -26,6 +26,9 @@
     ]
   },
   "dependencies": {
+    "@aws-amplify/auth": "^3.3.5",
+    "@aws-amplify/core": "^3.4.6",
+    "aws-cognito-next": "^3.0.0",
     "bootstrap": "^4.5.2",
     "next": "latest",
     "react": "^16.13.1",
