@@ -1,0 +1,13 @@
+{
+    "go-1.14": {
+        "name": "Go (1.14)",
+        "filename": "main.go",
+        "compileCommand": "go build main.go",
+        "runCommand": "./main"
+    },
+    "python3": {
+        "name": "Python 3",
+        "filename": "main.py",
+        "runCommand": "python3 ./main.py"
+    }
+}
