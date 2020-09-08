@@ -12,7 +12,8 @@ type CodeTestSubmission struct {
 	Stdin string `dynamo:"stdin"`
 }
 
-const CODETEST_TIMELIMIT = 2000
+const CODETEST_TIME_LIMIT = 2
+const CODETEST_MEMORY_LIMIT = 131072 // 128 MB
 
 func testCode(definitions map[string]LanguageDefinition, username string, submissionID int) error {
 	var err error
@@ -37,7 +38,7 @@ func testCode(definitions map[string]LanguageDefinition, username string, submis
 		table.Update("userID", username).Range("submissionID", submissionID).Set("stderr", stderr).Run()
 		return nil
 	}
-	result, err := run(definition, submission.Stdin, CODETEST_TIMELIMIT)
+	result, err := run(definition, submission.Stdin, CODETEST_TIME_LIMIT, CODETEST_MEMORY_LIMIT)
 	if err != nil {
 		return err
 	}
