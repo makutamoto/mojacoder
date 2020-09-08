@@ -1,8 +1,6 @@
 package main
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/guregu/dynamo"
 )
 
@@ -15,14 +13,13 @@ type CodeTestSubmission struct {
 const CODETEST_TIME_LIMIT = 2
 const CODETEST_MEMORY_LIMIT = 131072 // 128 MB
 
-func testCode(definitions map[string]LanguageDefinition, username string, submissionID int) error {
+var dynamodb *dynamo.DB
+
+func testCode(definitions map[string]LanguageDefinition, submissionID string) error {
 	var err error
-	db := dynamo.New(session.New(), &aws.Config{
-		Region: aws.String("ap-northeast-1"),
-	})
-	table := db.Table("submissions")
+	table := dynamodb.Table("SubmissionsTable")
 	var submission CodeTestSubmission
-	err = table.Get("userID", username).Range("submissionID", dynamo.Equal, submissionID).One(&submission)
+	err = table.Get("submissionID", submissionID).One(&submission)
 	if err != nil {
 		return err
 	}
@@ -35,14 +32,14 @@ func testCode(definitions map[string]LanguageDefinition, username string, submis
 		return err
 	}
 	if !compiled {
-		table.Update("userID", username).Range("submissionID", submissionID).Set("stderr", stderr).Run()
+		table.Update("submissionID", submissionID).Set("stderr", stderr).Run()
 		return nil
 	}
 	result, err := run(definition, submission.Stdin, CODETEST_TIME_LIMIT, CODETEST_MEMORY_LIMIT)
 	if err != nil {
 		return err
 	}
-	err = table.Update("userID", username).Range("submissionID", submissionID).Set("stdout", string(result.stdout)).Run()
+	err = table.Update("submissionID", submissionID).Set("stdout", string(result.stdout)).Run()
 	if err != nil {
 		return err
 	}
