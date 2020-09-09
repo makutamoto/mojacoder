@@ -3,9 +3,9 @@ import { Badge } from 'react-bootstrap';
 
 import JudgeStatus, { JudgeStatusDetail } from '../lib/JudgeStatus';
 
-import styles from './JudgeStatusIndicator.module.css';
+import styles from './JudgeStatusBadge.module.css';
 
-export interface JudgeStatusIndicatorProps {
+export interface JudgeStatusBadgeProps {
     status: JudgeStatus,
     detail?: JudgeStatusDetail,
 }
@@ -20,7 +20,7 @@ export const JudgeStatusColors = {
     IE: "danger",
 };
 
-const JudgeStatusIndicator: React.FC<JudgeStatusIndicatorProps> = (props) => {
+const JudgeStatusBadge: React.FC<JudgeStatusBadgeProps> = (props) => {
     const [progressDot, setProgressDot] = useState('');
     useEffect(() => {
         if(props.detail || props.status == 'WJ') {
@@ -44,4 +44,4 @@ const JudgeStatusIndicator: React.FC<JudgeStatusIndicatorProps> = (props) => {
     );
 }
 
-export default JudgeStatusIndicator;
+export default JudgeStatusBadge;
