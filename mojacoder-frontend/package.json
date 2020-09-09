@@ -28,12 +28,18 @@
   "dependencies": {
     "@aws-amplify/auth": "^3.3.5",
     "@aws-amplify/core": "^3.4.6",
+    "@types/react-select": "^3.0.19",
     "aws-cognito-next": "^3.0.0",
     "bootstrap": "^4.5.2",
+    "codemirror": "^5.57.0",
+    "graphql": "^15.3.0",
+    "graphql-request": "^3.1.0",
     "next": "latest",
     "react": "^16.13.1",
     "react-bootstrap": "^1.3.0",
-    "react-dom": "^16.13.1"
+    "react-codemirror2": "^7.2.1",
+    "react-dom": "^16.13.1",
+    "react-select": "^3.1.0"
   },
   "devDependencies": {
     "@testing-library/react": "^10.0.1",

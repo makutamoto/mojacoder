@@ -2,8 +2,10 @@ import JudgeStatusBadge from '../components/JudgeStatusBadge'
 
 export const Home = (): JSX.Element => ( // fix type
   <>
+    GitHub ...
     <JudgeStatusBadge status="WJ" /><br />
     <JudgeStatusBadge status="WJ" detail={{ current: 1, whole: 2}} /><br />
+    <JudgeStatusBadge status="CE" /><br />
     <JudgeStatusBadge status="AC" /><br />
     <JudgeStatusBadge status="WA" /><br />
     <JudgeStatusBadge status="WA" detail={{ current: 1, whole: 2}} /><br />

@@ -12,6 +12,7 @@ module.exports = (phase) => {
                     REDIRECT_SIGN_IN: "http://localhost:3000/token",
                     REDIRECT_SIGN_OUT: "http://localhost:3000/",
                     AUTH_COOKIE_DOMAIN: "localhost",
+                    APPSYNC_ENDPOINT: "https://driah3qylvbvlk23gsvmstmbfy.appsync-api.ap-northeast-1.amazonaws.com/graphql",
                 },
             };
         default:
@@ -24,6 +25,7 @@ module.exports = (phase) => {
                     REDIRECT_SIGN_IN: "http://localhost:3000/token",
                     REDIRECT_SIGN_OUT: "http://localhost:3000/",
                     AUTH_COOKIE_DOMAIN: "localhost",
+                    APPSYNC_ENDPOINT: "https://driah3qylvbvlk23gsvmstmbfy.appsync-api.ap-northeast-1.amazonaws.com/graphql",
                 },
             };
     }

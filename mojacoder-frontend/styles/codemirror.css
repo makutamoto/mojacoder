@@ -1,0 +1,13 @@
+.CodeMirror {
+    z-index: 0;
+    border: solid 1px lightgray;
+    border-radius: 5px;
+}
+
+.CMAutoResize .CodeMirror {
+    height: auto;
+}
+
+.CodeMirror-scroll {
+    min-height: 300px;
+}

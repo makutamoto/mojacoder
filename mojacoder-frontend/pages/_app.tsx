@@ -8,6 +8,10 @@ import Auth from "@aws-amplify/auth";
 import { AuthTokens, useAuth, useAuthFunctions, getServerSideAuth } from '../lib/auth';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'codemirror/lib/codemirror.css';
+
+import '../styles/global.css';
+import '../styles/codemirror.css';
 
 Amplify.configure({
     Auth: {
@@ -42,8 +46,8 @@ Auth.configure({
     },
 });
 
-export default function MyApp ({ Component, pageProps: { initialAuth } }: AppProps) {
-    const auth = useAuth(initialAuth);
+export default function MyApp ({ Component, pageProps }: AppProps) {
+    const auth = useAuth(pageProps.initialAuth);
     const { login, logout } = useAuthFunctions();
     const OnClickSignInCallback = useCallback(() => login(), [login]);
     const OnClickSignOutCallback = useCallback(() => logout(), [logout]);
@@ -70,8 +74,8 @@ export default function MyApp ({ Component, pageProps: { initialAuth } }: AppPro
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-            <Container className="py-4">
-                <Component />
+            <Container className="py-4 bg-white shadow rounded">
+                <Component {...pageProps} login={auth === null ? false : true} />
             </Container>
         </>
     )
