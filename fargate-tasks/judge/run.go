@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"strings"
 	"syscall"
+	"time"
 )
 
 type RunResultStatus int
@@ -26,7 +27,7 @@ type RunResult struct {
 func run(definition LanguageDefinition, stdin string, timeLimit, memoryLimit int) (RunResult, error) {
 	var result RunResult
 	var err error
-	command := fmt.Sprintf("ulimit -u 10 -t %d -m %d && %s; EXIT_CODE=$?; kill -SIGKILL -1; exit $EXIT_CODE", timeLimit, memoryLimit, definition.RunCommand)
+	command := fmt.Sprintf("ulimit -u 10 -m %d && timeout --preserve-status -sSIGKILL %d \"%s\"; EXIT_CODE=$?; kill -SIGKILL -1; exit $EXIT_CODE", memoryLimit, timeLimit, definition.RunCommand)
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Env = []string{}
 	cmd.Dir = TEMP_DIR
@@ -34,17 +35,19 @@ func run(definition LanguageDefinition, stdin string, timeLimit, memoryLimit int
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Credential: &syscall.Credential{Uid: CHILD_UID, Gid: CHILD_GID},
 	}
+	start := time.Now()
 	stdout, err := cmd.Output()
+	end := time.Now()
 	if err != nil {
 		if _, ok := err.(*exec.ExitError); !ok {
 			return result, err
 		}
 	}
-	result.time = int((cmd.ProcessState.UserTime() + cmd.ProcessState.SystemTime()).Milliseconds())
+	result.time = int((end.Sub(start)).Milliseconds())
 	result.memory = int(cmd.ProcessState.SysUsage().(*syscall.Rusage).Maxrss)
 	result.stdout = stdout
 	if !cmd.ProcessState.Success() {
-		if result.time > timeLimit {
+		if result.time > timeLimit*1000 {
 			result.status = RunResultStatusTimeLimitExceeded
 		} else if result.memory > memoryLimit {
 			result.status = RunResultStatusMemoryLimitExceeded

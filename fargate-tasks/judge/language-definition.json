@@ -9,5 +9,10 @@
         "name": "Python 3.8",
         "filename": "main.py",
         "runCommand": "python3 ./main.py"
+    },
+    "gcc": {
+        "filename": "main.c",
+        "compileCommand": "gcc main.c",
+        "runCommand": "./a.out"
     }
 }
