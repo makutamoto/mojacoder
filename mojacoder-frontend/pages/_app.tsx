@@ -20,10 +20,10 @@ import '../styles/codemirror.css'
 
 Amplify.configure({
   API: {
-    aws_appsync_graphqlEndpoint: process.env.APPSYNC_ENDPOINT,
-    aws_appsync_region: process.env.AWS_REGION,
-    aws_appsync_authenticationType: 'API_KEY',
-    aws_appsync_apiKey: process.env.APPSYNC_API_KEY,
+    ['aws_appsync_graphqlEndpoint']: process.env.APPSYNC_ENDPOINT,
+    ['aws_appsync_region']: process.env.AWS_REGION,
+    ['aws_appsync_authenticationType']: 'API_KEY',
+    ['aws_appsync_apiKey']: process.env.APPSYNC_API_KEY,
   },
   Auth: {
     region: process.env.AWS_REGION,
