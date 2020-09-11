@@ -2,12 +2,17 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	v4 "github.com/aws/aws-sdk-go/aws/signer/v4"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/guregu/dynamo"
 )
+
+var AWS_REGION = os.Getenv("AWS_REGION")
+var API_ENDPOINT = os.Getenv("API_ENDPOINT")
+var JUDGEQUEUE_URL = os.Getenv("JUDGEQUEUE_URL")
 
 const TEMP_DIR = "/tmp/mojacoder-judge/"
 const CHILD_UID, CHILD_GID = 400, 400
@@ -29,11 +34,11 @@ func judge(submissionType string, submissionID string) error {
 
 func main() {
 	session := session.New()
-	config := &aws.Config{Region: aws.String("ap-northeast-1")}
+	config := &aws.Config{Region: aws.String(AWS_REGION)}
 	judgeQueue = sqs.New(session, config)
-	dynamodb = dynamo.New(session, config)
-	log.Println("Ready.")
+	signer = v4.NewSigner(session.Config.Credentials)
 
+	log.Println("Ready.")
 	for true {
 		var err error
 		message, exist, err := receiveJudgeQueueMessage()

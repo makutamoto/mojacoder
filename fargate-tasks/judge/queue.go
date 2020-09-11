@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
@@ -19,8 +18,6 @@ type JudgeQueueMessage struct {
 }
 
 const JUDGEQUEUE_WAIT_TIMEOUT = 20
-
-var JUDGEQUEUE_URL = os.Getenv("JUDGEQUEUE_URL")
 
 var judgeQueue *sqs.SQS
 
