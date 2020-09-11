@@ -19,15 +19,25 @@ const CHILD_UID, CHILD_GID = 400, 400
 
 const LANGUAGE_DEFINITION_FILE = "./language-definition.json"
 
-func judge(submissionType string, submissionID string) error {
+func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error {
 	var err error
-	definitions, err := loadLanguageDefinition(LANGUAGE_DEFINITION_FILE)
+	definition, exist := definitions[data.Lang]
+	if !exist {
+		return err
+	}
+	compiled, stderr, err := compile(definition, data.Code)
 	if err != nil {
 		return err
 	}
-	err = testCode(definitions, submissionID)
-	if err != nil {
+	if !compiled {
+		err = responseCodetest(data.ID, -1, -1, -1, "", stderr)
 		return err
+	}
+	if data.Type == "CODETEST" {
+		err = testCode(definition, data)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -37,6 +47,10 @@ func main() {
 	config := &aws.Config{Region: aws.String(AWS_REGION)}
 	judgeQueue = sqs.New(session, config)
 	signer = v4.NewSigner(session.Config.Credentials)
+	definitions, err := loadLanguageDefinition(LANGUAGE_DEFINITION_FILE)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	log.Println("Ready.")
 	for true {
@@ -53,8 +67,8 @@ func main() {
 		if !exist {
 			continue
 		}
-		log.Println(message.data.Type, message.data.SubmissionID)
-		err = judge(message.data.Type, message.data.SubmissionID)
+		log.Println(message.data)
+		err = judge(definitions, message.data)
 		if err != nil {
 			log.Println(err)
 			// IE

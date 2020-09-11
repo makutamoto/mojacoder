@@ -18,10 +18,11 @@ const (
 )
 
 type RunResult struct {
-	status RunResultStatus
-	time   int
-	memory int
-	stdout []byte
+	status   RunResultStatus
+	exitCode int
+	time     int
+	memory   int
+	stdout   []byte
 }
 
 func run(definition LanguageDefinition, stdin string, timeLimit, memoryLimit int) (RunResult, error) {
@@ -43,6 +44,7 @@ func run(definition LanguageDefinition, stdin string, timeLimit, memoryLimit int
 			return result, err
 		}
 	}
+	result.exitCode = cmd.ProcessState.ExitCode()
 	result.time = int((end.Sub(start)).Milliseconds())
 	result.memory = int(cmd.ProcessState.SysUsage().(*syscall.Rusage).Maxrss)
 	result.stdout = stdout

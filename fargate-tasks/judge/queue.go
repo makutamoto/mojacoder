@@ -8,8 +8,11 @@ import (
 )
 
 type JudgeQueueData struct {
-	Type         string `json:"type"`
-	SubmissionID string `json:"submissionID"`
+	Type  string `json:"type"`
+	ID    string `json:"id"`
+	Lang  string `json:"Lang"`
+	Code  string `json:"code"`
+	Stdin string `json:"stdin"`
 }
 
 type JudgeQueueMessage struct {

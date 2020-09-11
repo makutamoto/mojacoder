@@ -12,8 +12,8 @@ import (
 )
 
 type GraphQLRequest struct {
-	Query     string      `json:"query"`
-	Variables interface{} `json:"variables"`
+	Query     string                 `json:"query"`
+	Variables map[string]interface{} `json:"variables"`
 }
 
 type GraphQLResponseErrorDetail struct {
@@ -42,7 +42,7 @@ type GraphQLResponse struct {
 
 var signer *v4.Signer
 
-func requestGraphql(query string, variables interface{}, responseData ...interface{}) error {
+func requestGraphql(query string, variables map[string]interface{}, responseData ...interface{}) error {
 	var err error
 	var response GraphQLResponse
 	client := &http.Client{}
@@ -73,4 +73,32 @@ func requestGraphql(query string, variables interface{}, responseData ...interfa
 		return &response.Errors
 	}
 	return nil
+}
+
+type ResponseCodetestInput struct {
+	ID       string `json:"id"`
+	ExitCode int    `json:"exitCode"`
+	Time     int    `json:"time"`
+	Memory   int    `json:"memory"`
+	Stdout   string `json:"stdout"`
+	Stderr   string `json:"stderr"`
+}
+
+func responseCodetest(id string, exitCode int, time, memory int, stdout, stderr string) error {
+	variables := make(map[string]interface{})
+	query := `
+		mutation ResponseCodetest($input: ResponseCodetestInput!) {
+			responseCodetest(input: $input) {
+				id
+				exitCode
+				time
+				memory
+				stdout
+				stderr
+			}
+		}
+	`
+	variables["input"] = ResponseCodetestInput{id, exitCode, time, memory, stdout, stderr}
+	err := requestGraphql(query, variables)
+	return err
 }
