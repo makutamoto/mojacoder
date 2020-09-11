@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
 
-import { runCodetest, OnResponseCodetestResponse } from '../../lib/backend'
-import CodeEditor, { Code } from '../../components/CodeEditor'
-import Editor from '../../components/Editor'
+import { runCodetest, OnResponseCodetestResponse } from '../lib/backend'
+import CodeEditor, { Code } from '../components/CodeEditor'
+import Editor from '../components/Editor'
 
 interface Props {
   login: boolean
