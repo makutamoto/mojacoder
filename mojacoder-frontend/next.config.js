@@ -5,7 +5,7 @@ module.exports = (phase) => {
         case PHASE_DEVELOPMENT_SERVER:
             return {
                 env: {
-                    USER_POOL_REGION: "ap-northeast-1",
+                    AWS_REGION: "ap-northeast-1",
                     IDP_DOMAIN: "mojacoder-dev.auth.ap-northeast-1.amazoncognito.com",
                     USER_POOL_ID: "ap-northeast-1_zngPaG8ue",
                     USER_POOL_CLIENT_ID: "mvo4uregqaohgolig9085pr7s",
@@ -18,7 +18,7 @@ module.exports = (phase) => {
         default:
             return {
                 env: {
-                    USER_POOL_REGION: "ap-northeast-1",
+                    AWS_REGION: "ap-northeast-1",
                     IDP_DOMAIN: "mojacoder-dev.auth.ap-northeast-1.amazoncognito.com",
                     USER_POOL_ID: "ap-northeast-1_zngPaG8ue",
                     USER_POOL_CLIENT_ID: "mvo4uregqaohgolig9085pr7s",
