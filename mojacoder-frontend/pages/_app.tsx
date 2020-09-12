@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import App, { AppProps, AppContext } from 'next/app'
+import Link from 'next/link'
 import Head from 'next/head'
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import Amplify from '@aws-amplify/core'
@@ -69,9 +70,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <Navbar sticky="top" bg="dark" variant="dark" expand="sm">
-        <Navbar.Brand href="/">MojaCoder</Navbar.Brand>
+        <Link href="/">
+          <Navbar.Brand as={null}>MojaCoder</Navbar.Brand>
+        </Link>
         <Navbar.Toggle />
-        <Navbar.Collapse className="justify-content-end">
+        <Navbar.Collapse>
+          <Nav className="mr-auto">
+            <Link href="/playground">
+              <Nav.Link as="span">Playground</Nav.Link>
+            </Link>
+          </Nav>
           <Nav>
             {auth ? (
               <NavDropdown

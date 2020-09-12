@@ -29,7 +29,7 @@ const Codetest: React.FC<Props> = (props) => {
       <h1>Playground</h1>
       <hr />
       <Alert variant="primary">
-        コードテストではMojaCoderのジャッジ上でコードの動作を確認することができます。
+        PlaygroundではMojaCoderのジャッジ上でコードの動作を確認することができます。
       </Alert>
       {props.login ? (
         <>
