@@ -3,11 +3,11 @@ import { useRouter } from 'next/router'
 import { useAuthRedirect } from '../lib/auth'
 
 export default function Token() {
-  const router = useRouter()
+    const router = useRouter()
 
-  useAuthRedirect(() => {
-    router.replace('/')
-  })
+    useAuthRedirect(() => {
+        router.replace('/')
+    })
 
-  return <p>loading..</p>
+    return <p>loading..</p>
 }
