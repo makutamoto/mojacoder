@@ -28,7 +28,7 @@ type RunResult struct {
 func run(definition LanguageDefinition, stdin string, timeLimit, memoryLimit int) (RunResult, error) {
 	var result RunResult
 	var err error
-	command := fmt.Sprintf("ulimit -u 10 -m %d && timeout --preserve-status -sSIGKILL %d \"%s\"; EXIT_CODE=$?; kill -SIGKILL -1; exit $EXIT_CODE", memoryLimit, timeLimit, definition.RunCommand)
+	command := fmt.Sprintf("ulimit -u 10 -m %d && timeout --preserve-status -sSIGKILL %d %s; EXIT_CODE=$?; kill -SIGKILL -1; exit $EXIT_CODE", memoryLimit, timeLimit, definition.RunCommand)
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Env = []string{}
 	cmd.Dir = TEMP_DIR

@@ -10,7 +10,7 @@ import (
 func compile(definition LanguageDefinition, code string) (bool, string, error) {
 	var err error
 	codePath := path.Join(TEMP_DIR, definition.Filename)
-	if err = ioutil.WriteFile(codePath, []byte(code), 0600); err != nil {
+	if err = ioutil.WriteFile(codePath, []byte(code), 0555); err != nil {
 		return false, "", err
 	}
 	if definition.CompileCommand == "" {
