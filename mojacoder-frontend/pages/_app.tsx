@@ -1,10 +1,11 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import App, { AppProps, AppContext } from 'next/app'
 import Link from 'next/link'
 import Head from 'next/head'
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import Amplify from '@aws-amplify/core'
 import Auth from '@aws-amplify/auth'
+import { v4 as uuid } from 'uuid'
 
 import {
     AuthTokens,
@@ -53,6 +54,7 @@ Auth.configure({
 })
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+    const sessionID = useMemo(() => uuid(), [])
     const auth = useAuth(pageProps.initialAuth)
     const { login, logout } = useAuthFunctions()
     const OnClickSignInCallback = useCallback(() => login(), [login])
@@ -99,6 +101,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             <Container className="py-4 bg-white shadow rounded">
                 <Component
                     {...pageProps}
+                    sessionID={sessionID}
                     accessTokenData={
                         auth === null ? null : auth.accessTokenData
                     }

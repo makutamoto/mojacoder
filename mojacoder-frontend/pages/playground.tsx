@@ -8,6 +8,7 @@ import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
 
 interface Props {
+    sessionID: string
     accessTokenData: AccessTokenData | null
     login: boolean
 }
@@ -19,8 +20,8 @@ enum PlaygroundStatus {
 }
 
 const SUBSCRIPTION_DOCUMENT = gql`
-    subscription onResponseCodetest($userID: ID!) {
-        onResponseCodetest(userID: $userID) {
+    subscription onResponseCodetest($sessionID: ID!, $userID: ID!) {
+        onResponseCodetest(sessionID: $sessionID, userID: $userID) {
             exitCode
             time
             memory
@@ -33,7 +34,7 @@ const SUBSCRIPTION_DOCUMENT = gql`
 const MUTATION_DOCUMENT = gql`
     mutation runCodetest($input: RunCodetestInput!) {
         runCodetest(input: $input) {
-            id
+            sessionID
         }
     }
 `
@@ -50,7 +51,7 @@ interface SubscriptionData {
     onResponseCodetest: OnResponseCodetest
 }
 
-const Codetest: React.FC<Props> = (props) => {
+const Playground: React.FC<Props> = (props) => {
     const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     const [stdin, setStdin] = useState('')
     const [result, setResult] = useState<OnResponseCodetest>({
@@ -65,22 +66,24 @@ const Codetest: React.FC<Props> = (props) => {
         setStatus(PlaygroundStatus.Waiting)
         invokeMutation(MUTATION_DOCUMENT, {
             input: {
+                sessionID: props.sessionID,
                 lang: code.lang,
                 code: code.code,
                 stdin,
             },
         })
-    }, [code, stdin, setStatus])
+    }, [code, stdin, props.sessionID, setStatus])
     useSubscription(
         SUBSCRIPTION_DOCUMENT,
         useMemo(
             () => ({
+                sessionID: props.sessionID,
                 userID:
                     props.accessTokenData === null
                         ? ''
                         : props.accessTokenData.username,
             }),
-            [props.accessTokenData]
+            [props.sessionID, props.accessTokenData]
         ),
         useCallback(({ onResponseCodetest }: SubscriptionData) => {
             setResult({
@@ -104,7 +107,7 @@ const Codetest: React.FC<Props> = (props) => {
                 <>
                     <div className="mb-2">
                         <CodeEditor
-                            id="codetest-submission"
+                            id="playground-code-editor"
                             value={code}
                             onChange={setCode}
                         />
@@ -165,4 +168,4 @@ const Codetest: React.FC<Props> = (props) => {
     )
 }
 
-export default Codetest
+export default Playground
