@@ -9,7 +9,7 @@ func testCode(definition LanguageDefinition, data JudgeQueueData) error {
 	if err != nil {
 		return err
 	}
-	err = responseCodetest(data.ID, data.UserID, result.exitCode, result.time, result.memory, string(result.stdout), "")
+	err = responseCodetest(data.SessionID, data.UserID, result.exitCode, result.time, result.memory, string(result.stdout), "")
 	if err != nil {
 		return err
 	}

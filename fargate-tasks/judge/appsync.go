@@ -76,21 +76,21 @@ func requestGraphql(query string, variables map[string]interface{}, responseData
 }
 
 type ResponseCodetestInput struct {
-	ID       string `json:"id"`
-	UserID   string `json:"userID"`
-	ExitCode int    `json:"exitCode"`
-	Time     int    `json:"time"`
-	Memory   int    `json:"memory"`
-	Stdout   string `json:"stdout"`
-	Stderr   string `json:"stderr"`
+	SessionID string `json:"sessionID"`
+	UserID    string `json:"userID"`
+	ExitCode  int    `json:"exitCode"`
+	Time      int    `json:"time"`
+	Memory    int    `json:"memory"`
+	Stdout    string `json:"stdout"`
+	Stderr    string `json:"stderr"`
 }
 
-func responseCodetest(id string, userID string, exitCode int, time, memory int, stdout, stderr string) error {
+func responseCodetest(sessionID string, userID string, exitCode int, time, memory int, stdout, stderr string) error {
 	variables := make(map[string]interface{})
 	query := `
 		mutation ResponseCodetest($input: ResponseCodetestInput!) {
 			responseCodetest(input: $input) {
-				id
+				sessionID
 				userID
 				exitCode
 				time
@@ -100,7 +100,7 @@ func responseCodetest(id string, userID string, exitCode int, time, memory int, 
 			}
 		}
 	`
-	variables["input"] = ResponseCodetestInput{id, userID, exitCode, time, memory, stdout, stderr}
+	variables["input"] = ResponseCodetestInput{sessionID, userID, exitCode, time, memory, stdout, stderr}
 	err := requestGraphql(query, variables)
 	return err
 }

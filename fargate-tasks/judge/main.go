@@ -30,7 +30,7 @@ func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error
 		return err
 	}
 	if !compiled {
-		err = responseCodetest(data.ID, data.UserID, -1, -1, -1, "", stderr)
+		err = responseCodetest(data.SessionID, data.UserID, -1, -1, -1, "", stderr)
 		return err
 	}
 	if data.Type == "PLAYGROUND" {
