@@ -30,10 +30,10 @@ func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error
 		return err
 	}
 	if !compiled {
-		err = responseCodetest(data.ID, -1, -1, -1, "", stderr)
+		err = responseCodetest(data.ID, data.UserID, -1, -1, -1, "", stderr)
 		return err
 	}
-	if data.Type == "CODETEST" {
+	if data.Type == "PLAYGROUND" {
 		err = testCode(definition, data)
 		if err != nil {
 			return err

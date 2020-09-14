@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -66,6 +67,7 @@ func requestGraphql(query string, variables map[string]interface{}, responseData
 		response.Data = responseData
 	}
 	err = json.Unmarshal(bodyData, &response)
+	log.Println(string(bodyData))
 	if err != nil {
 		return err
 	}
@@ -77,6 +79,7 @@ func requestGraphql(query string, variables map[string]interface{}, responseData
 
 type ResponseCodetestInput struct {
 	ID       string `json:"id"`
+	UserID   string `json:"userID"`
 	ExitCode int    `json:"exitCode"`
 	Time     int    `json:"time"`
 	Memory   int    `json:"memory"`
@@ -84,12 +87,13 @@ type ResponseCodetestInput struct {
 	Stderr   string `json:"stderr"`
 }
 
-func responseCodetest(id string, exitCode int, time, memory int, stdout, stderr string) error {
+func responseCodetest(id string, userID string, exitCode int, time, memory int, stdout, stderr string) error {
 	variables := make(map[string]interface{})
 	query := `
 		mutation ResponseCodetest($input: ResponseCodetestInput!) {
 			responseCodetest(input: $input) {
 				id
+				userID
 				exitCode
 				time
 				memory
@@ -98,7 +102,7 @@ func responseCodetest(id string, exitCode int, time, memory int, stdout, stderr 
 			}
 		}
 	`
-	variables["input"] = ResponseCodetestInput{id, exitCode, time, memory, stdout, stderr}
+	variables["input"] = ResponseCodetestInput{id, userID, exitCode, time, memory, stdout, stderr}
 	err := requestGraphql(query, variables)
 	return err
 }
