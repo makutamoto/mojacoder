@@ -1,79 +1,42 @@
-import API, { graphqlOperation, GraphQLResult } from '@aws-amplify/api'
-import Observable from 'zen-observable-ts'
-import gql from 'graphql-tag'
+import { useEffect } from 'react'
+import Auth from '@aws-amplify/auth'
+import AWSAppSyncClient from 'aws-appsync'
+import { DocumentNode } from 'graphql'
 
-export interface SubscriptionResponse<T> {
-    value: {
-        data: T
-    }
-    errors: any
+export interface SubscriptionPayload<T> {
+    data: T
 }
 
-export interface RunCodetestResponse {
-    runCodetest: {
-        id: string
-    }
-}
+const client = new AWSAppSyncClient({
+    url: process.env.APPSYNC_ENDPOINT,
+    region: process.env.AWS_REGION,
+    auth: {
+        type: 'AMAZON_COGNITO_USER_POOLS',
+        jwtToken: async () =>
+            (await Auth.currentSession()).getAccessToken().getJwtToken(),
+    },
+    disableOffline: true,
+})
 
-export interface OnResponseCodetestResponse {
-    exitCode: number
-    time: number
-    memory: number
-    stdout: string
-    stderr: string
-}
-
-export function runCodetest(
-    lang: string,
-    code: string,
-    stdin: string
-): Promise<OnResponseCodetestResponse> {
-    return new Promise((resolve, reject) => {
-        const mutationOperation = gql`
-            mutation runCodetest($input: RunCodetestInput!) {
-                runCodetest(input: $input) {
-                    id
-                }
-            }
-        `
-        const subscriptionOperation = gql`
-            subscription onResponseCodetest($id: ID!) {
-                onResponseCodetest(id: $id) {
-                    exitCode
-                    time
-                    memory
-                    stderr
-                    stdout
-                }
-            }
-        `
-        ;(API.graphql(
-            graphqlOperation(mutationOperation, {
-                input: { lang, code, stdin },
+export function useSubscription<D, V>(
+    query: DocumentNode,
+    variables: V,
+    callback: (data: D) => void
+) {
+    useEffect(() => {
+        const subscription = client
+            .subscribe<SubscriptionPayload<D>>({ query, variables })
+            .subscribe({
+                next: ({ data }) => callback(data),
+                error: (err) => console.error(err),
             })
-        ) as Promise<GraphQLResult<RunCodetestResponse>>).then(
-            (mutationResponse) => {
-                const subscriptionResponse = API.graphql(
-                    graphqlOperation(subscriptionOperation, {
-                        id: mutationResponse.data.runCodetest.id,
-                    })
-                ) as Observable<
-                    SubscriptionResponse<{
-                        onResponseCodetest: OnResponseCodetestResponse
-                    }>
-                >
-                const subscription = subscriptionResponse.subscribe({
-                    next: (res) => {
-                        subscription.unsubscribe()
-                        if (res.errors) reject(res.errors)
-                        else resolve(res.value.data.onResponseCodetest)
-                    },
-                    error: (err) => {
-                        reject(err)
-                    },
-                })
-            },
-            (err) => reject(err)
-        )
-    })
+        return () => subscription.unsubscribe()
+    }, [client, query, variables, callback])
+}
+
+export async function invokeMutation<D, V>(
+    mutation: DocumentNode,
+    variables: V
+) {
+    return (await client.mutate<D>({ mutation, variables })).data
 }

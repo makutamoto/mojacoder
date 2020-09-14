@@ -1,18 +1,53 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
+import gql from 'graphql-tag'
 
-import { runCodetest, OnResponseCodetestResponse } from '../lib/backend'
+import { AccessTokenData } from '../lib/auth'
+import { useSubscription, invokeMutation } from '../lib/backend'
 import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
 
 interface Props {
+    accessTokenData: AccessTokenData
     login: boolean
+}
+
+const SUBSCRIPTION_DOCUMENT = gql`
+    subscription onResponseCodetest($userID: ID!) {
+        onResponseCodetest(userID: $userID) {
+            exitCode
+            time
+            memory
+            stderr
+            stdout
+        }
+    }
+`
+
+const MUTATION_DOCUMENT = gql`
+    mutation runCodetest($input: RunCodetestInput!) {
+        runCodetest(input: $input) {
+            id
+        }
+    }
+`
+
+interface OnResponseCodetest {
+    exitCode: number
+    time: number
+    memory: number
+    stderr: string
+    stdout: string
+}
+
+interface SubscriptionData {
+    onResponseCodetest: OnResponseCodetest
 }
 
 const Codetest: React.FC<Props> = (props) => {
     const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     const [stdin, setStdin] = useState('')
-    const [result, setResult] = useState<OnResponseCodetestResponse>({
+    const [result, setResult] = useState<OnResponseCodetest>({
         exitCode: 0,
         time: 0,
         memory: 0,
@@ -20,10 +55,32 @@ const Codetest: React.FC<Props> = (props) => {
         stderr: '',
     })
     const onRun = useCallback(() => {
-        runCodetest(code.lang, code.code, stdin).then((res) => {
-            setResult(res)
+        invokeMutation(MUTATION_DOCUMENT, {
+            input: {
+                lang: code.lang,
+                code: code.code,
+                stdin,
+            },
         })
     }, [code, stdin])
+    useSubscription(
+        SUBSCRIPTION_DOCUMENT,
+        useMemo(
+            () => ({
+                userID: props.accessTokenData.username,
+            }),
+            [props.accessTokenData.username]
+        ),
+        useCallback(({ onResponseCodetest }: SubscriptionData) => {
+            setResult({
+                exitCode: onResponseCodetest.exitCode,
+                time: onResponseCodetest.time,
+                memory: onResponseCodetest.memory,
+                stdout: onResponseCodetest.stdout,
+                stderr: onResponseCodetest.stderr,
+            })
+        }, [])
+    )
     return (
         <>
             <h1>Playground</h1>

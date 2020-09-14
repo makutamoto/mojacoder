@@ -20,12 +20,6 @@ import '../styles/global.css'
 import '../styles/codemirror.css'
 
 Amplify.configure({
-    API: {
-        ['aws_appsync_graphqlEndpoint']: process.env.APPSYNC_ENDPOINT,
-        ['aws_appsync_region']: process.env.AWS_REGION,
-        ['aws_appsync_authenticationType']: 'API_KEY',
-        ['aws_appsync_apiKey']: process.env.APPSYNC_API_KEY,
-    },
     Auth: {
         region: process.env.AWS_REGION,
         userPoolId: process.env.USER_POOL_ID,
@@ -105,6 +99,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             <Container className="py-4 bg-white shadow rounded">
                 <Component
                     {...pageProps}
+                    accessTokenData={auth.accessTokenData}
                     login={auth === null ? false : true}
                 />
             </Container>
