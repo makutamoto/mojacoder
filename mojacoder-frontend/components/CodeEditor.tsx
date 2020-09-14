@@ -1,14 +1,7 @@
 import React from 'react'
-import { Controlled as CodeMirror } from 'react-codemirror2'
 
 import LanguageSelector from './LanguageSelector'
-
-if (process.browser) {
-    require('codemirror/mode/clike/clike')
-    require('codemirror/mode/go/go')
-    require('codemirror/mode/python/python')
-    require('codemirror/mode/markdown/markdown')
-}
+import Editor from './Editor'
 
 export interface Code {
     lang: string
@@ -34,14 +27,11 @@ const CodeEditor: React.FC<CodeEditorProps> = (props) => {
                 value={props.value.lang}
                 onChange={(lang) => props.onChange({ ...props.value, lang })}
             />
-            <CodeMirror
-                className="my-2"
+            <Editor
+                mode={LANGUAGE_TO_MODE[props.value.lang]}
+                lineNumbers
                 value={props.value.code}
-                options={{
-                    mode: LANGUAGE_TO_MODE[props.value.lang],
-                    lineNumbers: true,
-                }}
-                onBeforeChange={(_editor, _data, value) =>
+                onChange={(value) =>
                     props.onChange({ ...props.value, code: value })
                 }
             />

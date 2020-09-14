@@ -99,7 +99,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             <Container className="py-4 bg-white shadow rounded">
                 <Component
                     {...pageProps}
-                    accessTokenData={auth.accessTokenData}
+                    accessTokenData={
+                        auth === null ? null : auth.accessTokenData
+                    }
                     login={auth === null ? false : true}
                 />
             </Container>

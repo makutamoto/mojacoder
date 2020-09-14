@@ -8,7 +8,7 @@ import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
 
 interface Props {
-    accessTokenData: AccessTokenData
+    accessTokenData: AccessTokenData | null
     login: boolean
 }
 
@@ -67,9 +67,12 @@ const Codetest: React.FC<Props> = (props) => {
         SUBSCRIPTION_DOCUMENT,
         useMemo(
             () => ({
-                userID: props.accessTokenData.username,
+                userID:
+                    props.accessTokenData === null
+                        ? ''
+                        : props.accessTokenData.username,
             }),
-            [props.accessTokenData.username]
+            [props.accessTokenData]
         ),
         useCallback(({ onResponseCodetest }: SubscriptionData) => {
             setResult({
