@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -67,7 +66,6 @@ func requestGraphql(query string, variables map[string]interface{}, responseData
 		response.Data = responseData
 	}
 	err = json.Unmarshal(bodyData, &response)
-	log.Println(string(bodyData))
 	if err != nil {
 		return err
 	}
