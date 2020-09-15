@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: mojacoder-backend
+
+Resources:
+  CodeTestingStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: statemachine/codeTesting.asl.json
+      DefinitionSubstitutions:
+        CodeRunnerFunctionArn: !GetAtt CodeRunnerFunction.Arn
+        CodeTestingEndpointFunctionArn: !GetAtt CodeTestingEndpointFunction.Arn
+        CodeTestingResultFunctionArn: !GetAtt CodeTestingResultFunction.Arn
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CodeRunnerFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CodeTestingEndpointFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CodeTestingResultFunction
+
+  CodeRunnerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/codeRunner/
+      Handler: codeRunner
+      Runtime: go1.x
+
+  CodeTestingEndpointFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/codeTestingEndpoint/
+      Handler: codeTestingEndpoint
+      Runtime: go1.x
+
+  CodeTestingResultFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/codeTestingResult/
+      Handler: codeTestingResult
+      Runtime: go1.x
+
+Outputs:
+  StockTradingStateMachineArn:
+    Description: "Stock Trading State machine ARN"
+    Value: !Ref StockTradingStateMachine
+  StockTradingStateMachineRoleArn:
+    Description: "IAM Role created for Stock Trading State machine based on the specified SAM Policy Templates"
+    Value: !GetAtt StockTradingStateMachineRole.Arn
