@@ -20,6 +20,9 @@ import 'codemirror/lib/codemirror.css'
 import '../styles/global.css'
 import '../styles/codemirror.css'
 
+const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
+const TWITTER_LINK = 'https://twitter.com/makutamoto'
+
 Amplify.configure({
     Auth: {
         region: process.env.AWS_REGION,
@@ -75,6 +78,22 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                         <Link href="/playground">
                             <Nav.Link as="span">Playground</Nav.Link>
                         </Link>
+                        <NavDropdown id="navbar-links-dropdown" title="Links">
+                            <NavDropdown.Item
+                                href={GITHUB_LINK}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                GitHub
+                            </NavDropdown.Item>
+                            <NavDropdown.Item
+                                href={TWITTER_LINK}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                @makutamoto
+                            </NavDropdown.Item>
+                        </NavDropdown>
                     </Nav>
                     <Nav>
                         {auth ? (
