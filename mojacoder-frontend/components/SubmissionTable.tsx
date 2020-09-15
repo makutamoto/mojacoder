@@ -2,11 +2,6 @@ import React from 'react'
 import { Table } from 'react-bootstrap'
 
 import JudgeStatusBadge from '../components/JudgeStatusBadge'
-// import { CodetestSubmission } from '../lib/backend'
-
-// export interface SubmissionTableProps {
-//   submissions: CodetestSubmission[]
-// }
 
 const SubmissionTable: React.FC<any> = (props) => {
     return (

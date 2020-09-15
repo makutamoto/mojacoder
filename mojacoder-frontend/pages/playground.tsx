@@ -20,8 +20,8 @@ enum PlaygroundStatus {
 }
 
 const SUBSCRIPTION_DOCUMENT = gql`
-    subscription onResponseCodetest($sessionID: ID!, $userID: ID!) {
-        onResponseCodetest(sessionID: $sessionID, userID: $userID) {
+    subscription onResponsePlayground($sessionID: ID!, $userID: ID!) {
+        onResponsePlayground(sessionID: $sessionID, userID: $userID) {
             exitCode
             time
             memory
@@ -32,14 +32,14 @@ const SUBSCRIPTION_DOCUMENT = gql`
 `
 
 const MUTATION_DOCUMENT = gql`
-    mutation runCodetest($input: RunCodetestInput!) {
-        runCodetest(input: $input) {
+    mutation runPlayground($input: RunPlaygroundInput!) {
+        runPlayground(input: $input) {
             sessionID
         }
     }
 `
 
-interface OnResponseCodetest {
+interface OnResponsePlayground {
     exitCode: number
     time: number
     memory: number
@@ -48,13 +48,13 @@ interface OnResponseCodetest {
 }
 
 interface SubscriptionData {
-    onResponseCodetest: OnResponseCodetest
+    onResponsePlayground: OnResponsePlayground
 }
 
 const Playground: React.FC<Props> = (props) => {
     const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     const [stdin, setStdin] = useState('')
-    const [result, setResult] = useState<OnResponseCodetest>({
+    const [result, setResult] = useState<OnResponsePlayground>({
         exitCode: 0,
         time: 0,
         memory: 0,
@@ -85,13 +85,13 @@ const Playground: React.FC<Props> = (props) => {
             }),
             [props.sessionID, props.accessTokenData]
         ),
-        useCallback(({ onResponseCodetest }: SubscriptionData) => {
+        useCallback(({ onResponsePlayground }: SubscriptionData) => {
             setResult({
-                exitCode: onResponseCodetest.exitCode,
-                time: onResponseCodetest.time,
-                memory: onResponseCodetest.memory,
-                stdout: onResponseCodetest.stdout,
-                stderr: onResponseCodetest.stderr,
+                exitCode: onResponsePlayground.exitCode,
+                time: onResponsePlayground.time,
+                memory: onResponsePlayground.memory,
+                stdout: onResponsePlayground.stdout,
+                stderr: onResponsePlayground.stderr,
             })
             setStatus(PlaygroundStatus.Received)
         }, [])
