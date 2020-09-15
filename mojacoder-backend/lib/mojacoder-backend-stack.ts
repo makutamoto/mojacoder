@@ -72,6 +72,10 @@ export class MojacoderBackendStack extends cdk.Stack {
             resources: [api.arn],
             actions: ['appsync:GraphQL'],
         }));
+        JudgeUser.addToPolicy(new PolicyStatement({
+            resources: [JudgeQueue.queueArn],
+            actions: ['sqs:ReceiveMessage', 'sqs:DeleteMessage'],
+        }));
         const accessKey = new CfnAccessKey(this, 'JudgeUserAccessKey', {
             userName: JudgeUser.userName,
         });

@@ -75,7 +75,7 @@ func requestGraphql(query string, variables map[string]interface{}, responseData
 	return nil
 }
 
-type ResponseCodetestInput struct {
+type ResponsePlaygroundInput struct {
 	SessionID string `json:"sessionID"`
 	UserID    string `json:"userID"`
 	ExitCode  int    `json:"exitCode"`
@@ -85,11 +85,11 @@ type ResponseCodetestInput struct {
 	Stderr    string `json:"stderr"`
 }
 
-func responseCodetest(sessionID string, userID string, exitCode int, time, memory int, stdout, stderr string) error {
+func responsePlayground(sessionID string, userID string, exitCode int, time, memory int, stdout, stderr string) error {
 	variables := make(map[string]interface{})
 	query := `
-		mutation ResponseCodetest($input: ResponseCodetestInput!) {
-			responseCodetest(input: $input) {
+		mutation ResponsePlayground($input: ResponsePlaygroundInput!) {
+			responsePlayground(input: $input) {
 				sessionID
 				userID
 				exitCode
@@ -100,7 +100,7 @@ func responseCodetest(sessionID string, userID string, exitCode int, time, memor
 			}
 		}
 	`
-	variables["input"] = ResponseCodetestInput{sessionID, userID, exitCode, time, memory, stdout, stderr}
+	variables["input"] = ResponsePlaygroundInput{sessionID, userID, exitCode, time, memory, stdout, stderr}
 	err := requestGraphql(query, variables)
 	return err
 }
