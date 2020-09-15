@@ -1,0 +1,52 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Playground {
+  code: String! @aws_cognito_user_pools
+  lang: String! @aws_cognito_user_pools
+  sessionID: ID! @aws_cognito_user_pools
+  stdin: String! @aws_cognito_user_pools
+  userID: ID! @aws_cognito_user_pools
+}
+
+type Mutation {
+  responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
+  runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
+}
+
+type ResponsePlayground {
+  exitCode: Int! @aws_cognito_user_pools @aws_iam
+  memory: Int! @aws_cognito_user_pools @aws_iam
+  sessionID: ID! @aws_cognito_user_pools @aws_iam
+  stderr: String! @aws_cognito_user_pools @aws_iam
+  stdout: String! @aws_cognito_user_pools @aws_iam
+  time: Int! @aws_cognito_user_pools @aws_iam
+  userID: ID! @aws_cognito_user_pools @aws_iam
+}
+
+type Query {
+}
+
+type Subscription {
+  onResponsePlayground(sessionID: ID!, userID: ID!): ResponsePlayground @aws_cognito_user_pools @aws_subscribe(mutations : ["responsePlayground"])
+}
+
+input ResponsePlaygroundInput {
+  exitCode: Int!
+  memory: Int!
+  sessionID: ID!
+  stderr: String!
+  stdout: String!
+  time: Int!
+  userID: ID!
+}
+
+input RunPlaygroundInput {
+  code: String!
+  lang: String!
+  sessionID: ID!
+  stdin: String!
+}

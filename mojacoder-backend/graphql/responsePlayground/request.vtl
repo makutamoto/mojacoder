@@ -1,0 +1,12 @@
+{
+    "version": "2017-02-28",
+    "payload": {
+        "sessionID": "$context.arguments.input.sessionID",
+        "userID": "$context.arguments.input.userID",
+    	"time": $context.arguments.input.time,
+    	"stdout": $util.toJson($context.arguments.input.stdout),
+    	"stderr": $util.toJson($context.arguments.input.stderr),
+    	"memory": $context.arguments.input.memory,
+    	"exitCode": $context.arguments.input.exitCode
+    }
+}
