@@ -1,7 +1,7 @@
 on:
-    push:
-      branches:
-        - master
+  push:
+    branches:
+      - master
   name: Auto Deploy to AWS
   jobs:
     deploy:
