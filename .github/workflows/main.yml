@@ -20,6 +20,7 @@ jobs:
           yarn
       - name: Deploy to AWS
         run: |
+          cd mojacoder-backend
           $(yarn global bin)/cdk deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
