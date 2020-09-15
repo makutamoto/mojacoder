@@ -1,5 +1,7 @@
 on:
   push:
+    paths:
+      - /mojacoder-backend
     branches:
       - master
 name: Auto Deploy to AWS
@@ -14,14 +16,14 @@ jobs:
         with:
           node-version: '12.x'
       - name: Install Dependencies
+        working-directory: mojacoder-backend
         run: |
           yarn global add aws-cdk
-          cd mojacoder-backend
           yarn
       - name: Deploy to AWS
-        run: |
-          cd mojacoder-backend
-          $(yarn global bin)/cdk deploy
+        working-directory: mojacoder-backend
+        run: yes | $(yarn global bin)/cdk deploy
         env:
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
