@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - mojacoder-backend
+      - mojacoder-backend/**
     branches:
       - master
 name: Auto Deploy to AWS
