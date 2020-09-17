@@ -8,8 +8,8 @@ module.exports = (phase) => {
                     AWS_REGION: 'ap-northeast-1',
                     IDP_DOMAIN:
                         'mojacoder-dev.auth.ap-northeast-1.amazoncognito.com',
-                    USER_POOL_ID: 'ap-northeast-1_zngPaG8ue',
-                    USER_POOL_CLIENT_ID: 'mvo4uregqaohgolig9085pr7s',
+                    USER_POOL_ID: 'ap-northeast-1_LcfdLiPKX',
+                    USER_POOL_CLIENT_ID: '6imo836n994qb9536tv8332din',
                     REDIRECT_SIGN_IN: 'http://localhost:3000/token',
                     REDIRECT_SIGN_OUT: 'http://localhost:3000/',
                     AUTH_COOKIE_DOMAIN: 'localhost',
@@ -23,8 +23,8 @@ module.exports = (phase) => {
                     AWS_REGION: 'ap-northeast-1',
                     IDP_DOMAIN:
                         'mojacoder-dev.auth.ap-northeast-1.amazoncognito.com',
-                    USER_POOL_ID: 'ap-northeast-1_zngPaG8ue',
-                    USER_POOL_CLIENT_ID: 'mvo4uregqaohgolig9085pr7s',
+                    USER_POOL_ID: 'ap-northeast-1_LcfdLiPKX',
+                    USER_POOL_CLIENT_ID: '6imo836n994qb9536tv8332din',
                     REDIRECT_SIGN_IN: 'http://localhost:3000/token',
                     REDIRECT_SIGN_OUT: 'http://localhost:3000/',
                     AUTH_COOKIE_DOMAIN: 'localhost',
