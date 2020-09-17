@@ -42,7 +42,7 @@ export class MojacoderBackendStack extends cdk.Stack {
                 "https://mojacoder.vercel.app/token",
             ],
             logoutUrLs: [
-                "http://localhost:3000/",
+                "http://localhost:3000",
                 "https://mojacoder.vercel.app",
             ],
             supportedIdentityProviders: ["COGNITO"],
