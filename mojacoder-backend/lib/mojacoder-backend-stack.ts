@@ -1,19 +1,69 @@
 import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
 import { Queue } from '@aws-cdk/aws-sqs';
-import { CfnDataSource, CfnResolver, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
+import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
 import { ContainerImage } from '@aws-cdk/aws-ecs';
+import { CfnUserPoolClient, UserPool } from '@aws-cdk/aws-cognito';
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
+        const pool = new UserPool(this, 'mojacoder-users', {
+            selfSignUpEnabled: true,
+            signInAliases: {
+                email: true,
+            },
+            standardAttributes: {
+                preferredUsername: {
+                    mutable: true,
+                    required: true,
+                },
+            }
+        });
+        pool.addDomain("domain", {
+            cognitoDomain: {
+                domainPrefix: "mojacoder-dev",
+            },
+        });
+        new CfnUserPoolClient(this, "mojacoder-frontend-app", {
+            userPoolId: pool.userPoolId,
+            allowedOAuthFlows: [
+                "implicit",
+            ],
+            allowedOAuthFlowsUserPoolClient: true,
+            allowedOAuthScopes: [
+                "email", "openid", "profile",
+            ],
+            callbackUrLs: [
+                "http://localhost:3000/token",
+                "https://mojacoder.vercel.app/token",
+            ],
+            logoutUrLs: [
+                "http://localhost:3000/",
+                "https://mojacoder.vercel.app",
+            ],
+            supportedIdentityProviders: ["COGNITO"],
+        });
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
             schema: Schema.fromAsset(path.join(__dirname, '../graphql/schema.graphql')),
+            authorizationConfig: {
+                additionalAuthorizationModes: [
+                    {
+                        authorizationType: AuthorizationType.IAM,
+                    },
+                    {
+                        authorizationType: AuthorizationType.USER_POOL,
+                        userPoolConfig: {
+                            userPool: pool,
+                        },
+                    }
+                ]
+            }
         });
         const JudgeQueueDataSourceRole = new Role(this, 'JudgeQueueDataSourceRole', {
             assumedBy: new ServicePrincipal('appsync.amazonaws.com'),
@@ -69,7 +119,7 @@ export class MojacoderBackendStack extends cdk.Stack {
 
         const JudgeUser = new User(this, 'JudgeUser');
         JudgeUser.addToPolicy(new PolicyStatement({
-            resources: [api.arn],
+            resources: [api.arn + '/*'],
             actions: ['appsync:GraphQL'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({

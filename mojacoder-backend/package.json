@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@aws-cdk/aws-appsync": "^1.63.0",
+    "@aws-cdk/aws-cognito": "^1.63.0",
     "@aws-cdk/aws-ecs": "^1.63.0",
     "@aws-cdk/aws-ecs-patterns": "^1.63.0",
     "@aws-cdk/aws-iam": "^1.63.0",
