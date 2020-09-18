@@ -4,7 +4,6 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import Amplify from '@aws-amplify/core'
-import Auth from '@aws-amplify/auth'
 import { v4 as uuid } from 'uuid'
 
 import {
@@ -43,16 +42,13 @@ Amplify.configure({
             // The cookie should be set to secure in production.
             secure: false,
         },
-    },
-})
-
-Auth.configure({
-    oauth: {
-        domain: process.env.IDP_DOMAIN,
-        scope: ['email', 'openid', 'profile'],
-        redirectSignIn: process.env.REDIRECT_SIGN_IN,
-        redirectSignOut: process.env.REDIRECT_SIGN_OUT,
-        responseType: 'token',
+        oauth: {
+            domain: process.env.IDP_DOMAIN,
+            scope: ['email', 'openid', 'profile'],
+            redirectSignIn: process.env.REDIRECT_SIGN_IN,
+            redirectSignOut: process.env.REDIRECT_SIGN_OUT,
+            responseType: 'token',
+        },
     },
 })
 
