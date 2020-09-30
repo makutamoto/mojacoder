@@ -25,13 +25,6 @@ export class MojacoderBackendStack extends cdk.Stack {
         });
         new CfnUserPoolClient(this, "mojacoder-frontend-app", {
             userPoolId: pool.userPoolId,
-            allowedOAuthFlows: [
-                "implicit",
-            ],
-            allowedOAuthFlowsUserPoolClient: true,
-            allowedOAuthScopes: [
-                "email", "openid", "profile",
-            ],
             supportedIdentityProviders: ["COGNITO"],
         });
         const JudgeQueue = new Queue(this, 'JudgeQueue');
