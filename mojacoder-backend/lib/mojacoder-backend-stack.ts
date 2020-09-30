@@ -1,11 +1,12 @@
-import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
+import { join } from 'path';
 import { Queue } from '@aws-cdk/aws-sqs';
 import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
 import { ContainerImage } from '@aws-cdk/aws-ecs';
 import { UserPool } from '@aws-cdk/aws-cognito';
+import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -24,10 +25,15 @@ export class MojacoderBackendStack extends cdk.Stack {
             }
         });
         pool.addClient("mojacoder-frontend-app");
+        const signupTrigger = new Function(this, 'signup-trigger', {
+            runtime: Runtime.GO_1_X,
+            handler: 'main.go',
+            code: Code.fromAsset(join(__dirname, '../cognito-triggers/pre-signup')),
+        });
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
-            schema: Schema.fromAsset(path.join(__dirname, '../graphql/schema.graphql')),
+            schema: Schema.fromAsset(join(__dirname, '../graphql/schema.graphql')),
             authorizationConfig: {
                 additionalAuthorizationModes: [
                     {
@@ -73,10 +79,10 @@ export class MojacoderBackendStack extends cdk.Stack {
             dataSourceName: JudgeQueueDataSource.name,
             fieldName: 'runPlayground',
             requestMappingTemplate:
-                MappingTemplate.fromFile(path.join(__dirname, '../graphql/runPlayground/request.vtl'))
+                MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/request.vtl'))
                     .renderTemplate().replace(/%QUEUE_URL%/g, JudgeQueue.queueUrl),
             responseMappingTemplate:
-                MappingTemplate.fromFile(path.join(__dirname, '../graphql/runPlayground/response.vtl'))
+                MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/response.vtl'))
                     .renderTemplate(),
         });
         runPlayground.addDependsOn(JudgeQueueDataSource);
@@ -84,14 +90,14 @@ export class MojacoderBackendStack extends cdk.Stack {
         PlaygroundDataSource.createResolver({
             typeName: 'Mutation',
             fieldName: 'responsePlayground',
-            requestMappingTemplate: MappingTemplate.fromFile(path.join(__dirname, '../graphql/responsePlayground/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(path.join(__dirname, '../graphql/responsePlayground/response.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/responsePlayground/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/responsePlayground/response.vtl')),
         });
         PlaygroundDataSource.createResolver({
             typeName: 'Subscription',
             fieldName: 'onResponsePlayground',
-            requestMappingTemplate: MappingTemplate.fromFile(path.join(__dirname, '../graphql/onResponsePlayground/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(path.join(__dirname, '../graphql/onResponsePlayground/response.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/response.vtl')),
         });
 
         const JudgeUser = new User(this, 'JudgeUser');
@@ -107,7 +113,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             userName: JudgeUser.userName,
         });
         new QueueProcessingFargateService(this, 'JudgeCluster', {
-            image: ContainerImage.fromAsset(path.join(__dirname, '../judge-image')),
+            image: ContainerImage.fromAsset(join(__dirname, '../judge-image')),
             environment: {
                 AWS_ACCESS_KEY_ID: accessKey.ref,
                 AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,
