@@ -5,7 +5,7 @@ import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTempl
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
 import { ContainerImage } from '@aws-cdk/aws-ecs';
-import { UserPool } from '@aws-cdk/aws-cognito';
+import { UserPool, UserPoolOperation } from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 
 export class MojacoderBackendStack extends cdk.Stack {
@@ -29,6 +29,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
             handler: 'handler',
         });
+        pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
