@@ -1,7 +1,19 @@
-import { createGetServerSideAuth, createUseAuth } from 'aws-cognito-next'
-import pems from '../pems.json'
+import { useState } from 'react'
+import { createContainer } from 'unstated-next'
+import {
+    CognitoIdToken,
+    CognitoRefreshToken,
+    CognitoAccessToken,
+} from 'amazon-cognito-identity-js'
 
-export const getServerSideAuth = createGetServerSideAuth({ pems })
-export const useAuth = createUseAuth({ pems })
+export interface Session {
+    idToken: CognitoIdToken
+    refreshToken: CognitoRefreshToken
+    accessToken: CognitoAccessToken
+}
 
-export * from 'aws-cognito-next'
+function useAuth(initialState: Session | null = null) {
+    const [auth, setAuth] = useState(initialState)
+    return { auth, setAuth }
+}
+export default createContainer(useAuth)

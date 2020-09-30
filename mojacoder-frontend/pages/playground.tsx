@@ -2,15 +2,13 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { Alert, Button, Spinner, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
-import { AccessTokenData } from '../lib/auth'
+import Auth from '../lib/auth'
 import { useSubscription, invokeMutation } from '../lib/backend'
 import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
 
 interface Props {
     sessionID: string
-    accessTokenData: AccessTokenData | null
-    login: boolean
 }
 
 enum PlaygroundStatus {
@@ -52,6 +50,7 @@ interface SubscriptionData {
 }
 
 const Playground: React.FC<Props> = (props) => {
+    const { auth } = Auth.useContainer()
     const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     const [stdin, setStdin] = useState('')
     const [result, setResult] = useState<OnResponsePlayground>({
@@ -78,12 +77,9 @@ const Playground: React.FC<Props> = (props) => {
         useMemo(
             () => ({
                 sessionID: props.sessionID,
-                userID:
-                    props.accessTokenData === null
-                        ? ''
-                        : props.accessTokenData.username,
+                userID: auth === null ? '' : auth.accessToken.payload.username,
             }),
-            [props.sessionID, props.accessTokenData]
+            [props.sessionID, auth]
         ),
         useCallback(({ onResponsePlayground }: SubscriptionData) => {
             setResult({
@@ -103,7 +99,7 @@ const Playground: React.FC<Props> = (props) => {
             <Alert variant="primary">
                 PlaygroundではMojaCoderのジャッジ上でコードの動作を確認することができます。
             </Alert>
-            {props.login ? (
+            {auth ? (
                 <>
                     <div className="mb-2">
                         <CodeEditor
