@@ -27,7 +27,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         pool.addClient("mojacoder-frontend-app");
         const signupTrigger = new Function(this, 'signup-trigger', {
             runtime: Runtime.GO_1_X,
-            handler: 'pre-signup',
+            handler: 'handler',
             code: Code.fromAsset(join(__dirname, '../cognito-triggers/pre-signup')),
         });
         const JudgeQueue = new Queue(this, 'JudgeQueue');
