@@ -5,6 +5,7 @@ import { Alert, Button, Form, Spinner } from 'react-bootstrap'
 import { Auth as Cognito } from 'aws-amplify'
 
 import Auth from '../lib/auth'
+import Title from '../components/Title'
 
 enum Status {
     Normal,
@@ -48,57 +49,64 @@ const SignIn: React.FC = () => {
         [router, email, password]
     )
     return (
-        <Form noValidate validated={status === Status.ValidationError}>
-            <h1>サインイン</h1>
-            <hr />
-            {status === Status.Error && (
-                <Alert variant="danger">エラーが発生しました。</Alert>
-            )}
-            {status === Status.InvalidEmailOrPassword && (
-                <Alert variant="danger">
-                    無効なユーザー名もしくはパスワードです。
-                </Alert>
-            )}
-            <Alert variant="primary">
-                まだユーザー登録を行っていない方は
-                <Link href="/signup">
-                    <a>こちら</a>
-                </Link>
-                から登録して下さい。
-            </Alert>
-            <Form.Group>
-                <Form.Label>メールアドレス</Form.Label>
-                <Form.Control
-                    type="email"
-                    required
-                    placeholder="makutamoto@example.com..."
-                    value={email}
-                    onChange={(e) => setEmail(e.currentTarget.value)}
-                />
-                <Form.Control.Feedback type="invalid">
-                    メールアドレスを入力して下さい。
-                </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>パスワード</Form.Label>
-                <Form.Control
-                    type="password"
-                    required
-                    placeholder="password..."
-                    value={password}
-                    onChange={(e) => setPassword(e.currentTarget.value)}
-                />
-                <Form.Control.Feedback type="invalid">
-                    パスワードを入力して下さい。
-                </Form.Control.Feedback>
-            </Form.Group>
-            <Button type="submit" onClick={onSubmit}>
-                {status === Status.SigningIn && (
-                    <Spinner className="mr-2" animation="border" size="sm" />
+        <>
+            <Title>サインイン</Title>
+            <Form noValidate validated={status === Status.ValidationError}>
+                <h1>サインイン</h1>
+                <hr />
+                {status === Status.Error && (
+                    <Alert variant="danger">エラーが発生しました。</Alert>
                 )}
-                サインイン
-            </Button>
-        </Form>
+                {status === Status.InvalidEmailOrPassword && (
+                    <Alert variant="danger">
+                        無効なユーザー名もしくはパスワードです。
+                    </Alert>
+                )}
+                <Alert variant="primary">
+                    まだユーザー登録を行っていない方は
+                    <Link href="/signup">
+                        <a>こちら</a>
+                    </Link>
+                    から登録して下さい。
+                </Alert>
+                <Form.Group>
+                    <Form.Label>メールアドレス</Form.Label>
+                    <Form.Control
+                        type="email"
+                        required
+                        placeholder="makutamoto@example.com..."
+                        value={email}
+                        onChange={(e) => setEmail(e.currentTarget.value)}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        メールアドレスを入力して下さい。
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>パスワード</Form.Label>
+                    <Form.Control
+                        type="password"
+                        required
+                        placeholder="password..."
+                        value={password}
+                        onChange={(e) => setPassword(e.currentTarget.value)}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        パスワードを入力して下さい。
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Button type="submit" onClick={onSubmit}>
+                    {status === Status.SigningIn && (
+                        <Spinner
+                            className="mr-2"
+                            animation="border"
+                            size="sm"
+                        />
+                    )}
+                    サインイン
+                </Button>
+            </Form>
+        </>
     )
 }
 

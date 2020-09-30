@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 
 import Auth from '../lib/auth'
 import { useSubscription, invokeMutation } from '../lib/backend'
+import Title from '../components/Title'
 import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
 
@@ -94,6 +95,7 @@ const Playground: React.FC<Props> = (props) => {
     )
     return (
         <>
+            <Title>Playground</Title>
             <h1>Playground</h1>
             <hr />
             <Alert variant="primary">
