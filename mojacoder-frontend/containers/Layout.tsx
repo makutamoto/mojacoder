@@ -57,9 +57,14 @@ const Layout: React.FC = (props) => {
                                 </NavDropdown.Item>
                             </NavDropdown>
                         ) : (
-                            <Link href="/signin">
-                                <Nav.Link as="span">Sign in</Nav.Link>
-                            </Link>
+                            <>
+                                <Link href="/signup">
+                                    <Nav.Link as="span">Sign up</Nav.Link>
+                                </Link>
+                                <Link href="/signin">
+                                    <Nav.Link as="span">Sign in</Nav.Link>
+                                </Link>
+                            </>
                         )}
                     </Nav>
                 </Navbar.Collapse>
