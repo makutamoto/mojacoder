@@ -5,7 +5,7 @@ import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTempl
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
 import { ContainerImage } from '@aws-cdk/aws-ecs';
-import { CfnUserPoolClient, UserPool } from '@aws-cdk/aws-cognito';
+import { UserPool } from '@aws-cdk/aws-cognito';
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
