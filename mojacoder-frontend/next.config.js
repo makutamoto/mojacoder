@@ -7,7 +7,7 @@ module.exports = (phase) => {
                 env: {
                     AWS_REGION: 'ap-northeast-1',
                     USER_POOL_ID: 'ap-northeast-1_LcfdLiPKX',
-                    USER_POOL_CLIENT_ID: '6imo836n994qb9536tv8332din',
+                    USER_POOL_CLIENT_ID: '40otuecqohjj8ka86vp7bujvdl',
                     APPSYNC_ENDPOINT:
                         'https://abtbgepvxzdefhsaiu6hx6zeja.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                 },
@@ -17,7 +17,7 @@ module.exports = (phase) => {
                 env: {
                     AWS_REGION: 'ap-northeast-1',
                     USER_POOL_ID: 'ap-northeast-1_LcfdLiPKX',
-                    USER_POOL_CLIENT_ID: '6imo836n994qb9536tv8332din',
+                    USER_POOL_CLIENT_ID: '40otuecqohjj8ka86vp7bujvdl',
                     APPSYNC_ENDPOINT:
                         'https://abtbgepvxzdefhsaiu6hx6zeja.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                 },
