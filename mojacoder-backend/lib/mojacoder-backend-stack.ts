@@ -23,11 +23,6 @@ export class MojacoderBackendStack extends cdk.Stack {
                 },
             }
         });
-        pool.addDomain("domain", {
-            cognitoDomain: {
-                domainPrefix: "mojacoder-dev",
-            },
-        });
         new CfnUserPoolClient(this, "mojacoder-frontend-app", {
             userPoolId: pool.userPoolId,
             allowedOAuthFlows: [
@@ -36,14 +31,6 @@ export class MojacoderBackendStack extends cdk.Stack {
             allowedOAuthFlowsUserPoolClient: true,
             allowedOAuthScopes: [
                 "email", "openid", "profile",
-            ],
-            callbackUrLs: [
-                "http://localhost:3000/token",
-                "https://mojacoder.vercel.app/token",
-            ],
-            logoutUrLs: [
-                "http://localhost:3000",
-                "https://mojacoder.vercel.app",
             ],
             supportedIdentityProviders: ["COGNITO"],
         });
