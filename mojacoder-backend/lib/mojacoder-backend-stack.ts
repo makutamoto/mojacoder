@@ -6,7 +6,7 @@ import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aw
 import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
 import { ContainerImage } from '@aws-cdk/aws-ecs';
 import { UserPool } from '@aws-cdk/aws-cognito';
-import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
+import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -25,10 +25,9 @@ export class MojacoderBackendStack extends cdk.Stack {
             }
         });
         pool.addClient("mojacoder-frontend-app");
-        const signupTrigger = new Function(this, 'signup-trigger', {
-            runtime: Runtime.GO_1_X,
+        const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
+            entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
             handler: 'handler',
-            code: Code.fromAsset(join(__dirname, '../cognito-triggers/pre-signup')),
         });
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {

@@ -427,7 +427,16 @@
     "@aws-cdk/core" "1.64.1"
     constructs "^3.0.4"
 
-"@aws-cdk/aws-lambda@1.64.1", "@aws-cdk/aws-lambda@^1.64.1":
+"@aws-cdk/aws-lambda-nodejs@^1.64.1":
+  version "1.64.1"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-lambda-nodejs/-/aws-lambda-nodejs-1.64.1.tgz#745a704deaa24d846f5e266f66a725b77771c93b"
+  integrity sha512-afETALQrJpwz8vLBHmRbOwg/fIAwPoj9Y5qMNIhwXpuguB7qmf1xoz9nzpFCnwpBW700cFF6t4wFFTNWc5zz+g==
+  dependencies:
+    "@aws-cdk/aws-lambda" "1.64.1"
+    "@aws-cdk/core" "1.64.1"
+    constructs "^3.0.4"
+
+"@aws-cdk/aws-lambda@1.64.1":
   version "1.64.1"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-lambda/-/aws-lambda-1.64.1.tgz#0f70b45c811f00d1e3e40c3cc1404466be4dc06c"
   integrity sha512-czJP+iVTlaiFjKX4Gs15ROjPbLsuD+x4czlZx+6PWaswtxHg1rgnznwTZg4uDAR2xMaioZmHbMQmPlEMkfidUw==

@@ -1,0 +1,9 @@
+{
+  "name": "pre-signup",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.63"
+  }
+}
