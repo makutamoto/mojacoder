@@ -21,7 +21,7 @@ jobs:
           yarn global add aws-cdk
           yarn
           cd cognito-triggers
-          for $dir in ./*; do
+          for dir in ./*; do
             cd $dir
             yarn
             cd ..
