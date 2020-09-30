@@ -23,10 +23,7 @@ export class MojacoderBackendStack extends cdk.Stack {
                 },
             }
         });
-        new CfnUserPoolClient(this, "mojacoder-frontend-app", {
-            userPoolId: pool.userPoolId,
-            supportedIdentityProviders: ["COGNITO"],
-        });
+        pool.addClient("mojacoder-frontend-app");
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
