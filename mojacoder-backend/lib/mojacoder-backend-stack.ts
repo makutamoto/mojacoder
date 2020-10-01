@@ -23,6 +23,11 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
         });
         pool.addClient("mojacoder-frontend-app");
+        pool.addDomain('mojacoder-users-domain', {
+            cognitoDomain: {
+                domainPrefix: 'mojacoder',
+            }
+        });
         const usernameToIDTable = new Table(this, 'username-to-id-table', {
             partitionKey: {
                 name: 'username',
