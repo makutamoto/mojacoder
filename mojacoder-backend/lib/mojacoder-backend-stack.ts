@@ -5,7 +5,7 @@ import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTempl
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
 import { ContainerImage } from '@aws-cdk/aws-ecs';
-import { UserPool, UserPoolOperation } from '@aws-cdk/aws-cognito';
+import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 
@@ -17,6 +17,9 @@ export class MojacoderBackendStack extends cdk.Stack {
             selfSignUpEnabled: true,
             signInAliases: {
                 email: true,
+            },
+            userVerification: {
+                emailStyle: VerificationEmailStyle.LINK,
             },
         });
         pool.addClient("mojacoder-frontend-app");
