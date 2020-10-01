@@ -18,12 +18,6 @@ export class MojacoderBackendStack extends cdk.Stack {
             signInAliases: {
                 email: true,
             },
-            standardAttributes: {
-                preferredUsername: {
-                    mutable: true,
-                    required: true,
-                },
-            }
         });
         pool.addClient("mojacoder-frontend-app");
         const usernameToIDTable = new Table(this, 'username-to-id-table', {
@@ -42,6 +36,9 @@ export class MojacoderBackendStack extends cdk.Stack {
         const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
             entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
             handler: 'handler',
+            environment: {
+                TABLE_NAME: usernameToIDTable.tableName,
+            },
         });
         pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
         signupTrigger.addToRolePolicy(new PolicyStatement({

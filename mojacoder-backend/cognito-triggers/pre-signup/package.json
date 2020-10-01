@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@types/aws-lambda": "^8.10.63"
+    "@types/aws-lambda": "^8.10.63",
+    "aws-sdk": "^2.764.0"
   }
 }
