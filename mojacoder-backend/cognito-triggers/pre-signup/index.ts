@@ -11,6 +11,7 @@ export const handler: PreSignUpTriggerHandler = (event) => {
     return new Promise((resolve, reject) => {
         const username = (event.request.clientMetadata as StringMap).username;
         const sub = event.request.userAttributes.sub;
+        console.log(event.request);
         dynamodb.putItem({
             TableName: TABLE_NAME,
             Item: {
