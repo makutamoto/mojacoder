@@ -10,17 +10,12 @@ if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
 export const handler: PreSignUpTriggerHandler = (event) => {
     return new Promise((resolve, reject) => {
         const username = (event.request.clientMetadata as StringMap).username;
-        const sub = event.request.userAttributes.sub;
-        console.log(event.request);
         dynamodb.putItem({
             TableName: TABLE_NAME,
             Item: {
                 username: {
                     S: username,
                 },
-                sub: {
-                    S: sub,
-                }
             },
             ConditionExpression: 'attribute_not_exists(#username)',
             ExpressionAttributeNames: {
