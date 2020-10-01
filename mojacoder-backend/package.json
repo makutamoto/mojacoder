@@ -11,7 +11,7 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.64.1",
+    "@aws-cdk/assert": "1.65.0",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
     "aws-cdk": "1.63.0",
@@ -21,14 +21,15 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-appsync": "^1.64.1",
-    "@aws-cdk/aws-cognito": "^1.64.1",
-    "@aws-cdk/aws-ecs": "^1.64.1",
-    "@aws-cdk/aws-ecs-patterns": "^1.64.1",
-    "@aws-cdk/aws-iam": "^1.64.1",
-    "@aws-cdk/aws-lambda-nodejs": "^1.64.1",
-    "@aws-cdk/aws-sqs": "^1.64.1",
-    "@aws-cdk/core": "1.64.1",
+    "@aws-cdk/aws-appsync": "^1.65.0",
+    "@aws-cdk/aws-cognito": "^1.65.0",
+    "@aws-cdk/aws-dynamodb": "^1.65.0",
+    "@aws-cdk/aws-ecs": "^1.65.0",
+    "@aws-cdk/aws-ecs-patterns": "^1.65.0",
+    "@aws-cdk/aws-iam": "^1.65.0",
+    "@aws-cdk/aws-lambda-nodejs": "^1.65.0",
+    "@aws-cdk/aws-sqs": "^1.65.0",
+    "@aws-cdk/core": "1.65.0",
     "source-map-support": "^0.5.16"
   }
 }

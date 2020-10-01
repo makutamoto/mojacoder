@@ -7,6 +7,7 @@ import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
 import { ContainerImage } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation } from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
+import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -30,6 +31,19 @@ export class MojacoderBackendStack extends cdk.Stack {
             handler: 'handler',
         });
         pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
+        const usernameToIDTable = new Table(this, 'username-to-id-table', {
+            partitionKey: {
+                name: 'username',
+                type: AttributeType.STRING,
+            }
+        });
+        usernameToIDTable.addGlobalSecondaryIndex({
+            indexName: 'id-to-username-index',
+            partitionKey: {
+                name: 'id',
+                type: AttributeType.STRING,
+            },
+        });
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
