@@ -16,6 +16,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             selfSignUpEnabled: true,
             signInAliases: {
                 email: true,
+                preferredUsername: true,
             },
             standardAttributes: {
                 preferredUsername: {
