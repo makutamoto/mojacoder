@@ -24,20 +24,6 @@ export class MojacoderBackendStack extends cdk.Stack {
                 },
             }
         });
-        new UserPool(this, 'mojacoder-users-another', {
-            selfSignUpEnabled: true,
-            signInAliases: {
-                email: true,
-                preferredUsername: true,
-                username: true,
-            },
-            standardAttributes: {
-                preferredUsername: {
-                    mutable: true,
-                    required: true,
-                },
-            }
-        });
         pool.addClient("mojacoder-frontend-app");
         const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
             entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
