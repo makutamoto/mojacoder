@@ -26,11 +26,6 @@ export class MojacoderBackendStack extends cdk.Stack {
             }
         });
         pool.addClient("mojacoder-frontend-app");
-        const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
-            entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
-            handler: 'handler',
-        });
-        pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
         const usernameToIDTable = new Table(this, 'username-to-id-table', {
             partitionKey: {
                 name: 'username',
@@ -44,6 +39,15 @@ export class MojacoderBackendStack extends cdk.Stack {
                 type: AttributeType.STRING,
             },
         });
+        const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
+            entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
+            handler: 'handler',
+        });
+        pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
+        signupTrigger.addToRolePolicy(new PolicyStatement({
+            resources: [usernameToIDTable.tableArn],
+            actions: ['dynamodb:PutItem'],
+        }));
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
