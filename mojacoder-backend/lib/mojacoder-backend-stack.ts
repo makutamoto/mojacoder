@@ -53,6 +53,14 @@ export class MojacoderBackendStack extends cdk.Stack {
             resources: [usernameToIDTable.tableArn],
             actions: ['dynamodb:PutItem'],
         }));
+        const postConfirmationTrigger = new NodejsFunction(this, 'post-confirmation-trigger', {
+            entry: join(__dirname, '../cognito-triggers/post-confirmation/index.ts'),
+            handler: 'handler',
+            environment: {
+                TABLE_NAME: usernameToIDTable.tableName,
+            },
+        });
+        pool.addTrigger(UserPoolOperation.POST_CONFIRMATION, postConfirmationTrigger);
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
