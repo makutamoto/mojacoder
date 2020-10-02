@@ -21,8 +21,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             standardAttributes: {
                 preferredUsername: {
                     required: true,
-                    mutable: false,
-                }
+                },
             },
             userVerification: {
                 emailStyle: VerificationEmailStyle.LINK,
