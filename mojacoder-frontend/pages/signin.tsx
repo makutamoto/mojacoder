@@ -34,7 +34,10 @@ const SignIn: React.FC = () => {
                 .then(() => {
                     Cognito.currentSession().then((session) => {
                         setAuth(session as any)
-                        router.push('/')
+                        const redirect = decodeURIComponent(
+                            (router.query.redirect as string) ?? '/'
+                        )
+                        router.push(redirect)
                     })
                 })
                 .catch((err) => {

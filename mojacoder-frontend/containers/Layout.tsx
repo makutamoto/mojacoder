@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Auth as Cognito } from 'aws-amplify'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
@@ -9,6 +10,7 @@ const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'
 
 const Layout: React.FC = (props) => {
+    const router = useRouter()
     const { auth, setAuth } = Auth.useContainer()
     const OnClickSignOutCallback = useCallback(() => {
         Cognito.signOut()
@@ -61,7 +63,11 @@ const Layout: React.FC = (props) => {
                                 <Link href="/signup">
                                     <Nav.Link as="span">Sign up</Nav.Link>
                                 </Link>
-                                <Link href="/signin">
+                                <Link
+                                    href={`/signin?redirect=${encodeURIComponent(
+                                        router.asPath
+                                    )}`}
+                                >
                                     <Nav.Link as="span">Sign in</Nav.Link>
                                 </Link>
                             </>
