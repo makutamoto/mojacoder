@@ -6,20 +6,20 @@ module.exports = (phase) => {
             return {
                 env: {
                     AWS_REGION: 'ap-northeast-1',
-                    USER_POOL_ID: 'ap-northeast-1_LcfdLiPKX',
-                    USER_POOL_CLIENT_ID: '40otuecqohjj8ka86vp7bujvdl',
+                    USER_POOL_ID: 'ap-northeast-1_zq64GnG1I',
+                    USER_POOL_CLIENT_ID: '1b46nkj8gq1ofjm8qel9r8di8p',
                     APPSYNC_ENDPOINT:
-                        'https://abtbgepvxzdefhsaiu6hx6zeja.appsync-api.ap-northeast-1.amazonaws.com/graphql',
+                        'https://pazmbdtwqjczppdcbo3zlue6eq.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                 },
             }
         default:
             return {
                 env: {
                     AWS_REGION: 'ap-northeast-1',
-                    USER_POOL_ID: 'ap-northeast-1_LcfdLiPKX',
-                    USER_POOL_CLIENT_ID: '40otuecqohjj8ka86vp7bujvdl',
+                    USER_POOL_ID: 'ap-northeast-1_zq64GnG1I',
+                    USER_POOL_CLIENT_ID: '1b46nkj8gq1ofjm8qel9r8di8p',
                     APPSYNC_ENDPOINT:
-                        'https://abtbgepvxzdefhsaiu6hx6zeja.appsync-api.ap-northeast-1.amazonaws.com/graphql',
+                        'https://pazmbdtwqjczppdcbo3zlue6eq.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                 },
             }
     }

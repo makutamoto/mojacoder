@@ -51,24 +51,24 @@ const SignIn: React.FC = () => {
     return (
         <>
             <Title>サインイン</Title>
-            <Form noValidate validated={status === Status.ValidationError}>
-                <h1>サインイン</h1>
-                <hr />
-                {status === Status.Error && (
-                    <Alert variant="danger">エラーが発生しました。</Alert>
-                )}
-                {status === Status.InvalidEmailOrPassword && (
-                    <Alert variant="danger">
-                        無効なユーザー名もしくはパスワードです。
-                    </Alert>
-                )}
-                <Alert variant="primary">
-                    まだユーザー登録を行っていない方は
-                    <Link href="/signup">
-                        <a>こちら</a>
-                    </Link>
-                    から登録して下さい。
+            <h1>サインイン</h1>
+            <hr />
+            {status === Status.Error && (
+                <Alert variant="danger">エラーが発生しました。</Alert>
+            )}
+            {status === Status.InvalidEmailOrPassword && (
+                <Alert variant="danger">
+                    無効なユーザー名もしくはパスワードです。
                 </Alert>
+            )}
+            <Alert variant="primary">
+                まだユーザー登録を行っていない方は
+                <Link href="/signup">
+                    <a>こちら</a>
+                </Link>
+                から登録して下さい。
+            </Alert>
+            <Form noValidate validated={status === Status.ValidationError}>
                 <Form.Group>
                     <Form.Label>メールアドレス</Form.Label>
                     <Form.Control
