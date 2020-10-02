@@ -20,6 +20,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
             standardAttributes: {
                 preferredUsername: {
+                    mutable: false,
                     required: true,
                 },
             },
@@ -66,6 +67,10 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
         });
         pool.addTrigger(UserPoolOperation.POST_CONFIRMATION, postConfirmationTrigger);
+        postConfirmationTrigger.addToRolePolicy(new PolicyStatement({
+            resources: [usernameToIDTable.tableArn],
+            actions: ['dynamodb:PutItem'],
+        }));
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',

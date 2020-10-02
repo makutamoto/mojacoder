@@ -1,5 +1,4 @@
 import { PreSignUpTriggerHandler } from 'aws-lambda';
-import { StringMap } from 'aws-lambda/trigger/cognito-user-pool-trigger/_common';
 import { DynamoDB } from 'aws-sdk';
 
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
@@ -9,12 +8,12 @@ if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
 
 export const handler: PreSignUpTriggerHandler = (event) => {
     return new Promise((resolve, reject) => {
-        const username = (event.request.clientMetadata as StringMap).username;
+        const preferred_username = event.request.userAttributes.preferred_username;
         dynamodb.putItem({
             TableName: TABLE_NAME,
             Item: {
                 username: {
-                    S: username,
+                    S: preferred_username,
                 },
             },
             ConditionExpression: 'attribute_not_exists(#username)',
