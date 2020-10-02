@@ -1,4 +1,4 @@
-#if($context.arguments.userID != $context.identity.username)
+#if($context.arguments.userID != $context.identity.sub)
 	$util.unauthorized()
 #end
 {

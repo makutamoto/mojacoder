@@ -1,7 +1,7 @@
 #if($ctx.error)
   $util.error($ctx.error.message, $ctx.error.type)
 #end
-#set($payloadJson = $util.toJson({"sessionID": $context.arguments.input.sessionID, "userID": $context.identity.username, "lang": $context.arguments.input.lang, "code": $context.arguments.input.code, "stdin": $context.arguments.input.stdin }))
+#set($payloadJson = $util.toJson({"sessionID": $context.arguments.input.sessionID, "userID": $context.identity.sub, "lang": $context.arguments.input.lang, "code": $context.arguments.input.code, "stdin": $context.arguments.input.stdin }))
 #if($ctx.result.statusCode == 200)
     $payloadJson
 #else

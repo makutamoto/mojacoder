@@ -1,7 +1,7 @@
 #set($action = "Action=SendMessage")
 #set($version = "Version=2012-11-05")
 #set($queueurl = "QueueUrl=%QUEUE_URL%")
-#set($payload = $util.toJson({ "type": "PLAYGROUND", "sessionID": $context.arguments.input.sessionID, "userID": $context.identity.username, "lang": $context.arguments.input.lang, "code": $context.arguments.input.code, "stdin": $context.arguments.input.stdin }))
+#set($payload = $util.toJson({ "type": "PLAYGROUND", "sessionID": $context.arguments.input.sessionID, "userID": $context.identity.sub, "lang": $context.arguments.input.lang, "code": $context.arguments.input.code, "stdin": $context.arguments.input.stdin }))
 #set($encodedPayload = $util.urlEncode($payload))
 #set($msgbody = "MessageBody=$encodedPayload")
 {
