@@ -29,6 +29,7 @@ type ResponsePlayground {
 
 type Query {
   getUsernameFromUserID(userID: String!): String
+  getUserIDFromUsername(username: String!): String
 }
 
 type Subscription {
