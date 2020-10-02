@@ -137,7 +137,7 @@ const SignUp: React.FC = () => {
                     パスワードが一致しません。
                 </Form.Control.Feedback>
             </Form.Group>
-            <Button onClick={onSubmit}>
+            <Button onClick={onSubmit} disabled={status === Status.SigningUp}>
                 {status === Status.SigningUp && (
                     <Spinner className="mr-2" animation="border" size="sm" />
                 )}
