@@ -98,7 +98,11 @@ const SignIn: React.FC = () => {
                         パスワードを入力して下さい。
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Button type="submit" onClick={onSubmit}>
+                <Button
+                    type="submit"
+                    onClick={onSubmit}
+                    disabled={status === Status.SigningIn}
+                >
                     {status === Status.SigningIn && (
                         <Spinner
                             className="mr-2"
