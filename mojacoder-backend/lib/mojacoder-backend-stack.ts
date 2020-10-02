@@ -150,7 +150,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         const usernameToIDTableDataSource = api.addDynamoDbDataSource('UsernameToIDTable', usernameToIDTable);
         usernameToIDTableDataSource.createResolver({
             typeName: 'Query',
-            fieldName: 'getUsernameFromID',
+            fieldName: 'getUsernameFromUserID',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromID/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromID/response.vtl')),
         });
