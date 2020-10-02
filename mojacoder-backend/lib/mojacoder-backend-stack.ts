@@ -18,6 +18,12 @@ export class MojacoderBackendStack extends cdk.Stack {
             signInAliases: {
                 email: true,
             },
+            standardAttributes: {
+                preferredUsername: {
+                    required: true,
+                    mutable: false,
+                }
+            },
             userVerification: {
                 emailStyle: VerificationEmailStyle.LINK,
             },
