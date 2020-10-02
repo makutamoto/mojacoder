@@ -47,6 +47,12 @@ export class MojacoderBackendStack extends cdk.Stack {
                 type: AttributeType.STRING,
             },
         });
+        const userDataTable = new Table(this, 'user-data-table', {
+            partitionKey: {
+                name: 'id',
+                type: AttributeType.STRING,
+            }
+        });
         const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
             entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
             handler: 'handler',
@@ -63,12 +69,13 @@ export class MojacoderBackendStack extends cdk.Stack {
             entry: join(__dirname, '../cognito-triggers/post-confirmation/index.ts'),
             handler: 'handler',
             environment: {
-                TABLE_NAME: usernameToIDTable.tableName,
+                USERNAME_TO_ID_TABLE_NAME: usernameToIDTable.tableName,
+                USER_DATA_TABLE: userDataTable.tableName,
             },
         });
         pool.addTrigger(UserPoolOperation.POST_CONFIRMATION, postConfirmationTrigger);
         postConfirmationTrigger.addToRolePolicy(new PolicyStatement({
-            resources: [usernameToIDTable.tableArn],
+            resources: [usernameToIDTable.tableArn, userDataTable.tableArn],
             actions: ['dynamodb:PutItem'],
         }));
         const JudgeQueue = new Queue(this, 'JudgeQueue');
