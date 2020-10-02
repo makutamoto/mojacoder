@@ -151,8 +151,14 @@ export class MojacoderBackendStack extends cdk.Stack {
         usernameToIDTableDataSource.createResolver({
             typeName: 'Query',
             fieldName: 'getUsernameFromUserID',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromID/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromID/response.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromUserID/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromUserID/response.vtl')),
+        });
+        usernameToIDTableDataSource.createResolver({
+            typeName: 'Query',
+            fieldName: 'getUserIDFromUsername',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUserIDFromUsername/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUserIDFromUsername/response.vtl')),
         });
 
         const JudgeUser = new User(this, 'JudgeUser');
