@@ -34,9 +34,6 @@ export const handler: PostConfirmationTriggerHandler = (event) => {
                             id: {
                                 S: sub,
                             },
-                            username: {
-                                S: preferred_username,
-                            },
                         },
                     },
                 },
