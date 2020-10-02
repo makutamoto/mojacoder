@@ -147,6 +147,13 @@ export class MojacoderBackendStack extends cdk.Stack {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/response.vtl')),
         });
+        const usernameToIDTableDataSource = api.addDynamoDbDataSource('UsernameToIDTable', usernameToIDTable);
+        usernameToIDTableDataSource.createResolver({
+            typeName: 'Query',
+            fieldName: 'getUsernameFromID',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromID/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUsernameFromID/response.vtl')),
+        });
 
         const JudgeUser = new User(this, 'JudgeUser');
         JudgeUser.addToPolicy(new PolicyStatement({
