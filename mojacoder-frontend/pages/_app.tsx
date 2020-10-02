@@ -1,12 +1,11 @@
-import { useMemo } from 'react'
 import App, { AppProps, AppContext } from 'next/app'
 import Head from 'next/head'
 import { Amplify, withSSRContext } from 'aws-amplify'
 import { AuthClass } from '@aws-amplify/auth/lib-esm/Auth'
 import { CognitoUserSession } from 'amazon-cognito-identity-js'
-import { v4 as uuid } from 'uuid'
 
 import Auth from '../lib/auth'
+import Session from '../lib/session'
 import Layout from '../containers/Layout'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -25,16 +24,17 @@ Amplify.configure({
 })
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-    const sessionID = useMemo(() => uuid(), [])
     return (
         <Auth.Provider initialState={pageProps.initialAuth}>
-            <Head>
-                <title>MojaCoder</title>
-                <link rel="manifest" href="/manifest.json" />
-            </Head>
-            <Layout>
-                <Component {...pageProps} sessionID={sessionID} />
-            </Layout>
+            <Session.Provider>
+                <Head>
+                    <title>MojaCoder</title>
+                    <link rel="manifest" href="/manifest.json" />
+                </Head>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </Session.Provider>
         </Auth.Provider>
     )
 }

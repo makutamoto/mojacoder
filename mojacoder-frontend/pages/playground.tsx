@@ -8,9 +8,7 @@ import Title from '../components/Title'
 import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
 
-interface Props {
-    sessionID: string
-}
+import Session from '../lib/session'
 
 enum PlaygroundStatus {
     Normal,
@@ -50,8 +48,9 @@ interface SubscriptionData {
     onResponsePlayground: OnResponsePlayground
 }
 
-const Playground: React.FC<Props> = (props) => {
+const Playground: React.FC = () => {
     const { auth } = Auth.useContainer()
+    const { session } = Session.useContainer()
     const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     const [stdin, setStdin] = useState('')
     const [result, setResult] = useState<OnResponsePlayground>({
@@ -66,21 +65,21 @@ const Playground: React.FC<Props> = (props) => {
         setStatus(PlaygroundStatus.Waiting)
         invokeMutation(MUTATION_DOCUMENT, {
             input: {
-                sessionID: props.sessionID,
+                sessionID: session.id,
                 lang: code.lang,
                 code: code.code,
                 stdin,
             },
         })
-    }, [code, stdin, props.sessionID, setStatus])
+    }, [code, stdin, session.id, setStatus])
     useSubscription(
         SUBSCRIPTION_DOCUMENT,
         useMemo(
             () => ({
-                sessionID: props.sessionID,
+                sessionID: session.id,
                 userID: auth === null ? '' : auth.accessToken.payload.username,
             }),
-            [props.sessionID, auth]
+            [session.id, auth]
         ),
         useCallback(({ onResponsePlayground }: SubscriptionData) => {
             setResult({

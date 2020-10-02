@@ -6,13 +6,13 @@ import {
     CognitoAccessToken,
 } from 'amazon-cognito-identity-js'
 
-export interface Session {
+export interface AuthSession {
     idToken: CognitoIdToken
     refreshToken: CognitoRefreshToken
     accessToken: CognitoAccessToken
 }
 
-function useAuth(initialState: Session | null = null) {
+function useAuth(initialState: AuthSession | null = null) {
     const [auth, setAuth] = useState(initialState)
     return { auth, setAuth }
 }
