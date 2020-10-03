@@ -199,11 +199,10 @@ export class MojacoderBackendStack extends cdk.Stack {
         const judgeService = new FargateService(this, 'judge-service', {
             cluster: judgeCluster,
             taskDefinition: judgeTask,
-            desiredCount: 1,
+            assignPublicIp: true,
         });
         const judgeScale = judgeService.autoScaleTaskCount({
             maxCapacity: 2,
-            minCapacity: 1,
         });
         judgeScale.scaleOnMetric('judge-scale-by-queue', {
             metric: approximateNumberOfMessagesVisible,
