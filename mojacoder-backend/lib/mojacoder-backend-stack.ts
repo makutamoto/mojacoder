@@ -183,6 +183,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
             queue: JudgeQueue,
             desiredTaskCount: 0,
+            maxScalingCapacity: 2,
         })
     }
 }
