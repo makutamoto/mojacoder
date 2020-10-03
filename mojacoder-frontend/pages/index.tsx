@@ -1,8 +1,20 @@
+import { Jumbotron, Image } from 'react-bootstrap'
+
 import JudgeStatusBadge from '../components/JudgeStatusBadge'
 
 export const Home = (): JSX.Element => ( // fix type
     <>
-        GitHub ...
+        <Jumbotron>
+            <div className="text-center">
+                <Image
+                    height={256}
+                    src="/illustrations/undraw_programming_2svr.svg"
+                />
+                <h2 className="mt-4">
+                    競技プログラミングの問題を投稿できるサイトです。
+                </h2>
+            </div>
+        </Jumbotron>
         <JudgeStatusBadge status="WJ" />
         <br />
         <JudgeStatusBadge status="WJ" detail={{ current: 1, whole: 2 }} />
