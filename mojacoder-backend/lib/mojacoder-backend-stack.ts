@@ -8,6 +8,7 @@ import { ContainerImage } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
+import { Vpc } from '@aws-cdk/aws-ec2';
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -161,6 +162,9 @@ export class MojacoderBackendStack extends cdk.Stack {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/getUserIDFromUsername/response.vtl')),
         });
 
+        const vpc = new Vpc(this, 'vpc', {
+            natGateways: 0,
+        });
         const JudgeUser = new User(this, 'JudgeUser');
         JudgeUser.addToPolicy(new PolicyStatement({
             resources: [api.arn + '/*'],
@@ -184,6 +188,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             queue: JudgeQueue,
             desiredTaskCount: 0,
             maxScalingCapacity: 2,
+            vpc,
         })
     }
 }
