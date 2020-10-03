@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import { Auth as Cognito } from 'aws-amplify'
 import { Alert, Button, Form, Spinner } from 'react-bootstrap'
 
@@ -11,12 +12,12 @@ enum Status {
     Normal,
     ValidationError,
     SigningUp,
-    Success,
     UserAlreadyExists,
     Error,
 }
 
 const SignUp: React.FC = () => {
+    const router = useRouter()
     const form = useRef(null)
     const passwordInput = useRef(null)
     const [status, setStatus] = useState(Status.Normal)
@@ -39,7 +40,15 @@ const SignUp: React.FC = () => {
             },
         })
             .then(() => {
-                setStatus(Status.Success)
+                router.push(
+                    `/signin?signedup=true${
+                        router.query.redirect
+                            ? `&redirect=${encodeURIComponent(
+                                  router.query.redirect as string
+                              )}`
+                            : ''
+                    }`
+                )
             })
             .catch((err) => {
                 if (
@@ -59,11 +68,6 @@ const SignUp: React.FC = () => {
             <Title>新規登録</Title>
             <h1>新規登録</h1>
             <hr />
-            {status === Status.Success && (
-                <Alert variant="success">
-                    確認メールを送信しました。メール内のリンクにアクセスすることで登録が完了します。
-                </Alert>
-            )}
             {status === Status.UserAlreadyExists && (
                 <Alert variant="danger">ユーザーがすでに存在します。</Alert>
             )}

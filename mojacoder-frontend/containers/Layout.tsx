@@ -60,7 +60,11 @@ const Layout: React.FC = (props) => {
                             </NavDropdown>
                         ) : (
                             <>
-                                <Link href="/signup">
+                                <Link
+                                    href={`/signup?redirect=${encodeURIComponent(
+                                        router.asPath
+                                    )}`}
+                                >
                                     <Nav.Link as="span">Sign up</Nav.Link>
                                 </Link>
                                 <Link

@@ -60,6 +60,11 @@ const SignIn: React.FC = () => {
             <Title>サインイン</Title>
             <h1>サインイン</h1>
             <hr />
+            {router.query.signedup && (
+                <Alert variant="success">
+                    確認メールを送信しました。メール内のリンクにアクセスすることで登録が完了します。
+                </Alert>
+            )}
             {status === Status.Error && (
                 <Alert variant="danger">エラーが発生しました。</Alert>
             )}
