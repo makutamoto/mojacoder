@@ -41,7 +41,11 @@ const SignIn: React.FC = () => {
                     })
                 })
                 .catch((err) => {
-                    if (err.code === 'NotAuthorizedException') {
+                    if (
+                        err.code === 'NotAuthorizedException' ||
+                        err.code === 'UserNotFoundException' ||
+                        err.code === 'UserNotConfirmedException'
+                    ) {
                         setStatus(Status.InvalidEmailOrPassword)
                     } else {
                         console.error(err)
