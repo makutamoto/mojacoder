@@ -207,11 +207,16 @@ export class MojacoderBackendStack extends cdk.Stack {
         });
         judgeScale.scaleOnMetric('judge-scale-by-queue', {
             metric: approximateNumberOfMessagesVisible,
-            scalingSteps: [{
-                lower: 0,
-                upper: 100,
-                change: 1,
-            }],
+            scalingSteps: [
+                {
+                    upper: 0,
+                    change: -1,
+                },
+                {
+                    lower: 100,
+                    change: 1,
+                },
+            ],
         });
     }
 }
