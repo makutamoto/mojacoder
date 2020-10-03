@@ -182,6 +182,7 @@ export class MojacoderBackendStack extends cdk.Stack {
                 JUDGEQUEUE_URL: JudgeQueue.queueUrl,
             },
             queue: JudgeQueue,
+            desiredTaskCount: 0,
         })
     }
 }
