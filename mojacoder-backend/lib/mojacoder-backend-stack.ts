@@ -208,6 +208,8 @@ export class MojacoderBackendStack extends cdk.Stack {
         judgeScale.scaleOnMetric('judge-scale-by-queue', {
             metric: approximateNumberOfMessagesVisible,
             scalingSteps: [{
+                lower: 0,
+                upper: 100,
                 change: 1,
             }],
         });
