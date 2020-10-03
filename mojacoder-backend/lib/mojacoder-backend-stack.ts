@@ -3,12 +3,11 @@ import { join } from 'path';
 import { Queue } from '@aws-cdk/aws-sqs';
 import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
-import { QueueProcessingFargateService } from '@aws-cdk/aws-ecs-patterns';
-import { ContainerImage } from '@aws-cdk/aws-ecs';
+import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
-import { Vpc } from '@aws-cdk/aws-ec2';
+import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -164,6 +163,12 @@ export class MojacoderBackendStack extends cdk.Stack {
 
         const vpc = new Vpc(this, 'vpc', {
             natGateways: 0,
+            subnetConfiguration: [
+                {
+                    name: 'judge-subnet',
+                    subnetType: SubnetType.PUBLIC,
+                }
+            ],
         });
         const JudgeUser = new User(this, 'JudgeUser');
         JudgeUser.addToPolicy(new PolicyStatement({
@@ -177,7 +182,12 @@ export class MojacoderBackendStack extends cdk.Stack {
         const accessKey = new CfnAccessKey(this, 'JudgeUserAccessKey', {
             userName: JudgeUser.userName,
         });
-        new QueueProcessingFargateService(this, 'JudgeCluster', {
+        const approximateNumberOfMessagesVisible = JudgeQueue.metricApproximateNumberOfMessagesVisible();
+        const judgeCluster = new Cluster(this, 'judge-cluster', {
+            vpc,
+        });
+        const judgeTask = new FargateTaskDefinition(this, 'judge-task');
+        judgeTask.addContainer('judge-container', {
             image: ContainerImage.fromAsset(join(__dirname, '../judge-image')),
             environment: {
                 AWS_ACCESS_KEY_ID: accessKey.ref,
@@ -185,10 +195,21 @@ export class MojacoderBackendStack extends cdk.Stack {
                 API_ENDPOINT: api.graphqlUrl,
                 JUDGEQUEUE_URL: JudgeQueue.queueUrl,
             },
-            queue: JudgeQueue,
-            desiredTaskCount: 0,
-            maxScalingCapacity: 2,
-            vpc,
-        })
+        });
+        const judgeService = new FargateService(this, 'judge-service', {
+            cluster: judgeCluster,
+            taskDefinition: judgeTask,
+            desiredCount: 1,
+        });
+        const judgeScale = judgeService.autoScaleTaskCount({
+            maxCapacity: 2,
+            minCapacity: 1,
+        });
+        judgeScale.scaleOnMetric('judge-scale-by-queue', {
+            metric: approximateNumberOfMessagesVisible,
+            scalingSteps: [{
+                change: 1,
+            }],
+        });
     }
 }
