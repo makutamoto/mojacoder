@@ -1,25 +1,68 @@
-import React from 'react'
-import { Image, Jumbotron } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
+import { Alert, Image, Jumbotron } from 'react-bootstrap'
+import gql from 'graphql-tag'
 
-const UserPage: React.FC = () => {
+import { invokeQueryWithApiKey } from '../../lib/backend'
+
+interface Props {
+    userID: string | null
+}
+
+const UserPage: React.FC<Props> = (props) => {
+    const router = useRouter()
+    const [browser, setBroser] = useState(false)
+    const [iconNotFound, setIconNotFound] = useState(false)
+    useEffect(() => setBroser(true), [])
     return (
         <>
-            <h1>ユーザーページ</h1>
-            <hr />
-            <Jumbotron>
-                <div className="text-center">
-                    <Image
-                        roundedCircle
-                        height={256}
-                        src="https://pbs.twimg.com/profile_images/1263491082517544963/i-EWkDsJ_400x400.jpg"
-                    />
-                    <h2>Makutamoto</h2>
-                </div>
-            </Jumbotron>
-            <h1>作問した問題</h1>
-            <hr />
+            {props.userID === null ? (
+                <Alert variant="danger">ユーザーが存在しません。</Alert>
+            ) : (
+                <Jumbotron>
+                    <div className="text-center">
+                        {browser && (
+                            <Image
+                                roundedCircle
+                                height={256}
+                                src={
+                                    iconNotFound
+                                        ? '/images/avatar.png'
+                                        : '/images/avatar.png'
+                                }
+                                onError={() =>
+                                    iconNotFound || setIconNotFound(true)
+                                }
+                            />
+                        )}
+                        <h2>{router.query.username}</h2>
+                    </div>
+                </Jumbotron>
+            )}
         </>
     )
 }
 
 export default UserPage
+
+const GetUserIDFromUsername = gql`
+    query GetUserIDFromUsername($username: String!) {
+        getUserIDFromUsername(username: $username)
+    }
+`
+interface GetUserIDFromUsernameResponse {
+    getUserIDFromUsername: string | null
+}
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+    query,
+}) => {
+    const res = (await invokeQueryWithApiKey(GetUserIDFromUsername, {
+        username: query.username,
+    })) as GetUserIDFromUsernameResponse
+    return {
+        props: {
+            userID: res.getUserIDFromUsername,
+        },
+    }
+}
