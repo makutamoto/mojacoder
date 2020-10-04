@@ -23,7 +23,7 @@ const clientWithApiKey = new AWSAppSyncClient({
     region: process.env.AWS_REGION,
     auth: {
         type: 'API_KEY',
-        apiKey: process.env.API_KEY,
+        apiKey: process.env.APPSYNC_APIKEY,
     },
     disableOffline: true,
 })
