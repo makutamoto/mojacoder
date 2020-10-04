@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import { Alert, Image, Jumbotron } from 'react-bootstrap'
+import { Auth as Cognito } from 'aws-amplify'
+import { Alert, Button, Image, Jumbotron } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
+import Auth from '../../lib/auth'
 import { invokeQueryWithApiKey } from '../../lib/backend'
 
 interface Props {
@@ -12,8 +14,14 @@ interface Props {
 
 const UserPage: React.FC<Props> = (props) => {
     const router = useRouter()
+    const { auth, setAuth } = Auth.useContainer()
     const [browser, setBroser] = useState(false)
     const [iconNotFound, setIconNotFound] = useState(false)
+    const OnClickSignOutCallback = useCallback(() => {
+        Cognito.signOut()
+            .then(() => setAuth(null))
+            .catch((err) => console.error(err))
+    }, [auth])
     useEffect(() => setBroser(true), [])
     return (
         <>
@@ -37,6 +45,14 @@ const UserPage: React.FC<Props> = (props) => {
                             />
                         )}
                         <h2>{router.query.username}</h2>
+                        {auth && auth.userID === props.userID && (
+                            <Button
+                                variant="danger"
+                                onClick={OnClickSignOutCallback}
+                            >
+                                サインアウト
+                            </Button>
+                        )}
                     </div>
                 </Jumbotron>
             )}

@@ -1,15 +1,9 @@
 import { useState } from 'react'
 import { createContainer } from 'unstated-next'
-import {
-    CognitoIdToken,
-    CognitoRefreshToken,
-    CognitoAccessToken,
-} from 'amazon-cognito-identity-js'
 
 export interface AuthSession {
-    idToken: CognitoIdToken
-    refreshToken: CognitoRefreshToken
-    accessToken: CognitoAccessToken
+    userID: string
+    username: string
 }
 
 function useAuth(initialState: AuthSession | null = null) {

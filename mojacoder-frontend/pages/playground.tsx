@@ -77,7 +77,7 @@ const Playground: React.FC = () => {
         useMemo(
             () => ({
                 sessionID: session.id,
-                userID: auth === null ? '' : auth.accessToken.payload.username,
+                userID: auth === null ? '' : auth.userID,
             }),
             [session.id, auth]
         ),

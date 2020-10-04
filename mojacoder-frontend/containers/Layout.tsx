@@ -1,22 +1,13 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Auth as Cognito } from 'aws-amplify'
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import { Container, Nav, Navbar } from 'react-bootstrap'
 
 import Auth from '../lib/auth'
 
-const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
-const TWITTER_LINK = 'https://twitter.com/makutamoto'
-
 const Layout: React.FC = (props) => {
     const router = useRouter()
-    const { auth, setAuth } = Auth.useContainer()
-    const OnClickSignOutCallback = useCallback(() => {
-        Cognito.signOut()
-            .then(() => setAuth(null))
-            .catch((err) => console.error(err))
-    }, [auth])
+    const { auth } = Auth.useContainer()
     return (
         <>
             <Navbar sticky="top" bg="dark" variant="dark" expand="sm">
@@ -29,35 +20,12 @@ const Layout: React.FC = (props) => {
                         <Link href="/playground">
                             <Nav.Link as="span">Playground</Nav.Link>
                         </Link>
-                        <NavDropdown id="navbar-links-dropdown" title="Links">
-                            <NavDropdown.Item
-                                href={GITHUB_LINK}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                GitHub
-                            </NavDropdown.Item>
-                            <NavDropdown.Item
-                                href={TWITTER_LINK}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                @makutamoto
-                            </NavDropdown.Item>
-                        </NavDropdown>
                     </Nav>
                     <Nav>
                         {auth ? (
-                            <NavDropdown
-                                id="navbar-user-dropdown"
-                                title={auth.idToken.payload.preferred_username}
-                            >
-                                <NavDropdown.Item
-                                    onClick={OnClickSignOutCallback}
-                                >
-                                    Sign out
-                                </NavDropdown.Item>
-                            </NavDropdown>
+                            <Link href={`/users/${auth.username}`}>
+                                <Nav.Link as="span">{auth.username}</Nav.Link>
+                            </Link>
                         ) : (
                             <>
                                 <Link
