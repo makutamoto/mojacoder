@@ -1,5 +1,5 @@
 import React from 'react'
-import { Jumbotron, Image } from 'react-bootstrap'
+import { Badge, Jumbotron, Image } from 'react-bootstrap'
 
 import styles from './index.module.css'
 
@@ -18,20 +18,26 @@ export const Index: React.FC = () => {
                     <h2 className="mt-4">
                         競技プログラミングの問題を投稿できるサイトです。
                     </h2>
+                    <Badge
+                        as="a"
+                        variant="dark"
+                        href={TWITTER_LINK}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        Author: @makutamoto
+                    </Badge>{' '}
+                    <Badge
+                        as="a"
+                        variant="dark"
+                        href={GITHUB_LINK}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        GitHub: makutamoto/mojacoder
+                    </Badge>
                 </div>
             </Jumbotron>
-            <p>
-                このサイトは
-                <a href={TWITTER_LINK} target="_blank" rel="noreferrer">
-                    @makutamoto
-                </a>
-                により制作されました。
-                <br />
-                GitHubリポジトリ 👉{' '}
-                <a href={GITHUB_LINK} target="_blank" rel="noreferrer">
-                    makutamoto/mojacoder
-                </a>
-            </p>
             <h2>タイムライン</h2>
         </>
     )
