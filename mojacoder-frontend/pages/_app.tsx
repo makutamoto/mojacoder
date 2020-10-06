@@ -27,8 +27,6 @@ Amplify.configure({
 })
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-    // eslint-disable-next-line
-    console.log(process.env.COOKIE_DOMAIN)
     return (
         <Auth.Provider initialState={pageProps.initialAuth}>
             <Session.Provider>
