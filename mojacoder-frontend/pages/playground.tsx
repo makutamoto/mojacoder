@@ -119,16 +119,18 @@ const Playground: React.FC = () => {
                             実行
                         </Button>
                     </div>
-                    {status === PlaygroundStatus.Waiting && (
-                        <Alert className="my-4" variant="primary">
-                            <Spinner
-                                className="mr-3"
-                                size="sm"
-                                animation="border"
-                            />
-                            コードを実行中です。しばらくお待ち下さい。
-                        </Alert>
-                    )}
+                    <Alert
+                        show={status === PlaygroundStatus.Waiting}
+                        className="my-4"
+                        variant="primary"
+                    >
+                        <Spinner
+                            className="mr-3"
+                            size="sm"
+                            animation="border"
+                        />
+                        コードを実行中です。しばらくお待ち下さい。
+                    </Alert>
                     {status === PlaygroundStatus.Received && (
                         <Table className="my-4" bordered striped hover>
                             <tbody>

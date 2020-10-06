@@ -62,19 +62,18 @@ const SignIn: React.FC = () => {
             <Title>サインイン</Title>
             <h1>サインイン</h1>
             <hr />
-            {router.query.signedup && (
-                <Alert variant="success">
-                    確認メールを送信しました。メール内のリンクにアクセスすることで登録が完了します。
-                </Alert>
-            )}
-            {status === Status.Error && (
-                <Alert variant="danger">エラーが発生しました。</Alert>
-            )}
-            {status === Status.InvalidEmailOrPassword && (
-                <Alert variant="danger">
-                    無効なユーザー名もしくはパスワードです。
-                </Alert>
-            )}
+            <Alert show={!!router.query.signedup} variant="success">
+                確認メールを送信しました。メール内のリンクにアクセスすることで登録が完了します。
+            </Alert>
+            <Alert show={status === Status.Error} variant="danger">
+                エラーが発生しました。
+            </Alert>
+            <Alert
+                show={status === Status.InvalidEmailOrPassword}
+                variant="danger"
+            >
+                無効なユーザー名もしくはパスワードです。
+            </Alert>
             <Alert variant="primary">
                 まだユーザー登録を行っていない方は
                 <Link href="/signup">

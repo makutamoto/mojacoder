@@ -68,12 +68,12 @@ const SignUp: React.FC = () => {
             <Title>新規登録</Title>
             <h1>新規登録</h1>
             <hr />
-            {status === Status.UserAlreadyExists && (
-                <Alert variant="danger">ユーザーがすでに存在します。</Alert>
-            )}
-            {status === Status.Error && (
-                <Alert variant="danger">エラーが発生しました。</Alert>
-            )}
+            <Alert show={status === Status.UserAlreadyExists} variant="danger">
+                ユーザーがすでに存在します。
+            </Alert>
+            <Alert show={status === Status.Error} variant="danger">
+                エラーが発生しました。
+            </Alert>
             <Form
                 noValidate
                 validated={status === Status.ValidationError}
