@@ -11,6 +11,7 @@ module.exports = (phase) => {
                     APPSYNC_ENDPOINT:
                         'https://oit5fxgguranhp5z5uzye43eji.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-5ewhg75ukffhfgwrn65nnptbdi',
+                    COOKIE_DOMAIN: 'localhost',
                 },
             }
         default:
@@ -22,6 +23,7 @@ module.exports = (phase) => {
                     APPSYNC_ENDPOINT:
                         'https://oit5fxgguranhp5z5uzye43eji.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-5ewhg75ukffhfgwrn65nnptbdi',
+                    COOKIE_DOMAIN: process.env.VERCEL_URL,
                 },
             }
     }

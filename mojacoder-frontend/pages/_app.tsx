@@ -20,8 +20,8 @@ Amplify.configure({
         userPoolId: process.env.USER_POOL_ID,
         userPoolWebClientId: process.env.USER_POOL_CLIENT_ID,
         cookieStorage: {
-            domain: process.env.VERCEL_URL ?? 'localhost',
-            secure: !!process.env.VERCEL_URL,
+            domain: process.env.COOKIE_DOMAIN,
+            secure: process.env.COOKIE_DOMAIN != 'localhost',
         },
     },
 })
