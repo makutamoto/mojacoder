@@ -10,7 +10,13 @@ const Layout: React.FC = (props) => {
     const { auth } = Auth.useContainer()
     return (
         <>
-            <Navbar sticky="top" bg="dark" variant="dark" expand="sm">
+            <Navbar
+                collapseOnSelect
+                sticky="top"
+                bg="dark"
+                variant="dark"
+                expand="sm"
+            >
                 <Link href="/">
                     <Navbar.Brand as={null}>MojaCoder</Navbar.Brand>
                 </Link>
