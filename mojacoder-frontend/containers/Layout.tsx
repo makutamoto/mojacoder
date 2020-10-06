@@ -24,13 +24,17 @@ const Layout: React.FC = (props) => {
                 <Navbar.Collapse>
                     <Nav className="mr-auto">
                         <Link href="/playground">
-                            <Nav.Link as="span">Playground</Nav.Link>
+                            <Nav.Link as="span" href="#">
+                                Playground
+                            </Nav.Link>
                         </Link>
                     </Nav>
                     <Nav>
                         {auth ? (
                             <Link href={`/users/${auth.username}`}>
-                                <Nav.Link as="span">{auth.username}</Nav.Link>
+                                <Nav.Link as="span" href="#">
+                                    {auth.username}
+                                </Nav.Link>
                             </Link>
                         ) : (
                             <>
@@ -39,14 +43,18 @@ const Layout: React.FC = (props) => {
                                         router.asPath
                                     )}`}
                                 >
-                                    <Nav.Link as="span">Sign up</Nav.Link>
+                                    <Nav.Link as="span" href="#">
+                                        Sign up
+                                    </Nav.Link>
                                 </Link>
                                 <Link
                                     href={`/signin?redirect=${encodeURIComponent(
                                         router.asPath
                                     )}`}
                                 >
-                                    <Nav.Link as="span">Sign in</Nav.Link>
+                                    <Nav.Link as="span" href="#">
+                                        Sign in
+                                    </Nav.Link>
                                 </Link>
                             </>
                         )}
