@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { Alert, Button, Form, Spinner } from 'react-bootstrap'
 import { Auth as Cognito } from 'aws-amplify'
 
-import Auth from '../lib/auth'
+import Auth, { genAuthSession } from '../lib/auth'
 import Title from '../components/Title'
 
 enum Status {
@@ -33,11 +33,13 @@ const SignIn: React.FC = () => {
             Cognito.signIn(email, password)
                 .then(() => {
                     Cognito.currentSession().then((session) => {
-                        setAuth(session as any)
-                        const redirect = decodeURIComponent(
-                            (router.query.redirect as string) ?? '/'
-                        )
-                        router.push(redirect)
+                        genAuthSession(session).then((authSession) => {
+                            setAuth(authSession)
+                            const redirect = decodeURIComponent(
+                                (router.query.redirect as string) ?? '/'
+                            )
+                            router.push(redirect)
+                        })
                     })
                 })
                 .catch((err) => {

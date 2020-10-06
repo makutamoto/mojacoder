@@ -21,7 +21,7 @@ const UserPage: React.FC<Props> = (props) => {
         Cognito.signOut()
             .then(() => setAuth(null))
             .catch((err) => console.error(err))
-    }, [auth])
+    }, [])
     useEffect(() => setBroser(true), [])
     return (
         <>

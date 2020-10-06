@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
-import { Auth } from 'aws-amplify'
+import { Auth as Cognito } from 'aws-amplify'
 import AWSAppSyncClient from 'aws-appsync'
 import { DocumentNode } from 'graphql'
+
+import Auth from '../lib/auth'
 
 export interface SubscriptionPayload<T> {
     data: T
@@ -13,7 +15,7 @@ const client = new AWSAppSyncClient({
     auth: {
         type: 'AMAZON_COGNITO_USER_POOLS',
         jwtToken: async () =>
-            (await Auth.currentSession()).getAccessToken().getJwtToken(),
+            (await Cognito.currentSession()).getAccessToken().getJwtToken(),
     },
     disableOffline: true,
 })
@@ -33,14 +35,17 @@ export function useSubscription<D, V>(
     variables: V,
     callback: (data: D) => void
 ) {
+    const { auth } = Auth.useContainer()
     useEffect(() => {
-        const subscription = client
-            .subscribe<SubscriptionPayload<D>>({ query, variables })
-            .subscribe({
-                next: ({ data }) => callback(data),
-                error: (err) => console.error(err),
-            })
-        return () => subscription.unsubscribe()
+        if (auth) {
+            const subscription = client
+                .subscribe<SubscriptionPayload<D>>({ query, variables })
+                .subscribe({
+                    next: ({ data }) => callback(data),
+                    error: (err) => console.error(err),
+                })
+            return () => subscription.unsubscribe()
+        }
     }, [client, query, variables, callback])
 }
 
