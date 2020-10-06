@@ -1,6 +1,8 @@
 import React from 'react'
 import { Jumbotron, Image } from 'react-bootstrap'
 
+import styles from './index.module.css'
+
 const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'
 
@@ -10,7 +12,7 @@ export const Index: React.FC = () => {
             <Jumbotron>
                 <div className="text-center">
                     <Image
-                        height={256}
+                        className={styles['top-image']}
                         src="/illustrations/undraw_programming_2svr.svg"
                     />
                     <h2 className="mt-4">
