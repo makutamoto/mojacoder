@@ -11,6 +11,7 @@ enum Status {
     Normal,
     ValidationError,
     SigningIn,
+    Success,
     InvalidEmailOrPassword,
     Error,
 }
@@ -34,6 +35,7 @@ const SignIn: React.FC = () => {
                 .then(() => {
                     Cognito.currentSession().then((session) => {
                         genAuthSession(session).then((authSession) => {
+                            setStatus(Status.Success)
                             setAuth(authSession)
                             const redirect = decodeURIComponent(
                                 (router.query.redirect as string) ?? '/'
@@ -64,6 +66,9 @@ const SignIn: React.FC = () => {
             <hr />
             <Alert show={!!router.query.signedup} variant="success">
                 確認メールを送信しました。メール内のリンクにアクセスすることで登録が完了します。
+            </Alert>
+            <Alert show={status === Status.Success} variant="success">
+                サインインが完了しました。
             </Alert>
             <Alert show={status === Status.Error} variant="danger">
                 エラーが発生しました。
