@@ -78,6 +78,37 @@ export class MojacoderBackendStack extends cdk.Stack {
             resources: [usernameToIDTable.tableArn, userDataTable.tableArn],
             actions: ['dynamodb:PutItem'],
         }));
+        const problemTable = new Table(this, 'problem-table', {
+            partitionKey: {
+                name: 'problemID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.NUMBER,
+            },
+        });
+        const authorTable = new Table(this, 'author-table', {
+            partitionKey: {
+                name: 'problemID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'userID',
+                type: AttributeType.STRING,
+            },
+        });
+        authorTable.addGlobalSecondaryIndex({
+            indexName: 'userID-index',
+            partitionKey: {
+                name: 'userID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.NUMBER,
+            },
+        });
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
