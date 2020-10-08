@@ -18,11 +18,13 @@ export default createContainer(useAuth)
 
 const GetUsernameFromUserID = gql`
     query GetUserIDFromUsername($userID: String!) {
-        getUsernameFromUserID(userID: $userID)
+        user(userID: $userID) {
+            username
+        }
     }
 `
 interface GetUsernameFromUserIDResponse {
-    getUsernameFromUserID: string | null
+    user: { username: string } | null
 }
 export async function genAuthSession(
     session: CognitoUserSession
@@ -33,6 +35,6 @@ export async function genAuthSession(
     })) as GetUsernameFromUserIDResponse
     return {
         userID,
-        username: res.getUsernameFromUserID,
+        username: res.user.username,
     }
 }

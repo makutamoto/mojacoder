@@ -5,8 +5,8 @@ import { Auth as Cognito } from 'aws-amplify'
 import { Alert, Button, Image, Jumbotron } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
-import Auth from '../../lib/auth'
-import { invokeQueryWithApiKey } from '../../lib/backend'
+import Auth from '../../../lib/auth'
+import { invokeQueryWithApiKey } from '../../../lib/backend'
 
 interface Props {
     userID: string | null
@@ -64,11 +64,13 @@ export default UserPage
 
 const GetUserIDFromUsername = gql`
     query GetUserIDFromUsername($username: String!) {
-        getUserIDFromUsername(username: $username)
+        user(username: $username) {
+            userID
+        }
     }
 `
 interface GetUserIDFromUsernameResponse {
-    getUserIDFromUsername: string | null
+    user: { userID: string } | null
 }
 export const getServerSideProps: GetServerSideProps<Props> = async ({
     query,
@@ -78,7 +80,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     })) as GetUserIDFromUsernameResponse
     return {
         props: {
-            userID: res.getUserIDFromUsername,
+            userID: res.user.userID,
         },
     }
 }
