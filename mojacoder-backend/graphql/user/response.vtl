@@ -1,5 +1,13 @@
 #if(!$util.isNull($context.arguments.username))
-$util.toJson({"userID": $context.result.id, "username": $context.arguments.username})
+    #if($util.isNull($context.result.id))
+        null
+    #else
+        $util.toJson({"userID": $context.result.id, "username": $context.arguments.username})
+    #end
 #else
-$util.toJson({"userID": $context.arguments.id, "username": $context.result.items[0].username})
+    #if($util.isNull($context.result.items[0].username))
+        null
+    #else
+        $util.toJson({"userID": $context.arguments.id, "username": $context.result.items[0].username})
+    #end
 #end
