@@ -12,6 +12,18 @@ type Playground {
   userID: ID! @aws_cognito_user_pools
 }
 
+type User {
+  userID: String!
+  username: String!
+  problems: [Problem]!
+}
+
+type Problem {
+  id: String!
+  title: String!
+  statement: String!
+}
+
 type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
@@ -28,8 +40,7 @@ type ResponsePlayground {
 }
 
 type Query {
-  getUsernameFromUserID(userID: String!): String
-  getUserIDFromUsername(username: String!): String
+  user(userID: String, username: String): User
 }
 
 type Subscription {

@@ -1,3 +1,12 @@
+#if($context.arguments.username != null)
+{
+	"version": "2018-05-29",
+	"operation": "GetItem",
+	"key": {
+		"username": $util.dynamodb.toDynamoDBJson($context.arguments.username)
+	}
+}
+#else
 {
 	"version": "2018-05-29",
 	"operation": "Query",
@@ -13,3 +22,4 @@
 	"index": "id-to-username-index",
 	"limit": 1,
 }
+#end
