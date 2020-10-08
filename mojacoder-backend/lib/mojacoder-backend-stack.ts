@@ -80,7 +80,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         }));
         const problemTable = new Table(this, 'problem-table', {
             partitionKey: {
-                name: 'problemID',
+                name: 'id',
                 type: AttributeType.STRING,
             },
             sortKey: {
