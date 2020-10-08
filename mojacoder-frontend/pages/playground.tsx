@@ -10,11 +10,12 @@ import Editor from '../components/Editor'
 
 import Session from '../lib/session'
 
-enum PlaygroundStatus {
-    Normal,
-    Waiting,
-    Received,
-}
+const Status = {
+    Normal: 'Normal',
+    Waiting: 'Waiting',
+    Received: 'Received',
+} as const
+type Status = typeof Status[keyof typeof Status]
 
 const SUBSCRIPTION_DOCUMENT = gql`
     subscription onResponsePlayground($sessionID: ID!, $userID: ID!) {
@@ -60,9 +61,9 @@ const Playground: React.FC = () => {
         stdout: '',
         stderr: '',
     })
-    const [status, setStatus] = useState(PlaygroundStatus.Normal)
+    const [status, setStatus] = useState<Status>(Status.Normal)
     const onRun = useCallback(() => {
-        setStatus(PlaygroundStatus.Waiting)
+        setStatus(Status.Waiting)
         invokeMutation(MUTATION_DOCUMENT, {
             input: {
                 sessionID: session.id,
@@ -89,7 +90,7 @@ const Playground: React.FC = () => {
                 stdout: onResponsePlayground.stdout,
                 stderr: onResponsePlayground.stderr,
             })
-            setStatus(PlaygroundStatus.Received)
+            setStatus(Status.Received)
         }, [])
     )
     return (
@@ -114,13 +115,13 @@ const Playground: React.FC = () => {
                         <Button
                             variant="primary"
                             onClick={onRun}
-                            disabled={status === PlaygroundStatus.Waiting}
+                            disabled={status === Status.Waiting}
                         >
                             実行
                         </Button>
                     </div>
                     <Alert
-                        show={status === PlaygroundStatus.Waiting}
+                        show={status === Status.Waiting}
                         className="my-4"
                         variant="primary"
                     >
@@ -131,7 +132,7 @@ const Playground: React.FC = () => {
                         />
                         コードを実行中です。しばらくお待ち下さい。
                     </Alert>
-                    {status === PlaygroundStatus.Received && (
+                    {status === Status.Received && (
                         <Table className="my-4" bordered striped hover>
                             <tbody>
                                 <tr>

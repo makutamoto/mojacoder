@@ -8,19 +8,20 @@ import Title from '../components/Title'
 const PASSWORD_CONSTRAINTS_MESSAGE =
     'パスワードは半角英文字大文字小文字・数字・記号をそれぞれ一文字以上かつ８文字以上128文字以内である必要があります。'
 
-enum Status {
-    Normal,
-    ValidationError,
-    SigningUp,
-    UserAlreadyExists,
-    Error,
-}
+const Status = {
+    Normal: 'Normal',
+    ValidationError: 'ValidationError',
+    SigningUp: 'SigningUp',
+    UserAlreadyExists: 'UserAlreadyExists',
+    Error: 'Error',
+} as const
+type Status = typeof Status[keyof typeof Status]
 
 const SignUp: React.FC = () => {
     const router = useRouter()
     const form = useRef(null)
     const passwordInput = useRef(null)
-    const [status, setStatus] = useState(Status.Normal)
+    const [status, setStatus] = useState<Status>(Status.Normal)
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')

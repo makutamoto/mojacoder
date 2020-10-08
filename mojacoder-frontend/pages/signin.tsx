@@ -7,19 +7,20 @@ import { Auth as Cognito } from 'aws-amplify'
 import Auth, { genAuthSession } from '../lib/auth'
 import Title from '../components/Title'
 
-enum Status {
-    Normal,
-    ValidationError,
-    SigningIn,
-    Success,
-    InvalidEmailOrPassword,
-    Error,
-}
+const Status = {
+    Normal: 'Normal',
+    ValidationError: 'ValidationError',
+    SigningIn: 'SigningIn',
+    Success: 'Success',
+    InvalidEmailOrPassword: 'InvalidEmailOrPassword',
+    Error: 'Error',
+} as const
+type Status = typeof Status[keyof typeof Status]
 
 const SignIn: React.FC = () => {
     const { setAuth } = Auth.useContainer()
     const router = useRouter()
-    const [status, setStatus] = useState(Status.Normal)
+    const [status, setStatus] = useState<Status>(Status.Normal)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const onSubmit = useCallback(
