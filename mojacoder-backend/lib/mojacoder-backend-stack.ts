@@ -185,8 +185,8 @@ export class MojacoderBackendStack extends cdk.Stack {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/response.vtl')),
         });
-        const problemTableDataSource = api.addDynamoDbDataSource('problem-table', problemTable);
-        const authorTableDataSource = api.addDynamoDbDataSource('author-table', authorTable);
+        const problemTableDataSource = api.addDynamoDbDataSource('problem_table', problemTable);
+        const authorTableDataSource = api.addDynamoDbDataSource('author_table', authorTable);
         const postProblemRegisterProblemFunction = new CfnFunctionConfiguration(this, 'postProblem-registerProblem', {
             apiId: api.apiId,
             name: 'postProblem-registerProblem',
