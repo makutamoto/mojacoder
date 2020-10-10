@@ -2,19 +2,11 @@
     "version" : "2018-05-29",
     "operation" : "PutItem",
     "key": {
-        "problemID": {
-            "S": "$context.prev.result.id"
-        },
-        "userID": {
-            "S": "$context.identity.sub"
-        },
+        "problemID": $util.dynamodb.toDynamoDBJson($context.prev.result.id),
+        "userID": $util.dynamodb.toDynamoDBJson($context.identity.sub)
     },
     "attributeValues": {
-        "datetime": {
-            "N": "$context.prev.datetime"
-        }
-        "status": {
-            "S": "PENDING"
-        }
+        "datetime": $util.dynamodb.toDynamoDBJson($context.prev.datetime),
+        "status": $util.dynamodb.toDynamoDBJson("PENDING")
     }
 }
