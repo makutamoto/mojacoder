@@ -34,7 +34,7 @@ type Problem {
 type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
-  postProblem: Problem @aws_cognito_user_pools
+  postProblem: Problem! @aws_cognito_user_pools
 }
 
 type ResponsePlayground {
