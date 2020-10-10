@@ -8,6 +8,7 @@ import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aw
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
+import { Bucket } from '@aws-cdk/aws-s3'
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -109,6 +110,9 @@ export class MojacoderBackendStack extends cdk.Stack {
                 type: AttributeType.NUMBER,
             },
         });
+        // const postedProblems = new Bucket(this, 'posted_problems');
+        // postedProblems.addObjectCreatedNotification()
+
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
@@ -189,7 +193,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         const authorTableDataSource = api.addDynamoDbDataSource('author_table', authorTable);
         const postProblemRegisterProblemFunction = new CfnFunctionConfiguration(this, 'postProblem-registerProblem', {
             apiId: api.apiId,
-            name: 'postProblem-registerProblem',
+            name: 'postProblemRegisterProblem',
             dataSourceName: problemTableDataSource.name,
             functionVersion: '2018-05-29',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerProblem/request.vtl')).renderTemplate(),
@@ -198,7 +202,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         postProblemRegisterProblemFunction.addDependsOn(problemTableDataSource.ds);
         const postProblemRegisterAuthorFunction = new CfnFunctionConfiguration(this, 'postProblem-registerAuthor', {
             apiId: api.apiId,
-            name: 'postProblem-registerAuthor',
+            name: 'postProblemRegisterAuthor',
             dataSourceName: authorTableDataSource.name,
             functionVersion: '2018-05-29',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerAuthor/request.vtl')).renderTemplate(),
