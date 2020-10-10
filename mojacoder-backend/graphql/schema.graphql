@@ -25,16 +25,16 @@ enum ProblemStatus {
 }
 
 type Problem {
-  id: String!
-  status: ProblemStatus!
-  title: String
-  statement: String
+  id: String! @aws_cognito_user_pools
+  status: ProblemStatus! @aws_cognito_user_pools
+  title: String @aws_cognito_user_pools
+  statement: String @aws_cognito_user_pools
 }
 
 type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
-  postProblem: Problem
+  postProblem: Problem @aws_cognito_user_pools
 }
 
 type ResponsePlayground {

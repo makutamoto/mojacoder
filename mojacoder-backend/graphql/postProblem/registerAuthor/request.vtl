@@ -6,7 +6,6 @@
         "userID": $util.dynamodb.toDynamoDBJson($context.identity.sub)
     },
     "attributeValues": {
-        "datetime": $util.dynamodb.toDynamoDBJson($context.prev.datetime),
-        "status": $util.dynamodb.toDynamoDBJson("PENDING")
+        "datetime": $util.dynamodb.toDynamoDBJson($context.prev.result.datetime),
     }
 }
