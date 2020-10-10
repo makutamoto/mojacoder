@@ -3,15 +3,15 @@
     "operation" : "PutItem",
     "key": {
         "problemID": {
-            "S": $context.prev.result.id
+            "S": "$context.prev.result.id"
         },
         "userID": {
-            "S": $context.identity.sub
+            "S": "$context.identity.sub"
         },
     },
     "attributeValues": {
         "datetime": {
-            "N": $context.prev.datetime
+            "N": "$context.prev.datetime"
         }
         "status": {
             "S": "PENDING"

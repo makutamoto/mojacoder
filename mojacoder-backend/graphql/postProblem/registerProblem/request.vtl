@@ -3,10 +3,10 @@
     "operation" : "PutItem",
     "key": {
         "id": {
-            "S": $util.autoId(),
+            "S": "$util.autoId()",
         },
         "datetime": {
-            "S": $util.time.nowEpochMilliSeconds()
+            "S": "$util.time.nowEpochMilliSeconds()"
         }
     }
 }
