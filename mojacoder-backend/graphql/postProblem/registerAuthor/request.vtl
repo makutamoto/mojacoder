@@ -8,11 +8,11 @@
         "userID": {
             "S": $context.identity.sub
         },
+    },
+    "attributeValues": {
         "datetime": {
             "N": $context.prev.datetime
         }
-    },
-    "attributeValues": {
         "status": {
             "S": "PENDING"
         }
