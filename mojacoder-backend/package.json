@@ -28,6 +28,7 @@
     "@aws-cdk/aws-ecs": "^1.66.0",
     "@aws-cdk/aws-iam": "^1.66.0",
     "@aws-cdk/aws-lambda-nodejs": "^1.66.0",
+    "@aws-cdk/aws-s3": "^1.67.0",
     "@aws-cdk/aws-sqs": "^1.66.0",
     "@aws-cdk/core": "1.66.0",
     "source-map-support": "^0.5.16"

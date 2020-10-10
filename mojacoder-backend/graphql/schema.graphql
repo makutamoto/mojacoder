@@ -18,15 +18,23 @@ type User {
   problems: [Problem]!
 }
 
+enum ProblemStatus {
+  PENDING
+  NORMAL
+  FAILED
+}
+
 type Problem {
   id: String!
-  title: String!
-  statement: String!
+  status: ProblemStatus!
+  title: String
+  statement: String
 }
 
 type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
+  postProblem: Problem
 }
 
 type ResponsePlayground {

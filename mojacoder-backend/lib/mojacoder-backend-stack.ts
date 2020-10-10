@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import { join } from 'path';
 import { Queue } from '@aws-cdk/aws-sqs';
-import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
+import { AuthorizationType, CfnDataSource, CfnFunctionConfiguration, CfnResolver, GraphqlApi, MappingTemplate, Resolver, Schema } from '@aws-cdk/aws-appsync';
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
@@ -184,6 +184,37 @@ export class MojacoderBackendStack extends cdk.Stack {
             fieldName: 'user',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/response.vtl')),
+        });
+        const problemTableDataSource = api.addDynamoDbDataSource('problem-table', problemTable);
+        const authorTableDataSource = api.addDynamoDbDataSource('author-table', authorTable);
+        const postProblemRegisterProblemFunction = new CfnFunctionConfiguration(this, 'postProblem-registerProblem', {
+            apiId: api.apiId,
+            name: 'postProblem-registerProblem',
+            dataSourceName: problemTableDataSource.name,
+            functionVersion: '2018-05-29',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerProblem/request.vtl')).renderTemplate(),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerProblem/response.vtl')).renderTemplate(),
+        });
+        postProblemRegisterProblemFunction.addDependsOn(problemTableDataSource.ds);
+        const postProblemRegisterAuthorFunction = new CfnFunctionConfiguration(this, 'postProblem-registerAuthor', {
+            apiId: api.apiId,
+            name: 'postProblem-registerAuthor',
+            dataSourceName: authorTableDataSource.name,
+            functionVersion: '2018-05-29',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerAuthor/request.vtl')).renderTemplate(),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerAuthor/response.vtl')).renderTemplate(),
+        });
+        postProblemRegisterAuthorFunction.addDependsOn(authorTableDataSource.ds);
+        new Resolver(this, 'postProblem', {
+            api,
+            typeName: 'Mutation',
+            fieldName: 'postProblem',
+            pipelineConfig: [
+                postProblemRegisterProblemFunction.attrFunctionId,
+                postProblemRegisterAuthorFunction.attrFunctionId,
+            ],
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/response.vtl')),
         });
 
         const vpc = new Vpc(this, 'vpc', {
