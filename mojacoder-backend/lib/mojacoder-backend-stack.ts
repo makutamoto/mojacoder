@@ -6,7 +6,7 @@ import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aw
 import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
-import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
+import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
 import { Bucket } from '@aws-cdk/aws-s3'
 
@@ -36,6 +36,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             }
         });
         const usernameToIDTable = new Table(this, 'username-to-id-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: 'username',
                 type: AttributeType.STRING,
@@ -49,6 +50,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
         });
         const userDataTable = new Table(this, 'user-data-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: 'id',
                 type: AttributeType.STRING,
@@ -80,6 +82,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             actions: ['dynamodb:PutItem'],
         }));
         const problemTable = new Table(this, 'problem-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: 'id',
                 type: AttributeType.STRING,
@@ -90,6 +93,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
         });
         const authorTable = new Table(this, 'author-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: 'problemID',
                 type: AttributeType.STRING,
