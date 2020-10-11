@@ -61,6 +61,18 @@ export class MojacoderBackendStack extends cdk.Stack {
             resources: [userTable.tableArn],
             actions: ['dynamodb:PutItem'],
         }));
+        const postConfirmationTrigger = new NodejsFunction(this, 'post-confirmation-trigger', {
+            entry: join(__dirname, '../cognito-triggers/post-confirmation/index.ts'),
+            handler: 'handler',
+            environment: {
+                TABLE_NAME: userTable.tableName,
+            },
+        });
+        pool.addTrigger(UserPoolOperation.POST_CONFIRMATION, postConfirmationTrigger);
+        postConfirmationTrigger.addToRolePolicy(new PolicyStatement({
+            resources: [userTable.tableArn],
+            actions: ['dynamodb:PutItem'],
+        }));
         const problemTable = new Table(this, 'problem-table', {
             billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
