@@ -35,14 +35,14 @@ export class MojacoderBackendStack extends cdk.Stack {
                 domainPrefix: 'mojacoder',
             }
         });
-        const userDataTable = new Table(this, 'user-data-table', {
+        const userTable = new Table(this, 'user-table', {
             billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: 'username',
                 type: AttributeType.STRING,
             }
         });
-        userDataTable.addGlobalSecondaryIndex({
+        userTable.addGlobalSecondaryIndex({
             indexName: 'idIndex',
             partitionKey: {
                 name: 'id',
@@ -53,12 +53,12 @@ export class MojacoderBackendStack extends cdk.Stack {
             entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
             handler: 'handler',
             environment: {
-                TABLE_NAME: userDataTable.tableName,
+                TABLE_NAME: userTable.tableName,
             },
         });
         pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
         signupTrigger.addToRolePolicy(new PolicyStatement({
-            resources: [userDataTable.tableArn],
+            resources: [userTable.tableArn],
             actions: ['dynamodb:PutItem'],
         }));
         const problemTable = new Table(this, 'problem-table', {
@@ -166,8 +166,8 @@ export class MojacoderBackendStack extends cdk.Stack {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/response.vtl')),
         });
-        const usernameToIDTableDataSource = api.addDynamoDbDataSource('UsernameToIDTable', usernameToIDTable);
-        usernameToIDTableDataSource.createResolver({
+        const userTableDataSource = api.addDynamoDbDataSource('userTable', userTable);
+        userTableDataSource.createResolver({
             typeName: 'Query',
             fieldName: 'user',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/request.vtl')),
