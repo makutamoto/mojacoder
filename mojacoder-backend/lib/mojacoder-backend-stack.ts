@@ -35,22 +35,15 @@ export class MojacoderBackendStack extends cdk.Stack {
                 domainPrefix: 'mojacoder',
             }
         });
-        const usernameToIDTable = new Table(this, 'username-to-id-table', {
+        const userDataTable = new Table(this, 'user-data-table', {
             billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: 'username',
                 type: AttributeType.STRING,
             }
         });
-        usernameToIDTable.addGlobalSecondaryIndex({
-            indexName: 'id-to-username-index',
-            partitionKey: {
-                name: 'id',
-                type: AttributeType.STRING,
-            },
-        });
-        const userDataTable = new Table(this, 'user-data-table', {
-            billingMode: BillingMode.PAY_PER_REQUEST,
+        userDataTable.addGlobalSecondaryIndex({
+            indexName: 'idIndex',
             partitionKey: {
                 name: 'id',
                 type: AttributeType.STRING,
@@ -60,25 +53,12 @@ export class MojacoderBackendStack extends cdk.Stack {
             entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
             handler: 'handler',
             environment: {
-                TABLE_NAME: usernameToIDTable.tableName,
+                TABLE_NAME: userDataTable.tableName,
             },
         });
         pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
         signupTrigger.addToRolePolicy(new PolicyStatement({
-            resources: [usernameToIDTable.tableArn],
-            actions: ['dynamodb:PutItem'],
-        }));
-        const postConfirmationTrigger = new NodejsFunction(this, 'post-confirmation-trigger', {
-            entry: join(__dirname, '../cognito-triggers/post-confirmation/index.ts'),
-            handler: 'handler',
-            environment: {
-                USERNAME_TO_ID_TABLE_NAME: usernameToIDTable.tableName,
-                USER_DATA_TABLE: userDataTable.tableName,
-            },
-        });
-        pool.addTrigger(UserPoolOperation.POST_CONFIRMATION, postConfirmationTrigger);
-        postConfirmationTrigger.addToRolePolicy(new PolicyStatement({
-            resources: [usernameToIDTable.tableArn, userDataTable.tableArn],
+            resources: [userDataTable.tableArn],
             actions: ['dynamodb:PutItem'],
         }));
         const problemTable = new Table(this, 'problem-table', {
