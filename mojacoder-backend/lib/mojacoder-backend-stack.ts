@@ -51,7 +51,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             }
         });
         const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
-            entry: join(__dirname, '../cognito-triggers/pre-signup/index.ts'),
+            entry: join(__dirname, '../lambda/cognito-pre-signup-trigger/index.ts'),
             handler: 'handler',
             environment: {
                 TABLE_NAME: userTable.tableName,
@@ -63,7 +63,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             actions: ['dynamodb:PutItem'],
         }));
         const postConfirmationTrigger = new NodejsFunction(this, 'post-confirmation-trigger', {
-            entry: join(__dirname, '../cognito-triggers/post-confirmation/index.ts'),
+            entry: join(__dirname, '../lambda/cognito-post-confirmation-trigger/index.ts'),
             handler: 'handler',
             environment: {
                 TABLE_NAME: userTable.tableName,
@@ -109,7 +109,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         });
         const postedProblems = new Bucket(this, 'postedProblems');
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
-            entry: join(__dirname, '../s3-notifications/posted-problems-create/index.ts'),
+            entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
             environment: {
                 BUCKET: postedProblems.bucketName,
