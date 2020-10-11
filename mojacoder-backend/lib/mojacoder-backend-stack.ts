@@ -117,7 +117,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         });
         postedProblemsCreatedNotification.addToRolePolicy(new PolicyStatement({
             actions: ['s3:GetObject'],
-            resources: [postedProblems.bucketArn],
+            resources: [postedProblems.bucketArn + '/*'],
         }))
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification));
 

@@ -20,7 +20,6 @@ function deployProblem(bucket: string, key: string): Promise<void> {
 }
 
 export const handler: S3Handler = async (event) => {
-    console.log(event);
     for(let record of event.Records) {
         const bucket = record.s3.bucket.name;
         const key = record.s3.object.key;
