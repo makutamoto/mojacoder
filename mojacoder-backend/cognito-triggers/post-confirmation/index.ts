@@ -3,15 +3,15 @@ import { DynamoDB } from 'aws-sdk';
 
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
 
-const USER_DATA_TABLE = process.env.USER_DATA_TABLE;
-if(USER_DATA_TABLE === undefined) throw "USER_DATA_TABLE is not defined.";
+const TABLE_NAME = process.env.TABLE_NAME;
+if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
 
 export const handler: PostConfirmationTriggerHandler = (event) => {
     return new Promise((resolve, reject) => {
         const preferred_username = event.request.userAttributes.preferred_username;
         const sub = event.request.userAttributes.sub;
         dynamodb.putItem({
-            TableName: USER_DATA_TABLE,
+            TableName: TABLE_NAME,
             Item: {
                 username: {
                     S: preferred_username,
