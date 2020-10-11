@@ -119,7 +119,9 @@ export class MojacoderBackendStack extends cdk.Stack {
             actions: ['s3:GetObject'],
             resources: [postedProblems.bucketArn + '/*'],
         }))
-        postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification));
+        postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
+            suffix: '.zip'
+        });
 
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
