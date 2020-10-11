@@ -9,6 +9,7 @@ import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
 import { Bucket } from '@aws-cdk/aws-s3'
+import { LambdaDestination } from '@aws-cdk/aws-s3-notifications'
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -106,8 +107,19 @@ export class MojacoderBackendStack extends cdk.Stack {
                 type: AttributeType.NUMBER,
             },
         });
-        // const postedProblems = new Bucket(this, 'posted_problems');
-        // postedProblems.addObjectCreatedNotification()
+        const postedProblems = new Bucket(this, 'postedProblems');
+        const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
+            entry: join(__dirname, '../s3-notifications/posted-problems-create'),
+            handler: 'handler',
+            environment: {
+                BUCKET: postedProblems.bucketName,
+            },
+        });
+        postedProblemsCreatedNotification.addToRolePolicy(new PolicyStatement({
+            actions: ['s3:GetObject'],
+            resources: [postedProblems.bucketArn],
+        }))
+        postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification));
 
         const JudgeQueue = new Queue(this, 'JudgeQueue');
         const api = new GraphqlApi(this, 'API', {
