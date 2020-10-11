@@ -109,7 +109,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         });
         const postedProblems = new Bucket(this, 'postedProblems');
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
-            entry: join(__dirname, '../s3-notifications/posted-problems-create'),
+            entry: join(__dirname, '../s3-notifications/posted-problems-create/index.ts'),
             handler: 'handler',
             environment: {
                 BUCKET: postedProblems.bucketName,
