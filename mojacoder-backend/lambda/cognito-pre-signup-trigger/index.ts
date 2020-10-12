@@ -13,7 +13,7 @@ export const handler: PreSignUpTriggerHandler = (event) => {
             TableName: TABLE_NAME,
             Item: {
                 username: {
-                    S: preferred_username,
+                    S: preferred_username.toUpperCase(),
                 },
             },
             ConditionExpression: 'attribute_not_exists(#username)',

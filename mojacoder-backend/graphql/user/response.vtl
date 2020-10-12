@@ -1,13 +1,14 @@
-#if(!$util.isNull($context.arguments.username))
+#if(!$util.isNull($context.arguments.screenName))
     #if($util.isNull($context.result.id))
         null
     #else
-        $util.toJson({"userID": $context.result.id, "username": $context.arguments.username})
+        $util.toJson({"userID": $context.result.id, "screenName": $context.result.screenName})
     #end
 #else
     #if($context.result.scannedCount == 0)
         null
     #else
-        $util.toJson({"userID": $context.arguments.userID, "username": $context.result.items[0].username})
+        #set($item = $context.result.items[0])
+        $util.toJson({"userID": $item.id, "screenName": $item.screenName})
     #end
 #end

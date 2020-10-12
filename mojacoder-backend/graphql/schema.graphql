@@ -14,7 +14,7 @@ type Playground {
 
 type User {
   userID: String!
-  username: String!
+  screenName: String!
   problems: [Problem]!
 }
 

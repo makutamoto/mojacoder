@@ -3,7 +3,7 @@
 	"version": "2018-05-29",
 	"operation": "GetItem",
 	"key": {
-		"username": $util.dynamodb.toDynamoDBJson($context.arguments.username)
+		"username": $util.dynamodb.toDynamoDBJson($context.arguments.username.toUpperCase())
 	}
 }
 #else

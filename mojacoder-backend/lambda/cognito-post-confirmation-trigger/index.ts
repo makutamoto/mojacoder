@@ -14,10 +14,13 @@ export const handler: PostConfirmationTriggerHandler = (event) => {
             TableName: TABLE_NAME,
             Item: {
                 username: {
-                    S: preferred_username,
+                    S: preferred_username.toUpperCase(),
                 },
                 id: {
                     S: sub,
+                },
+                screenName: {
+                    S: preferred_username,
                 },
             },
         }, (err) => {
