@@ -123,7 +123,13 @@ export class MojacoderBackendStack extends cdk.Stack {
             suffix: '.zip'
         });
 
-        const JudgeQueue = new Queue(this, 'JudgeQueue');
+        const JudgeQueueDeadLetterQueue = new Queue(this, 'JudgeQueueDeadLetterQueue');
+        const JudgeQueue = new Queue(this, 'JudgeQueue', {
+            deadLetterQueue: {
+                queue: JudgeQueueDeadLetterQueue,
+                maxReceiveCount: 4,
+            }
+        });
         const api = new GraphqlApi(this, 'API', {
             name: 'mojacoder-api',
             schema: Schema.fromAsset(join(__dirname, '../graphql/schema.graphql')),
