@@ -200,6 +200,12 @@ export class MojacoderBackendStack extends cdk.Stack {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/response.vtl')),
         });
+        problemTableDataSource.createResolver({
+            typeName: 'User',
+            fieldName: 'problems',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
+        });
 
         const vpc = new Vpc(this, 'vpc', {
             natGateways: 0,

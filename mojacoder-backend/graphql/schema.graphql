@@ -26,6 +26,8 @@ enum ProblemStatus {
 
 type Problem {
   id: String! @aws_cognito_user_pools
+  userID: String! @aws_cognito_user_pools
+  datetime: Int! @aws_cognito_user_pools
   status: ProblemStatus! @aws_cognito_user_pools
   title: String @aws_cognito_user_pools
   statement: String @aws_cognito_user_pools
