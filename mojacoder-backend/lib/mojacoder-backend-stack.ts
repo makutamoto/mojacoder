@@ -81,18 +81,7 @@ export class MojacoderBackendStack extends cdk.Stack {
                 type: AttributeType.STRING,
             },
         });
-        const authorTable = new Table(this, 'author-table', {
-            billingMode: BillingMode.PAY_PER_REQUEST,
-            partitionKey: {
-                name: 'problemID',
-                type: AttributeType.STRING,
-            },
-            sortKey: {
-                name: 'userID',
-                type: AttributeType.STRING,
-            },
-        });
-        authorTable.addGlobalSecondaryIndex({
+        problemTable.addGlobalSecondaryIndex({
             indexName: 'userID-index',
             partitionKey: {
                 name: 'userID',
@@ -205,33 +194,9 @@ export class MojacoderBackendStack extends cdk.Stack {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/response.vtl')),
         });
         const problemTableDataSource = api.addDynamoDbDataSource('problem_table', problemTable);
-        const authorTableDataSource = api.addDynamoDbDataSource('author_table', authorTable);
-        const postProblemRegisterProblemFunction = new CfnFunctionConfiguration(this, 'postProblem-registerProblem', {
-            apiId: api.apiId,
-            name: 'postProblemRegisterProblem',
-            dataSourceName: problemTableDataSource.name,
-            functionVersion: '2018-05-29',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerProblem/request.vtl')).renderTemplate(),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerProblem/response.vtl')).renderTemplate(),
-        });
-        postProblemRegisterProblemFunction.addDependsOn(problemTableDataSource.ds);
-        const postProblemRegisterAuthorFunction = new CfnFunctionConfiguration(this, 'postProblem-registerAuthor', {
-            apiId: api.apiId,
-            name: 'postProblemRegisterAuthor',
-            dataSourceName: authorTableDataSource.name,
-            functionVersion: '2018-05-29',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerAuthor/request.vtl')).renderTemplate(),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/registerAuthor/response.vtl')).renderTemplate(),
-        });
-        postProblemRegisterAuthorFunction.addDependsOn(authorTableDataSource.ds);
-        new Resolver(this, 'postProblem', {
-            api,
+        problemTableDataSource.createResolver({
             typeName: 'Mutation',
             fieldName: 'postProblem',
-            pipelineConfig: [
-                postProblemRegisterProblemFunction.attrFunctionId,
-                postProblemRegisterAuthorFunction.attrFunctionId,
-            ],
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/response.vtl')),
         });
