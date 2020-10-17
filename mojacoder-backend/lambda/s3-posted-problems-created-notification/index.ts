@@ -5,8 +5,10 @@ import { parse } from 'path'
 
 const TABLE_NAME = process.env.TABLE_NAME as string;
 if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
-const BUCKET_NAME = process.env.BUCKET_NAME as string;
-if(BUCKET_NAME === undefined) throw "BUCKET_NAME is not defined.";
+const POSTED_PROBLEMS_BUCKET_NAME = process.env.POSTED_PROBLEMS_BUCKET_NAME as string;
+if(POSTED_PROBLEMS_BUCKET_NAME === undefined) throw "POSTED_PROBLEMS_BUCKET_NAME is not defined.";
+const TESTCASES_BUCKET_NAME = process.env.TESTCASES_BUCKET_NAME as string;
+if(TESTCASES_BUCKET_NAME === undefined) throw "TESTCASES_BUCKET_NAME is not defined.";
 
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new S3({apiVersion: '2006-03-01'});
@@ -42,7 +44,7 @@ async function parseZip(data: Buffer): Promise<Task> {
 function deployProblem(key: string): Promise<void> {
     return new Promise((resolve, reject) => {
         s3.getObject({
-            Bucket: BUCKET_NAME,
+            Bucket: POSTED_PROBLEMS_BUCKET_NAME,
             Key: key,
         }, (err, data) => {
             if(err) {
@@ -51,11 +53,12 @@ function deployProblem(key: string): Promise<void> {
                 return;
             }
             parseZip(data.Body as Buffer).then((task) => {
+                const keyPath = parse(key);
                 dynamodb.updateItem({
                     TableName: TABLE_NAME,
                     Key: {
                         id: {
-                            S: parse(key).name,
+                            S: keyPath.name,
                         },
                     },
                     ExpressionAttributeNames: {
@@ -77,7 +80,18 @@ function deployProblem(key: string): Promise<void> {
                         reject("Failed to update Database.");
                         return;
                     }
-                    resolve();
+                    s3.putObject({
+                        Bucket: TESTCASES_BUCKET_NAME,
+                        Key: keyPath.base,
+                        Body: task.testcases,
+                    }, (err) => {
+                        if(err) {
+                            console.error(err);
+                            reject("Failed to update testcases.");
+                            return;
+                        }
+                        resolve();
+                    });
                 });
             }).catch((err) => reject(err));
         });
