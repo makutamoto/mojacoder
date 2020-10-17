@@ -80,10 +80,6 @@ export class MojacoderBackendStack extends cdk.Stack {
                 name: 'id',
                 type: AttributeType.STRING,
             },
-            sortKey: {
-                name: 'datetime',
-                type: AttributeType.NUMBER,
-            },
         });
         const authorTable = new Table(this, 'author-table', {
             billingMode: BillingMode.PAY_PER_REQUEST,
@@ -108,16 +104,19 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
         });
         const postedProblems = new Bucket(this, 'postedProblems');
+        const testcases = new Bucket(this, 'testcases');
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
             environment: {
-                BUCKET: postedProblems.bucketName,
+                TABLE_NAME: problemTable.tableName,
+                POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
+                TESTCASES_BUCKET_NAME: testcases.bucketName,
             },
         });
         postedProblemsCreatedNotification.addToRolePolicy(new PolicyStatement({
-            actions: ['s3:GetObject'],
-            resources: [postedProblems.bucketArn + '/*'],
+            actions: ['s3:GetObject', 's3:PutObject', 'dynamodb:UpdateItem'],
+            resources: [postedProblems.bucketArn + '/*', testcases.bucketArn + '/*', problemTable.tableArn],
         }))
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'

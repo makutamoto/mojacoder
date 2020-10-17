@@ -1,30 +1,94 @@
 import { S3Handler } from 'aws-lambda'
-import { S3 } from 'aws-sdk'
-import { loadAsync } from 'jszip'
+import { DynamoDB, S3 } from 'aws-sdk'
+import * as JSZip from 'jszip'
+import { parse } from 'path'
 
+const TABLE_NAME = process.env.TABLE_NAME as string;
+if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
+const BUCKET_NAME = process.env.BUCKET_NAME as string;
+if(BUCKET_NAME === undefined) throw "BUCKET_NAME is not defined.";
+
+const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new S3({apiVersion: '2006-03-01'});
 
-function deployProblem(bucket: string, key: string): Promise<void> {
+interface Config {
+    title: string,
+}
+
+interface Task {
+    title: string,
+    statement: string,
+    testcases: Buffer,
+}
+
+async function parseZip(data: Buffer): Promise<Task> {
+    const zip = await JSZip.loadAsync(data);
+    const configFile = zip.file('task.json');
+    if(configFile === null) throw "Config not fonud.";
+    const { title } = JSON.parse(await configFile.async("string")) as Config;
+    const statementFile = zip.file('README.md');
+    if(statementFile === null) throw "Statement not found.";
+    const statement = await statementFile.async("string");
+    const testcasesDir = zip.folder('testcases');
+    if(testcasesDir === null) throw "Testcases not found.";
+    const testcases = await testcasesDir.generateAsync<"nodebuffer">();
+    return {
+        title,
+        statement,
+        testcases,
+    }
+}
+
+function deployProblem(key: string): Promise<void> {
     return new Promise((resolve, reject) => {
         s3.getObject({
-            Bucket: bucket,
+            Bucket: BUCKET_NAME,
             Key: key,
         }, (err, data) => {
-            if(err) reject(err);
-            loadAsync(data.Body).then((zip) => {
-                console.log(zip.files);
-                resolve();
-            });
+            if(err) {
+                console.error(err);
+                reject("Internal Error Occurred.");
+                return;
+            }
+            parseZip(data.Body as Buffer).then((task) => {
+                dynamodb.updateItem({
+                    TableName: TABLE_NAME,
+                    Key: {
+                        id: {
+                            S: parse(key).name,
+                        },
+                    },
+                    ExpressionAttributeNames: {
+                        "#TITLE": "title",
+                        "#STATEMENT": "statement",
+                    },
+                    ExpressionAttributeValues: {
+                        ":title": {
+                            S: task.title,
+                        },
+                        ":statement": {
+                            S: task.statement,
+                        },
+                    },
+                    UpdateExpression: "SET #TITLE = :title, #STATEMENT = :statement",
+                }, (err) => {
+                    if(err) {
+                        console.error(err);
+                        reject("Failed to update Database.");
+                        return;
+                    }
+                    resolve();
+                });
+            }).catch((err) => reject(err));
         });
     });
 }
 
 export const handler: S3Handler = async (event) => {
     for(let record of event.Records) {
-        const bucket = record.s3.bucket.name;
         const key = record.s3.object.key;
         try {
-            await deployProblem(bucket, key);
+            await deployProblem(key);
         } catch(err) {
             console.error(err);
         }
