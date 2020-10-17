@@ -33,7 +33,9 @@ async function parseZip(data: Buffer): Promise<Task> {
     const statement = await statementFile.async("string");
     const testcasesDir = zip.folder('testcases');
     if(testcasesDir === null) throw "Testcases not found.";
-    const testcases = await testcasesDir.generateAsync<"nodebuffer">();
+    const testcases = await testcasesDir.generateAsync({
+        type: "nodebuffer",
+    });
     return {
         title,
         statement,
