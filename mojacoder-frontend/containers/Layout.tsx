@@ -31,9 +31,9 @@ const Layout: React.FC = (props) => {
                     </Nav>
                     <Nav>
                         {auth ? (
-                            <Link href={`/users/${auth.username}`}>
+                            <Link href={`/users/${auth.screenName}`}>
                                 <Nav.Link as="span" href="#">
-                                    {auth.username}
+                                    {auth.screenName}
                                 </Nav.Link>
                             </Link>
                         ) : (

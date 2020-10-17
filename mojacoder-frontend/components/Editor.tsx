@@ -12,7 +12,7 @@ export interface EditorProps {
     mode?: string
     lineNumbers?: boolean
     readOnly?: boolean
-    value: string
+    value?: string
     onChange?: (value: string) => void
 }
 
@@ -31,7 +31,7 @@ const Editor: React.FC<EditorProps> = (props) => {
                         readOnly: props.readOnly,
                     }}
                     onBeforeChange={(_editor, _data, value) =>
-                        props.onChange(value)
+                        props.onChange && props.onChange(value)
                     }
                 />
             )}

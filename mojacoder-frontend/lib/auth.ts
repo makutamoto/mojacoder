@@ -7,7 +7,7 @@ import { invokeQueryWithApiKey } from './backend'
 
 export interface AuthSession {
     userID: string
-    username: string
+    screenName: string
 }
 
 function useAuth(initialState: AuthSession | null = null) {
@@ -16,25 +16,25 @@ function useAuth(initialState: AuthSession | null = null) {
 }
 export default createContainer(useAuth)
 
-const GetUsernameFromUserID = gql`
-    query GetUserIDFromUsername($userID: String!) {
+const GetScreenNameFromUserID = gql`
+    query GetScreenNameFromUserID($userID: String!) {
         user(userID: $userID) {
-            username
+            screenName
         }
     }
 `
 interface GetUsernameFromUserIDResponse {
-    user: { username: string } | null
+    user: { screenName: string } | null
 }
 export async function genAuthSession(
     session: CognitoUserSession
 ): Promise<AuthSession> {
     const userID = session.getIdToken().payload.sub
-    const res = (await invokeQueryWithApiKey(GetUsernameFromUserID, {
+    const res = (await invokeQueryWithApiKey(GetScreenNameFromUserID, {
         userID,
     })) as GetUsernameFromUserIDResponse
     return {
         userID,
-        username: res.user.username,
+        screenName: res.user.screenName,
     }
 }

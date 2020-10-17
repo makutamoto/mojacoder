@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
-import { useRouter } from 'next/router'
 import { Auth as Cognito } from 'aws-amplify'
 import { Alert, Button, Image, Jumbotron } from 'react-bootstrap'
 import gql from 'graphql-tag'
@@ -8,12 +7,16 @@ import gql from 'graphql-tag'
 import Auth from '../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../lib/backend'
 
-interface Props {
+interface User {
     userID: string | null
+    screenName: string | null
+}
+
+interface Props {
+    user: User
 }
 
 const UserPage: React.FC<Props> = (props) => {
-    const router = useRouter()
     const { auth, setAuth } = Auth.useContainer()
     const [browser, setBroser] = useState(false)
     const [iconNotFound, setIconNotFound] = useState(false)
@@ -25,36 +28,41 @@ const UserPage: React.FC<Props> = (props) => {
     useEffect(() => setBroser(true), [])
     return (
         <>
-            {props.userID === null ? (
+            {props.user === null ? (
                 <Alert variant="danger">ユーザーが存在しません。</Alert>
             ) : (
-                <Jumbotron>
-                    <div className="text-center">
-                        {browser && (
-                            <Image
-                                roundedCircle
-                                height={256}
-                                src={
-                                    iconNotFound
-                                        ? '/images/avatar.png'
-                                        : '/images/avatar.png'
-                                }
-                                onError={() =>
-                                    iconNotFound || setIconNotFound(true)
-                                }
-                            />
-                        )}
-                        <h2>{router.query.username}</h2>
-                        {auth && auth.userID === props.userID && (
-                            <Button
-                                variant="danger"
-                                onClick={OnClickSignOutCallback}
-                            >
-                                サインアウト
-                            </Button>
-                        )}
-                    </div>
-                </Jumbotron>
+                <>
+                    <Jumbotron>
+                        <div className="text-center">
+                            {browser && (
+                                <Image
+                                    roundedCircle
+                                    height={256}
+                                    src={
+                                        iconNotFound
+                                            ? '/images/avatar.png'
+                                            : '/images/avatar.png'
+                                    }
+                                    onError={() =>
+                                        iconNotFound || setIconNotFound(true)
+                                    }
+                                />
+                            )}
+                            <h2>{props.user.screenName}</h2>
+                            {auth && auth.userID === props.user.userID && (
+                                <Button
+                                    variant="danger"
+                                    onClick={OnClickSignOutCallback}
+                                >
+                                    サインアウト
+                                </Button>
+                            )}
+                        </div>
+                    </Jumbotron>
+                    <h2>問題</h2>
+                    <hr />
+                    <Button>投稿</Button>
+                </>
             )}
         </>
     )
@@ -66,11 +74,12 @@ const GetUserIDFromUsername = gql`
     query GetUserIDFromUsername($username: String!) {
         user(username: $username) {
             userID
+            screenName
         }
     }
 `
 interface GetUserIDFromUsernameResponse {
-    user: { userID: string } | null
+    user: User | null
 }
 export const getServerSideProps: GetServerSideProps<Props> = async ({
     query,
@@ -80,7 +89,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     })) as GetUserIDFromUsernameResponse
     return {
         props: {
-            userID: res.user.userID,
+            user: res.user,
         },
     }
 }
