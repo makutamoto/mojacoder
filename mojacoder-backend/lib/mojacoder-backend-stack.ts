@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import { join } from 'path';
 import { Queue } from '@aws-cdk/aws-sqs';
-import { AuthorizationType, CfnDataSource, CfnFunctionConfiguration, CfnResolver, GraphqlApi, MappingTemplate, Resolver, Schema } from '@aws-cdk/aws-appsync';
+import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
@@ -160,19 +160,19 @@ export class MojacoderBackendStack extends cdk.Stack {
                 },
             },
         );
-        const runPlayground = new CfnResolver(this, 'runPlayground', {
-            apiId: api.apiId,
-            typeName: 'Mutation',
-            dataSourceName: JudgeQueueDataSource.name,
-            fieldName: 'runPlayground',
-            requestMappingTemplate:
-                MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/request.vtl'))
-                    .renderTemplate().replace(/%QUEUE_URL%/g, JudgeQueue.queueUrl),
-            responseMappingTemplate:
-                MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/response.vtl'))
-                    .renderTemplate(),
-        });
-        runPlayground.addDependsOn(JudgeQueueDataSource);
+        // const runPlayground = new CfnResolver(this, 'runPlayground', {
+        //     apiId: api.apiId,
+        //     typeName: 'Mutation',
+        //     dataSourceName: JudgeQueueDataSource.name,
+        //     fieldName: 'runPlayground',
+        //     requestMappingTemplate:
+        //         MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/request.vtl'))
+        //             .renderTemplate().replace(/%QUEUE_URL%/g, JudgeQueue.queueUrl),
+        //     responseMappingTemplate:
+        //         MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/response.vtl'))
+        //             .renderTemplate(),
+        // });
+        // runPlayground.addDependsOn(JudgeQueueDataSource);
         const PlaygroundDataSource = api.addNoneDataSource('Playground');
         PlaygroundDataSource.createResolver({
             typeName: 'Mutation',
