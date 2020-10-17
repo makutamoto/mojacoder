@@ -63,10 +63,6 @@ function deployProblem(key: string): Promise<void> {
                             S: keyPath.name,
                         },
                     },
-                    ExpressionAttributeNames: {
-                        "#TITLE": "title",
-                        "#STATEMENT": "statement",
-                    },
                     ExpressionAttributeValues: {
                         ":title": {
                             S: task.title,
@@ -75,7 +71,7 @@ function deployProblem(key: string): Promise<void> {
                             S: task.statement,
                         },
                     },
-                    UpdateExpression: "SET #TITLE = :title, #STATEMENT = :statement",
+                    UpdateExpression: "SET title = :title, statement = :statement",
                 }, (err) => {
                     if(err) {
                         console.error(err);
