@@ -5,7 +5,7 @@
         "id": $util.dynamodb.toDynamoDBJson($util.autoId()),
     },
     "attributeValues": {
-        "datetime": $util.dynamodb.toDynamoDBJson($util.time.nowEpochMilliSeconds())
+        "datetime": $util.dynamodb.toDynamoDBJson($util.time.nowEpochMilliSeconds()),
         "status": $util.dynamodb.toDynamoDBJson("PENDING")
     }
 }
