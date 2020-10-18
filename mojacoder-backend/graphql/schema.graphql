@@ -15,13 +15,18 @@ type Playground {
 type User {
   userID: String!
   screenName: String!
-  problems: [Problem]!
+  problems(nextToken: String): [ProblemConnection]!
 }
 
 enum ProblemStatus {
   PENDING
   NORMAL
   FAILED
+}
+
+type ProblemConnection {
+	items: [Problem]
+	nextToken: String
 }
 
 type Problem {
