@@ -202,6 +202,12 @@ export class MojacoderBackendStack extends cdk.Stack {
         });
         problemTableDataSource.createResolver({
             typeName: 'User',
+            fieldName: 'problem',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/response.vtl')),
+        });
+        problemTableDataSource.createResolver({
+            typeName: 'User',
             fieldName: 'problems',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),

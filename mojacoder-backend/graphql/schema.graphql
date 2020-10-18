@@ -15,6 +15,7 @@ type Playground {
 type User {
   userID: String!
   screenName: String!
+  problem(id: String): Problem
   problems(nextToken: String): ProblemConnection!
 }
 

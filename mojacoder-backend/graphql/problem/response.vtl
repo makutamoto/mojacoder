@@ -1,0 +1,5 @@
+#if($context.identitiy.sub == $context.result.userID)
+    $util.toJson($context.result)
+#else
+    null
+#end
