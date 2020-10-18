@@ -1,16 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
+import Link from 'next/link'
 import { Auth as Cognito } from 'aws-amplify'
-import { Alert, Button, Image, Jumbotron } from 'react-bootstrap'
+import { Alert, Button, Image, Jumbotron, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import Auth from '../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../lib/backend'
-
-interface User {
-    userID: string | null
-    screenName: string | null
-}
+import { User } from '../../../lib/backend_types'
 
 interface Props {
     user: User
@@ -61,7 +58,26 @@ const UserPage: React.FC<Props> = (props) => {
                     </Jumbotron>
                     <h2>問題</h2>
                     <hr />
-                    <Button>投稿</Button>
+                    <Table bordered striped hover>
+                        <thead>
+                            <tr>
+                                <th>問題名</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {props.user.problems.items.map((item) => (
+                                <tr key={item.id}>
+                                    <td>
+                                        <Link
+                                            href={`/users/${props.user.screenName}/problems/${item.id}`}
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </>
             )}
         </>
@@ -70,23 +86,29 @@ const UserPage: React.FC<Props> = (props) => {
 
 export default UserPage
 
-const GetUserIDFromUsername = gql`
-    query GetUserIDFromUsername($username: String!) {
+const GetUser = gql`
+    query GetUser($username: String!) {
         user(username: $username) {
             userID
             screenName
+            problems {
+                items {
+                    id
+                    title
+                }
+            }
         }
     }
 `
-interface GetUserIDFromUsernameResponse {
+interface GetUserResponse {
     user: User | null
 }
 export const getServerSideProps: GetServerSideProps<Props> = async ({
     query,
 }) => {
-    const res = (await invokeQueryWithApiKey(GetUserIDFromUsername, {
+    const res = (await invokeQueryWithApiKey(GetUser, {
         username: query.username,
-    })) as GetUserIDFromUsernameResponse
+    })) as GetUserResponse
     return {
         props: {
             user: res.user,
