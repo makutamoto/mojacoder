@@ -16,7 +16,7 @@
 			"#id": "id"
 		},
 		"expressionValues": {
-			":userID": $util.defaultIfNullOrEmpty($util.dynamodb.toDynamoDBJson($context.arguments.userID), "")
+			":userID": $util.dynamodb.toDynamoDBJson($context.arguments.userID)
 		}
 	},
 	"index": "idIndex",

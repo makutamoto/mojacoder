@@ -5,7 +5,7 @@
         $util.toJson({"userID": $context.result.id, "screenName": $context.result.screenName})
     #end
 #else
-    #if($context.result.scannedCount == 0)
+    #if($util.isNull($context.result) || $context.result.scannedCount == 0)
         null
     #else
         #set($item = $context.result.items[0])
