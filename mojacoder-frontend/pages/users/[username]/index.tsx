@@ -71,7 +71,7 @@ const UserPage: React.FC<Props> = (props) => {
                                         <Link
                                             href={`/users/${props.user.screenName}/problems/${item.id}`}
                                         >
-                                            {item.title}
+                                            <a>{item.title}</a>
                                         </Link>
                                     </td>
                                 </tr>
