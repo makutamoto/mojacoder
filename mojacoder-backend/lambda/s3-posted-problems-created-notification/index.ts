@@ -17,15 +17,15 @@ interface Config {
     title: string,
 }
 
-interface Task {
+interface Problem {
     title: string,
     statement: string,
     testcases: Buffer,
 }
 
-async function parseZip(data: Buffer): Promise<Task> {
+async function parseZip(data: Buffer): Promise<Problem> {
     const zip = await JSZip.loadAsync(data);
-    const configFile = zip.file('task.json');
+    const configFile = zip.file('problem.json');
     if(configFile === null) throw "Config not fonud.";
     const { title } = JSON.parse(await configFile.async("string")) as Config;
     const statementFile = zip.file('README.md');
@@ -54,7 +54,7 @@ function deployProblem(key: string): Promise<void> {
                 reject("Internal Error Occurred.");
                 return;
             }
-            parseZip(data.Body as Buffer).then((task) => {
+            parseZip(data.Body as Buffer).then((problem) => {
                 const keyPath = parse(key);
                 dynamodb.updateItem({
                     TableName: TABLE_NAME,
@@ -65,10 +65,10 @@ function deployProblem(key: string): Promise<void> {
                     },
                     ExpressionAttributeValues: {
                         ":title": {
-                            S: task.title,
+                            S: problem.title,
                         },
                         ":statement": {
-                            S: task.statement,
+                            S: problem.statement,
                         },
                     },
                     UpdateExpression: "SET title = :title, statement = :statement",
@@ -81,7 +81,7 @@ function deployProblem(key: string): Promise<void> {
                     s3.putObject({
                         Bucket: TESTCASES_BUCKET_NAME,
                         Key: keyPath.base,
-                        Body: task.testcases,
+                        Body: problem.testcases,
                     }, (err) => {
                         if(err) {
                             console.error(err);
