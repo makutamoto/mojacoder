@@ -1,4 +1,4 @@
-#if($context.identitiy.sub == $context.result.userID)
+#if($context.source.userID == $context.result.userID)
     $util.toJson($context.result)
 #else
     null
