@@ -15,7 +15,7 @@ type Playground {
 type User {
   userID: String!
   screenName: String!
-  problems(nextToken: String): [ProblemConnection]!
+  problems(nextToken: String): ProblemConnection!
 }
 
 enum ProblemStatus {
