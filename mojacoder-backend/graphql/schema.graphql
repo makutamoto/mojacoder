@@ -31,12 +31,12 @@ type ProblemConnection {
 }
 
 type Problem {
-  id: String! @aws_cognito_user_pools
-  userID: String! @aws_cognito_user_pools
-  datetime: Int! @aws_cognito_user_pools
-  status: ProblemStatus! @aws_cognito_user_pools
-  title: String @aws_cognito_user_pools
-  statement: String @aws_cognito_user_pools
+  id: String! @aws_cognito_user_pools @aws_api_key
+  userID: String! @aws_cognito_user_pools @aws_api_key
+  datetime: Int! @aws_cognito_user_pools @aws_api_key
+  status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
+  title: String @aws_cognito_user_pools @aws_api_key
+  statement: String @aws_cognito_user_pools @aws_api_key
 }
 
 type Mutation {
