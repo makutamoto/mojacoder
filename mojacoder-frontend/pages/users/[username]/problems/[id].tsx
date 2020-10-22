@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap'
 
 import { invokeQueryWithApiKey } from '../../../../lib/backend'
 import { User } from '../../../../lib/backend_types'
+import Sample from '../../../../components/Sample'
 
 interface Props {
     user: User
@@ -19,6 +20,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             <ReactMarkdown source={props.user.problem.statement} />
             <h2>提出</h2>
             <hr />
+            <Sample title={'AAA'} value="aaa" />
             {/* <CodeEditor
                 id="problem-submision"
                 value={{ code: '', lang: 'go-1.14' }}
