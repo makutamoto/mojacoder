@@ -17,10 +17,16 @@ const ProblemPage: React.FC<Props> = (props) => {
         <>
             <h1>{props.user.problem.title}</h1>
             <hr />
-            <ReactMarkdown source={props.user.problem.statement} />
+            <ReactMarkdown
+                source={props.user.problem.statement}
+                renderers={{
+                    code: ({ language, value }) => (
+                        <Sample title={language} value={value} />
+                    ),
+                }}
+            />
             <h2>提出</h2>
             <hr />
-            <Sample title={'AAA'} value="aaa" />
             {/* <CodeEditor
                 id="problem-submision"
                 value={{ code: '', lang: 'go-1.14' }}
