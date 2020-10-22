@@ -33,7 +33,12 @@ const Sample: React.FC<Props> = (props) => {
                     <CopyIcon size={24} />
                     <h3 className="ml-1 d-inline">{props.title}</h3>
                 </Button>
-                <Form.Control className="mt-1" readOnly value={props.value} />
+                <Form.Control
+                    type="text"
+                    className="mt-1"
+                    readOnly
+                    value={props.value}
+                />
             </div>
             <Overlay target={copyButton.current} show={tooltipVisible}>
                 <Tooltip id="sample-copied-tooltip">Copied!</Tooltip>
