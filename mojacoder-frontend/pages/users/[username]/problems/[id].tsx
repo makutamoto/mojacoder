@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { GetServerSideProps } from 'next'
 import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
@@ -7,12 +7,14 @@ import { Button } from 'react-bootstrap'
 import { invokeQueryWithApiKey } from '../../../../lib/backend'
 import { User } from '../../../../lib/backend_types'
 import Sample from '../../../../components/Sample'
+import CodeEditor, { Code } from '../../../../components/CodeEditor'
 
 interface Props {
     user: User
 }
 
 const ProblemPage: React.FC<Props> = (props) => {
+    const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     return (
         <>
             <h1>{props.user.problem.title}</h1>
@@ -23,17 +25,30 @@ const ProblemPage: React.FC<Props> = (props) => {
                     code: ({ language, value }) => (
                         <Sample title={language} value={value} />
                     ),
+                    heading: (props) => {
+                        const H = `h${Math.min(
+                            6,
+                            props.level + 1
+                        )}` as React.ElementType
+                        return (
+                            <div>
+                                <H>{props.children}</H>
+                                <hr />
+                            </div>
+                        )
+                    },
                 }}
             />
-            <h2>提出</h2>
-            <hr />
-            {/* <CodeEditor
-                id="problem-submision"
-                value={{ code: '', lang: 'go-1.14' }}
-                // eslint-disable-next-line
-                onChange={() => {}}
-            /> */}
-            <Button>提出</Button>
+            <div>
+                <h2>提出</h2>
+                <hr />
+                <CodeEditor
+                    id="problem-code-editor"
+                    value={code}
+                    onChange={setCode}
+                />
+                <Button>提出</Button>
+            </div>
         </>
     )
 }
