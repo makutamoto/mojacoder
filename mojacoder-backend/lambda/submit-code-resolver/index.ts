@@ -10,9 +10,9 @@ interface Response extends Arguments {
     id: string,
 }
 
-export const handler: AppSyncResolverHandler<Arguments, Response> = async () => {
+export const handler: AppSyncResolverHandler<Arguments, Response> = async (event) => {
     return {
-        id: "a",
+        id: JSON.stringify(event),
         problemID: "testID",
         lang: "c",
         code: "#",
