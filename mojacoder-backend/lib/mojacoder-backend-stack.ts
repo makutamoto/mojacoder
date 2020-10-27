@@ -135,6 +135,31 @@ export class MojacoderBackendStack extends cdk.Stack {
                 ]
             }
         });
+        const submissionTable = new Table(this, 'submissionTable', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
+            partitionKey: {
+                name: 'id',
+                type: AttributeType.STRING,
+            },
+        });
+        const submittedCodeBucket = new Bucket(this, 'submittedCodeBucket');
+        const submitCodeResolverLambda = new NodejsFunction(this, 'submitCodeResolverLambda', {
+            entry: join(__dirname, '../lambda/submit-code-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                SUBMISSION_TABLE_NAME: submissionTable.tableName,
+                SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
+            },
+        });
+        submitCodeResolverLambda.addToRolePolicy(new PolicyStatement({
+            resources: [submissionTable.tableArn, submittedCodeBucket.bucketArn],
+            actions: ['dynamodb:PutItem', 's3:PutObject'],
+        }));
+        const submitCodeResolverLambdaDatasource = api.addLambdaDataSource('submitCodeResolverLambda', submitCodeResolverLambda);
+        submitCodeResolverLambdaDatasource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'submitCode',
+        });
         const JudgeQueueDataSourceRole = new Role(this, 'JudgeQueueDataSourceRole', {
             assumedBy: new ServicePrincipal('appsync.amazonaws.com'),
         });

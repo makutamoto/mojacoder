@@ -12,10 +12,16 @@ type Playground {
   userID: ID! @aws_cognito_user_pools
 }
 
+type Submission {
+  id: ID! @aws_cognito_user_pools
+  lang: String! @aws_cognito_user_pools
+  code: String! @aws_cognito_user_pools
+}
+
 type User {
-  userID: String!
+  userID: ID!
   screenName: String!
-  problem(id: String!): Problem
+  problem(id: ID!): Problem
   problems(nextToken: String): ProblemConnection!
 }
 
@@ -31,7 +37,7 @@ type ProblemConnection {
 }
 
 type Problem {
-  id: String! @aws_cognito_user_pools @aws_api_key
+  id: ID! @aws_cognito_user_pools @aws_api_key
   userID: String! @aws_cognito_user_pools @aws_api_key
   datetime: Int! @aws_cognito_user_pools @aws_api_key
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
@@ -43,6 +49,7 @@ type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
   postProblem: Problem! @aws_cognito_user_pools
+  submitCode(input: SubmitCodeInput!): Submission! @aws_cognito_user_pools
 }
 
 type ResponsePlayground {
@@ -56,7 +63,7 @@ type ResponsePlayground {
 }
 
 type Query {
-  user(userID: String, username: String): User
+  user(userID: ID, username: String): User
 }
 
 type Subscription {
@@ -78,4 +85,10 @@ input RunPlaygroundInput {
   lang: String!
   sessionID: ID!
   stdin: String!
+}
+
+input SubmitCodeInput {
+  problemID: ID!
+  lang: String!
+  code: String!
 }
