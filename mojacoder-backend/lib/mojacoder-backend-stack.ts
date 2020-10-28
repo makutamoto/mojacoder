@@ -149,6 +149,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             environment: {
                 SUBMISSION_TABLE_NAME: submissionTable.tableName,
                 SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
+                JUDGEQUEUE_URL: JudgeQueue.queueUrl,
             },
         });
         submitCodeResolverLambda.addToRolePolicy(new PolicyStatement({
