@@ -29,10 +29,10 @@ interface JudgeQueueMessage {
 	submissionID: string
 }
 
-export const handler: AppSyncResolverHandler<Arguments, Response> = (event) => {
+export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (event) => {
     return new Promise((resolve, reject) => {
         const id = uuid();
-        const { problemID, lang, code } = event.arguments;
+        const { problemID, lang, code } = event.arguments.input;
         const sub = (event.identity as AppSyncIdentityCognito).sub;
         dynamodb.putItem({
             Item: {
