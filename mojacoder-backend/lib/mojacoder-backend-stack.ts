@@ -153,8 +153,8 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
         });
         submitCodeResolverLambda.addToRolePolicy(new PolicyStatement({
-            resources: [submissionTable.tableArn, submittedCodeBucket.bucketArn],
-            actions: ['dynamodb:PutItem', 's3:PutObject'],
+            resources: [submissionTable.tableArn, submittedCodeBucket.bucketArn, JudgeQueue.queueArn],
+            actions: ['dynamodb:PutItem', 's3:PutObject', 'sqs:SendMessage'],
         }));
         const submitCodeResolverLambdaDatasource = api.addLambdaDataSource('submitCodeResolverLambda', submitCodeResolverLambda);
         submitCodeResolverLambdaDatasource.createResolver({
