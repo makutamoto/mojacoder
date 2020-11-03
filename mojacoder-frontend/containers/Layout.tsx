@@ -32,6 +32,16 @@ const Layout: React.FC = (props) => {
                         </Link>
                     </Nav>
                     <Nav>
+                        <Link href="" locale="en">
+                            <Nav.Link as="span" href="#">
+                                EN
+                            </Nav.Link>
+                        </Link>
+                        <Link href="" locale="ja">
+                            <Nav.Link as="span" href="#">
+                                JA
+                            </Nav.Link>
+                        </Link>
                         {auth ? (
                             <Link href={`/users/${auth.screenName}`}>
                                 <Nav.Link as="span" href="#">
