@@ -43,7 +43,7 @@ export const I18nProvider: React.FC<I18nProviderProps> = (props) => {
 
 export function useI18n(namespace: string) {
     const { lang, namespaces } = useContext(context)
-    const t = (key: string[]) => {
+    const t = (key: ReadonlyArray<string>) => {
         if (!Object.prototype.hasOwnProperty.call(namespaces, namespace))
             return undefined
         const ns = namespaces[namespace]
