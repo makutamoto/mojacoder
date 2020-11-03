@@ -3,9 +3,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Container, Nav, Navbar } from 'react-bootstrap'
 
+import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
 
 const Layout: React.FC = (props) => {
+    const { t } = useI18n('layout')
     const router = useRouter()
     const { auth } = Auth.useContainer()
     return (
@@ -18,14 +20,14 @@ const Layout: React.FC = (props) => {
                 expand="sm"
             >
                 <Link href="/">
-                    <Navbar.Brand as={null}>MojaCoder</Navbar.Brand>
+                    <Navbar.Brand as={null}>{t`mojacoder`}</Navbar.Brand>
                 </Link>
                 <Navbar.Toggle />
                 <Navbar.Collapse>
                     <Nav className="mr-auto">
                         <Link href="/playground">
                             <Nav.Link as="span" href="#">
-                                Playground
+                                {t`playground`}
                             </Nav.Link>
                         </Link>
                     </Nav>
@@ -44,7 +46,7 @@ const Layout: React.FC = (props) => {
                                     )}`}
                                 >
                                     <Nav.Link as="span" href="#">
-                                        Sign up
+                                        {t`signUp`}
                                     </Nav.Link>
                                 </Link>
                                 <Link
@@ -53,7 +55,7 @@ const Layout: React.FC = (props) => {
                                     )}`}
                                 >
                                     <Nav.Link as="span" href="#">
-                                        Sign in
+                                        {t`signIn`}
                                     </Nav.Link>
                                 </Link>
                             </>

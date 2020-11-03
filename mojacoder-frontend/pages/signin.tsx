@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Alert, Button, Form, Spinner } from 'react-bootstrap'
 import { Auth as Cognito } from 'aws-amplify'
 
+import { useI18n } from '../lib/i18n'
 import Auth, { genAuthSession } from '../lib/auth'
 import Title from '../components/Title'
 
@@ -18,6 +18,7 @@ const Status = {
 type Status = typeof Status[keyof typeof Status]
 
 const SignIn: React.FC = () => {
+    const { t } = useI18n('signIn')
     const { setAuth } = Auth.useContainer()
     const router = useRouter()
     const [status, setStatus] = useState<Status>(Status.Normal)
@@ -62,34 +63,27 @@ const SignIn: React.FC = () => {
     )
     return (
         <>
-            <Title>サインイン</Title>
-            <h1>サインイン</h1>
+            <Title>{t`title`}</Title>
+            <h1>{t`title`}</h1>
             <hr />
             <Alert show={!!router.query.signedup} variant="success">
-                確認メールを送信しました。メール内のリンクにアクセスすることで登録が完了します。
+                {t`confirmationMailSent`}
             </Alert>
             <Alert show={status === Status.Success} variant="success">
-                サインインが完了しました。
+                {t`signedIn`}
             </Alert>
             <Alert show={status === Status.Error} variant="danger">
-                エラーが発生しました。
+                {t`error`}
             </Alert>
             <Alert
                 show={status === Status.InvalidEmailOrPassword}
                 variant="danger"
             >
-                無効なユーザー名もしくはパスワードです。
-            </Alert>
-            <Alert variant="primary">
-                まだユーザー登録を行っていない方は
-                <Link href="/signup">
-                    <a>こちら</a>
-                </Link>
-                から登録して下さい。
+                {t`invalidUsernameOrPassword`}
             </Alert>
             <Form noValidate validated={status === Status.ValidationError}>
                 <Form.Group>
-                    <Form.Label>メールアドレス</Form.Label>
+                    <Form.Label>{t`email`}</Form.Label>
                     <Form.Control
                         type="email"
                         required
@@ -98,11 +92,11 @@ const SignIn: React.FC = () => {
                         onChange={(e) => setEmail(e.currentTarget.value)}
                     />
                     <Form.Control.Feedback type="invalid">
-                        メールアドレスを入力して下さい。
+                        {t`enterEmail`}
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>パスワード</Form.Label>
+                    <Form.Label>{t`password`}</Form.Label>
                     <Form.Control
                         type="password"
                         required
@@ -111,7 +105,7 @@ const SignIn: React.FC = () => {
                         onChange={(e) => setPassword(e.currentTarget.value)}
                     />
                     <Form.Control.Feedback type="invalid">
-                        パスワードを入力して下さい。
+                        {t`enterPassword`}
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Button
@@ -126,7 +120,7 @@ const SignIn: React.FC = () => {
                             size="sm"
                         />
                     )}
-                    サインイン
+                    {t`signIn`}
                 </Button>
             </Form>
         </>

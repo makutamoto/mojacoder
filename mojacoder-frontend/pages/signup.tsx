@@ -3,10 +3,8 @@ import { useRouter } from 'next/router'
 import { Auth as Cognito } from 'aws-amplify'
 import { Alert, Button, Form, Spinner } from 'react-bootstrap'
 
+import { useI18n } from '../lib/i18n'
 import Title from '../components/Title'
-
-const PASSWORD_CONSTRAINTS_MESSAGE =
-    'パスワードは半角英文字大文字小文字・数字・記号をそれぞれ一文字以上かつ８文字以上128文字以内である必要があります。'
 
 const Status = {
     Normal: 'Normal',
@@ -18,6 +16,7 @@ const Status = {
 type Status = typeof Status[keyof typeof Status]
 
 const SignUp: React.FC = () => {
+    const { t } = useI18n('signUp')
     const router = useRouter()
     const form = useRef(null)
     const passwordInput = useRef(null)
@@ -66,14 +65,14 @@ const SignUp: React.FC = () => {
     }, [form, username, email, password, confirmedPassword])
     return (
         <>
-            <Title>新規登録</Title>
-            <h1>新規登録</h1>
+            <Title>{t`title`}</Title>
+            <h1>{t`title`}</h1>
             <hr />
             <Alert show={status === Status.UserAlreadyExists} variant="danger">
-                ユーザーがすでに存在します。
+                {t`userAlreadyExists`}
             </Alert>
             <Alert show={status === Status.Error} variant="danger">
-                エラーが発生しました。
+                {t`error`}
             </Alert>
             <Form
                 noValidate
@@ -81,7 +80,7 @@ const SignUp: React.FC = () => {
                 ref={form}
             >
                 <Form.Group>
-                    <Form.Label>ユーザー名</Form.Label>
+                    <Form.Label>{t`username`}</Form.Label>
                     <Form.Control
                         type="text"
                         required
@@ -91,7 +90,7 @@ const SignUp: React.FC = () => {
                     />
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>メールアドレス</Form.Label>
+                    <Form.Label>{t`email`}</Form.Label>
                     <Form.Control
                         type="email"
                         required
@@ -101,7 +100,7 @@ const SignUp: React.FC = () => {
                     />
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>パスワード</Form.Label>
+                    <Form.Label>{t`password`}</Form.Label>
                     <Form.Control
                         ref={passwordInput}
                         type="password"
@@ -112,15 +111,15 @@ const SignUp: React.FC = () => {
                         onChange={(e) => setPassword(e.currentTarget.value)}
                     />
                     <Form.Text className="text-muted">
-                        {PASSWORD_CONSTRAINTS_MESSAGE}
+                        {t`passwordConstraintsMessage`}
                     </Form.Text>
                     <Form.Control.Feedback type="invalid">
-                        {PASSWORD_CONSTRAINTS_MESSAGE}
+                        {t`passwordConstraintsMessage`}
                     </Form.Control.Feedback>
                 </Form.Group>
             </Form>
             <Form.Group>
-                <Form.Label>パスワードの確認</Form.Label>
+                <Form.Label>{t`passwordConfirmation`}</Form.Label>
                 <Form.Control
                     type="password"
                     required
@@ -139,14 +138,14 @@ const SignUp: React.FC = () => {
                     }
                 />
                 <Form.Control.Feedback type="invalid">
-                    パスワードが一致しません。
+                    {t`passwordNotMatch`}
                 </Form.Control.Feedback>
             </Form.Group>
             <Button onClick={onSubmit} disabled={status === Status.SigningUp}>
                 {status === Status.SigningUp && (
                     <Spinner className="mr-2" animation="border" size="sm" />
                 )}
-                登録
+                {t`signUp`}
             </Button>
         </>
     )

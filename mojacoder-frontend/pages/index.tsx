@@ -9,7 +9,7 @@ const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'
 
 export const Index: React.FC = () => {
-    const { t } = useI18n('aaa')
+    const { t } = useI18n('home')
     return (
         <>
             <Jumbotron>
@@ -18,10 +18,7 @@ export const Index: React.FC = () => {
                         className={styles['top-image']}
                         src="/illustrations/undraw_programming_2svr.svg"
                     />
-                    <h2 className="mt-4">
-                        {t`a`}
-                        競技プログラミングの問題を投稿できるサイトです。
-                    </h2>
+                    <h2 className="mt-4">{t`description`}</h2>
                     <Badge
                         as="a"
                         variant="dark"
@@ -42,7 +39,7 @@ export const Index: React.FC = () => {
                     </Badge>
                 </div>
             </Jumbotron>
-            <h2>タイムライン</h2>
+            <h2>{t`timeline`}</h2>
         </>
     )
 }

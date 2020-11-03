@@ -17,7 +17,7 @@ function useAuth(initialState: AuthSession | null = null) {
 export default createContainer(useAuth)
 
 const GetScreenNameFromUserID = gql`
-    query GetScreenNameFromUserID($userID: String!) {
+    query GetScreenNameFromUserID($userID: ID!) {
         user(userID: $userID) {
             screenName
         }

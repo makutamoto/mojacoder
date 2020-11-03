@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
 import { Button } from 'react-bootstrap'
 
+import { useI18n } from '../../../../lib/i18n'
 import { invokeQueryWithApiKey } from '../../../../lib/backend'
 import { User } from '../../../../lib/backend_types'
 import Sample from '../../../../components/Sample'
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const ProblemPage: React.FC<Props> = (props) => {
+    const { t } = useI18n('problem')
     const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     return (
         <>
@@ -40,14 +42,14 @@ const ProblemPage: React.FC<Props> = (props) => {
                 }}
             />
             <div>
-                <h2>提出</h2>
+                <h2>{t`submit`}</h2>
                 <hr />
                 <CodeEditor
                     id="problem-code-editor"
                     value={code}
                     onChange={setCode}
                 />
-                <Button>提出</Button>
+                <Button>{t`submit`}</Button>
             </div>
         </>
     )
@@ -55,7 +57,7 @@ const ProblemPage: React.FC<Props> = (props) => {
 export default ProblemPage
 
 const GetProblem = gql`
-    query GetProblem($username: String!, $id: String!) {
+    query GetProblem($username: String!, $id: ID!) {
         user(username: $username) {
             problem(id: $id) {
                 title

@@ -5,6 +5,7 @@ import { Auth as Cognito } from 'aws-amplify'
 import { Alert, Button, Image, Jumbotron, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
+import { useI18n } from '../../../lib/i18n'
 import Auth from '../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../lib/backend'
 import { User } from '../../../lib/backend_types'
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const UserPage: React.FC<Props> = (props) => {
+    const { t } = useI18n('user')
     const { auth, setAuth } = Auth.useContainer()
     const [browser, setBroser] = useState(false)
     const [iconNotFound, setIconNotFound] = useState(false)
@@ -26,7 +28,7 @@ const UserPage: React.FC<Props> = (props) => {
     return (
         <>
             {props.user === null ? (
-                <Alert variant="danger">ユーザーが存在しません。</Alert>
+                <Alert variant="danger">{t`userNotFound`}</Alert>
             ) : (
                 <>
                     <Jumbotron>
@@ -51,17 +53,17 @@ const UserPage: React.FC<Props> = (props) => {
                                     variant="danger"
                                     onClick={OnClickSignOutCallback}
                                 >
-                                    サインアウト
+                                    {t`signOut`}
                                 </Button>
                             )}
                         </div>
                     </Jumbotron>
-                    <h2>問題</h2>
+                    <h2>{t`problem`}</h2>
                     <hr />
                     <Table bordered striped hover>
                         <thead>
                             <tr>
-                                <th>問題名</th>
+                                <th>{t`problemName`}</th>
                             </tr>
                         </thead>
                         <tbody>
