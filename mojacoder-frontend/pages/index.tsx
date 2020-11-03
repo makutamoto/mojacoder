@@ -1,12 +1,15 @@
 import React from 'react'
 import { Badge, Jumbotron, Image } from 'react-bootstrap'
 
+import { useI18n } from '../lib/i18n'
+
 import styles from './index.module.css'
 
 const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'
 
 export const Index: React.FC = () => {
+    const { t } = useI18n('aaa')
     return (
         <>
             <Jumbotron>
@@ -16,6 +19,7 @@ export const Index: React.FC = () => {
                         src="/illustrations/undraw_programming_2svr.svg"
                     />
                     <h2 className="mt-4">
+                        {t`a`}
                         競技プログラミングの問題を投稿できるサイトです。
                     </h2>
                     <Badge

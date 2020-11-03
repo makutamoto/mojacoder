@@ -1,5 +1,10 @@
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
 
+const i18n = {
+    locales: ['en', 'ja'],
+    defaultLocale: 'ja',
+}
+
 module.exports = (phase) => {
     switch (phase) {
         case PHASE_DEVELOPMENT_SERVER:
@@ -13,6 +18,7 @@ module.exports = (phase) => {
                     APPSYNC_APIKEY: 'da2-zf3whlcplbhorhietu4h5bfk5y',
                     COOKIE_DOMAIN: 'localhost',
                 },
+                i18n,
             }
         default:
             return {
@@ -25,6 +31,7 @@ module.exports = (phase) => {
                     APPSYNC_APIKEY: 'da2-zf3whlcplbhorhietu4h5bfk5y',
                     COOKIE_DOMAIN: 'mojacoder.vercel.app',
                 },
+                i18n,
             }
     }
 }
