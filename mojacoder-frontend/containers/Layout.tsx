@@ -19,8 +19,8 @@ const Layout: React.FC = (props) => {
                 variant="dark"
                 expand="sm"
             >
-                <Link href="/">
-                    <Navbar.Brand as={null}>{t`mojacoder`}</Navbar.Brand>
+                <Link href="/" passHref>
+                    <Navbar.Brand>{t`mojacoder`}</Navbar.Brand>
                 </Link>
                 <Navbar.Toggle />
                 <Navbar.Collapse>
