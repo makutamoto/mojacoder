@@ -8,7 +8,7 @@ import Auth from '../lib/auth'
 
 const Layout: React.FC = (props) => {
     const { t } = useI18n('layout')
-    const router = useRouter()
+    const { asPath, locale, pathname } = useRouter()
     const { auth } = Auth.useContainer()
     return (
         <>
@@ -26,37 +26,47 @@ const Layout: React.FC = (props) => {
                 <Navbar.Collapse>
                     <Nav className="mr-auto">
                         <Link href="/playground" passHref>
-                            <Nav.Link>{t`playground`}</Nav.Link>
+                            <Nav.Link
+                                active={pathname === '/playground'}
+                            >{t`playground`}</Nav.Link>
                         </Link>
                     </Nav>
                     <Nav>
-                        <Link href="" locale="en" passHref>
-                            <Nav.Link>EN</Nav.Link>
+                        <Link href={asPath} locale="en" passHref>
+                            <Nav.Link active={locale === 'en'}>EN</Nav.Link>
                         </Link>
-                        <Link href="" locale="ja" passHref>
-                            <Nav.Link>JA</Nav.Link>
+                        <Link href={asPath} locale="ja" passHref>
+                            <Nav.Link active={locale === 'ja'}>JA</Nav.Link>
                         </Link>
                         {auth ? (
                             <Link href={`/users/${auth.screenName}`} passHref>
-                                <Nav.Link>{auth.screenName}</Nav.Link>
+                                <Nav.Link
+                                    active={pathname === '/users/[username]'}
+                                >
+                                    {auth.screenName}
+                                </Nav.Link>
                             </Link>
                         ) : (
                             <>
                                 <Link
                                     href={`/signup?redirect=${encodeURIComponent(
-                                        router.asPath
+                                        asPath
                                     )}`}
                                     passHref
                                 >
-                                    <Nav.Link>{t`signUp`}</Nav.Link>
+                                    <Nav.Link
+                                        active={pathname === '/signup'}
+                                    >{t`signUp`}</Nav.Link>
                                 </Link>
                                 <Link
                                     href={`/signin?redirect=${encodeURIComponent(
-                                        router.asPath
+                                        asPath
                                     )}`}
                                     passHref
                                 >
-                                    <Nav.Link>{t`signIn`}</Nav.Link>
+                                    <Nav.Link
+                                        active={pathname === '/signin'}
+                                    >{t`signIn`}</Nav.Link>
                                 </Link>
                             </>
                         )}
