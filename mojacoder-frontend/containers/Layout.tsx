@@ -25,28 +25,20 @@ const Layout: React.FC = (props) => {
                 <Navbar.Toggle />
                 <Navbar.Collapse>
                     <Nav className="mr-auto">
-                        <Link href="/playground">
-                            <Nav.Link as="span" href="#">
-                                {t`playground`}
-                            </Nav.Link>
+                        <Link href="/playground" passHref>
+                            <Nav.Link>{t`playground`}</Nav.Link>
                         </Link>
                     </Nav>
                     <Nav>
-                        <Link href="" locale="en">
-                            <Nav.Link as="span" href="#">
-                                EN
-                            </Nav.Link>
+                        <Link href="" locale="en" passHref>
+                            <Nav.Link>EN</Nav.Link>
                         </Link>
-                        <Link href="" locale="ja">
-                            <Nav.Link as="span" href="#">
-                                JA
-                            </Nav.Link>
+                        <Link href="" locale="ja" passHref>
+                            <Nav.Link>JA</Nav.Link>
                         </Link>
                         {auth ? (
-                            <Link href={`/users/${auth.screenName}`}>
-                                <Nav.Link as="span" href="#">
-                                    {auth.screenName}
-                                </Nav.Link>
+                            <Link href={`/users/${auth.screenName}`} passHref>
+                                <Nav.Link>{auth.screenName}</Nav.Link>
                             </Link>
                         ) : (
                             <>
@@ -54,19 +46,17 @@ const Layout: React.FC = (props) => {
                                     href={`/signup?redirect=${encodeURIComponent(
                                         router.asPath
                                     )}`}
+                                    passHref
                                 >
-                                    <Nav.Link as="span" href="#">
-                                        {t`signUp`}
-                                    </Nav.Link>
+                                    <Nav.Link>{t`signUp`}</Nav.Link>
                                 </Link>
                                 <Link
                                     href={`/signin?redirect=${encodeURIComponent(
                                         router.asPath
                                     )}`}
+                                    passHref
                                 >
-                                    <Nav.Link as="span" href="#">
-                                        {t`signIn`}
-                                    </Nav.Link>
+                                    <Nav.Link>{t`signIn`}</Nav.Link>
                                 </Link>
                             </>
                         )}
