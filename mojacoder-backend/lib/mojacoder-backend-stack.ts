@@ -142,6 +142,17 @@ export class MojacoderBackendStack extends cdk.Stack {
                 type: AttributeType.STRING,
             },
         });
+        submissionTable.addGlobalSecondaryIndex({
+            indexName: 'userID-index',
+            partitionKey: {
+                name: 'userID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.NUMBER,
+            },
+        });
         const submittedCodeBucket = new Bucket(this, 'submittedCodeBucket');
         const submitCodeResolverLambda = new NodejsFunction(this, 'submitCodeResolverLambda', {
             entry: join(__dirname, '../lambda/submit-code-resolver/index.ts'),
@@ -242,7 +253,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         submissionTableDataSource.createResolver({
             typeName: 'Problem',
             fieldName: 'submissions',
-            requestMappingTemplate: MappingTemplate.dynamoDbQuery(KeyCondition.eq('userID', 'userID')),
+            requestMappingTemplate: MappingTemplate.dynamoDbQuery(KeyCondition.eq('userID', 'userID'), 'userID-index'),
             responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
         });
 
