@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import { join } from 'path';
 import { Queue } from '@aws-cdk/aws-sqs';
-import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
+import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, KeyCondition, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
 import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
@@ -237,6 +237,13 @@ export class MojacoderBackendStack extends cdk.Stack {
             fieldName: 'problems',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
+        });
+        const submissionTableDataSource = api.addDynamoDbDataSource('submission_table', submissionTable);
+        submissionTableDataSource.createResolver({
+            typeName: 'Problem',
+            fieldName: 'submissions',
+            requestMappingTemplate: MappingTemplate.dynamoDbQuery(KeyCondition.eq('userID', '$context.arguments.userID')),
+            responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
         });
 
         const vpc = new Vpc(this, 'vpc', {

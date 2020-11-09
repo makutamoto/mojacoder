@@ -43,6 +43,19 @@ type Problem {
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
   title: String @aws_cognito_user_pools @aws_api_key
   statement: String @aws_cognito_user_pools @aws_api_key
+  submissions(nextToken: String, userID: ID): SubmissionConnection!
+}
+
+type SubmissionConnection {
+  items: [Submission]
+  nextToken: String
+}
+
+type Submission {
+  id: ID!
+  problemID: ID!
+  userID: ID!
+  lang: String!
 }
 
 type Mutation {
