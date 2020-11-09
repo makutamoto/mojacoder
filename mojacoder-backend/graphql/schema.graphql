@@ -12,12 +12,6 @@ type Playground {
   userID: ID! @aws_cognito_user_pools
 }
 
-type Submission {
-  id: ID! @aws_cognito_user_pools
-  lang: String! @aws_cognito_user_pools
-  code: String! @aws_cognito_user_pools
-}
-
 type User {
   userID: ID!
   screenName: String!
