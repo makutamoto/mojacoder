@@ -242,7 +242,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         submissionTableDataSource.createResolver({
             typeName: 'Problem',
             fieldName: 'submissions',
-            requestMappingTemplate: MappingTemplate.dynamoDbQuery(KeyCondition.eq('userID', '$context.arguments.userID')),
+            requestMappingTemplate: MappingTemplate.dynamoDbQuery(KeyCondition.eq('userID', 'userID')),
             responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
         });
 
