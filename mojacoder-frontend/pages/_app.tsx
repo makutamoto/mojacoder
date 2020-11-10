@@ -65,6 +65,7 @@ const languages = {
         },
         problem: {
             submit: '提出',
+            signInRequired: '提出するにはサインインして下さい。',
         },
         signIn: {
             title: 'サインイン',
@@ -131,6 +132,7 @@ const languages = {
         },
         problem: {
             submit: 'Submit',
+            signInRequired: 'Signing in is required to submit your code.',
         },
         signIn: {
             title: 'Sign in',
