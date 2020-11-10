@@ -254,7 +254,6 @@ export class MojacoderBackendStack extends cdk.Stack {
             typeName: 'Problem',
             fieldName: 'submissions',
             requestMappingTemplate: MappingTemplate.dynamoDbQuery(KeyCondition.eq('userID', 'userID'), 'userID-index'),
-            responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
         });
 
         const vpc = new Vpc(this, 'vpc', {
