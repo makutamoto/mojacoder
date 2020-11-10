@@ -49,6 +49,7 @@ type Submission {
   id: ID!
   problemID: ID!
   userID: ID!
+  datetime: Int!
   lang: String!
 }
 
