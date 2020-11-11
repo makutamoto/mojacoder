@@ -34,7 +34,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
         const id = uuid();
         const { problemID, lang, code } = event.arguments.input;
         const sub = (event.identity as AppSyncIdentityCognito).sub;
-        const datetime = Date.now();
+        const datetime = new Date();
         dynamodb.putItem({
             Item: {
                 id: {
@@ -50,7 +50,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                     S: sub,
                 },
                 datetime: {
-                    N: datetime.toString(),
+                    N: datetime.toISOString(),
                 }
             },
             ConditionExpression: 'attribute_not_exists(#id)',
