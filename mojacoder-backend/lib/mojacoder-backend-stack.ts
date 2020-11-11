@@ -150,7 +150,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
             sortKey: {
                 name: 'datetime',
-                type: AttributeType.NUMBER,
+                type: AttributeType.STRING,
             },
         });
         const submittedCodeBucket = new Bucket(this, 'submittedCodeBucket');
