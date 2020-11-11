@@ -3,7 +3,19 @@ import { Table } from 'react-bootstrap'
 
 import JudgeStatusBadge from '../components/JudgeStatusBadge'
 
-const SubmissionTable: React.FC<any> = (props) => {
+interface Submission {
+    id: string
+    problemID: string
+    userID: string
+    datetime: string
+    lang: string
+}
+
+interface Props {
+    submissions: Submission[]
+}
+
+const SubmissionTable: React.FC<Props> = (props) => {
     return (
         <Table responsive striped bordered hover>
             <thead>
@@ -18,8 +30,8 @@ const SubmissionTable: React.FC<any> = (props) => {
             </thead>
             <tbody>
                 {props.submissions.map((submission) => (
-                    <tr key={submission.submissionID}>
-                        <td>{submission.time}</td>
+                    <tr key={submission.id}>
+                        <td>{submission.datetime}</td>
                         <td>{submission.userID}</td>
                         <td>{submission.lang}</td>
                         <td className="text-center">

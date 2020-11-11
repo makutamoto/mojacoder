@@ -67,6 +67,10 @@ const languages = {
             submit: '提出',
             signInRequired: '提出するにはサインインして下さい。',
         },
+        problemTab: {
+            problem: '問題',
+            submissions: '提出',
+        },
         signIn: {
             title: 'サインイン',
             confirmationMailSent:
@@ -133,6 +137,10 @@ const languages = {
         problem: {
             submit: 'Submit',
             signInRequired: 'Signing in is required to submit your code.',
+        },
+        problemTab: {
+            problem: 'Problem',
+            submissions: 'Submissions',
         },
         signIn: {
             title: 'Sign in',
