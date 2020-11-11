@@ -50,7 +50,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                     S: sub,
                 },
                 datetime: {
-                    N: datetime.toISOString(),
+                    S: datetime.toISOString(),
                 }
             },
             ConditionExpression: 'attribute_not_exists(#id)',
