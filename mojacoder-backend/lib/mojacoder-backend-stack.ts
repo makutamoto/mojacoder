@@ -3,7 +3,7 @@ import { join } from 'path';
 import { Queue } from '@aws-cdk/aws-sqs';
 import { AuthorizationType, CfnDataSource, CfnResolver, GraphqlApi, KeyCondition, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
 import { CfnAccessKey, PolicyStatement, Role, ServicePrincipal, User } from '@aws-cdk/aws-iam';
-import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
+import { AwsLogDriver, Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
 import { UserPool, UserPoolOperation, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
@@ -265,6 +265,9 @@ export class MojacoderBackendStack extends cdk.Stack {
         const judgeTask = new FargateTaskDefinition(this, 'judge-task');
         judgeTask.addContainer('judge-container', {
             image: ContainerImage.fromAsset(join(__dirname, '../judge-image')),
+            logging: new AwsLogDriver({
+                streamPrefix: 'judge-container',
+            }),
             environment: {
                 AWS_ACCESS_KEY_ID: accessKey.ref,
                 AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,
