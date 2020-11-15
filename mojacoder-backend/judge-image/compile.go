@@ -9,7 +9,7 @@ import (
 func compile(definition LanguageDefinition, bucket, key string) (bool, string, error) {
 	var err error
 	codePath := path.Join(TEMP_DIR, definition.Filename)
-	err = downloadFromS3(codePath, bucket, key)
+	err = downloadFromStorage(codePath, bucket, key)
 	if err != nil {
 		return false, "", err
 	}

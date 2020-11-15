@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	v4 "github.com/aws/aws-sdk-go/aws/signer/v4"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/aws/aws-sdk-go/service/sqs"
 )
@@ -45,6 +46,7 @@ func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error
 		if err != nil {
 			return err
 		}
+		deleteFromStorage(PLAYGROUND_CODE_BUCKET_NAME, data.SessionID)
 	}
 	return nil
 }
@@ -53,7 +55,8 @@ func main() {
 	session := session.New()
 	config := &aws.Config{Region: aws.String(AWS_REGION)}
 	judgeQueue = sqs.New(session, config)
-	s3Downloader = s3manager.NewDownloader(session)
+	storage = s3.New(session, config)
+	storageDownloader = s3manager.NewDownloader(session)
 	signer = v4.NewSigner(session.Config.Credentials)
 	definitions, err := loadLanguageDefinition(LANGUAGE_DEFINITION_FILE)
 	if err != nil {
