@@ -24,7 +24,10 @@ func downloadFromStorage(path string, bucket, key string) error {
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
-	return fmt.Errorf(errorMessage, key, bucket, err)
+	if err != nil {
+		return fmt.Errorf(errorMessage, key, bucket, err)
+	}
+	return nil
 }
 
 func deleteFromStorage(bucket, key string) error {
@@ -33,5 +36,8 @@ func deleteFromStorage(bucket, key string) error {
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
-	return fmt.Errorf(errorMessage, key, bucket, err)
+	if err != nil {
+		return fmt.Errorf(errorMessage, key, bucket, err)
+	}
+	return nil
 }
