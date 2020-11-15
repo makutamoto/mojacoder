@@ -143,9 +143,9 @@ export class MojacoderBackendStack extends cdk.Stack {
             },
         });
         submissionTable.addGlobalSecondaryIndex({
-            indexName: 'userID-index',
+            indexName: 'problemID-index',
             partitionKey: {
-                name: 'userID',
+                name: 'problemID',
                 type: AttributeType.STRING,
             },
             sortKey: {
