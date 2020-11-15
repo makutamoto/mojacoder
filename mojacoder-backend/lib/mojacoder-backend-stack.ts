@@ -172,44 +172,24 @@ export class MojacoderBackendStack extends cdk.Stack {
             typeName: 'Mutation',
             fieldName: 'submitCode',
         });
-        const JudgeQueueDataSourceRole = new Role(this, 'JudgeQueueDataSourceRole', {
-            assumedBy: new ServicePrincipal('appsync.amazonaws.com'),
-        });
-        JudgeQueueDataSourceRole.addToPolicy(new PolicyStatement({
-            resources: [JudgeQueue.queueArn],
-            actions: ['sqs:SendMessage'],
-        }));
-        const JudgeQueueDataSource = new CfnDataSource(this, 'JudgeQueueDataSource',
-            {
-                apiId: api.apiId,
-                name: 'JudgeQueue',
-                serviceRoleArn: JudgeQueueDataSourceRole.roleArn,
-                type: 'HTTP',
-                httpConfig: {
-                    endpoint: "https://sqs.ap-northeast-1.amazonaws.com",
-                    authorizationConfig: {
-                        authorizationType: 'AWS_IAM',
-                        awsIamConfig: {
-                            signingRegion: 'ap-northeast-1',
-                            signingServiceName: 'sqs',
-                        }
-                    },
-                },
+        const playgroundCodeBucket = new Bucket(this, 'playgroundCodeBucket');
+        const runPlaygroundResolverLambda = new NodejsFunction(this, 'runPlaygroundResolverLambda', {
+            entry: join(__dirname, '../lambda/run-playground-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                PLAYGROUND_CODE_BUCKET_NAME: playgroundCodeBucket.bucketName,
+                JUDGEQUEUE_URL: JudgeQueue.queueUrl,
             },
-        );
-        // const runPlayground = new CfnResolver(this, 'runPlayground', {
-        //     apiId: api.apiId,
-        //     typeName: 'Mutation',
-        //     dataSourceName: JudgeQueueDataSource.name,
-        //     fieldName: 'runPlayground',
-        //     requestMappingTemplate:
-        //         MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/request.vtl'))
-        //             .renderTemplate().replace(/%QUEUE_URL%/g, JudgeQueue.queueUrl),
-        //     responseMappingTemplate:
-        //         MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/response.vtl'))
-        //             .renderTemplate(),
-        // });
-        // runPlayground.addDependsOn(JudgeQueueDataSource);
+        })
+        runPlaygroundResolverLambda.addToRolePolicy(new PolicyStatement({
+            resources: [playgroundCodeBucket.bucketArn + '/*', JudgeQueue.queueArn],
+            actions: ['s3:PutObject', 'sqs:SendMessage'],
+        }));
+        const runPlaygroundResolverLambdaDataSource = api.addLambdaDataSource('runPlaygroundResolverLambdaDataSource', runPlaygroundResolverLambda)
+        runPlaygroundResolverLambdaDataSource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'runPlayground',
+        })
         const PlaygroundDataSource = api.addNoneDataSource('Playground');
         PlaygroundDataSource.createResolver({
             typeName: 'Mutation',

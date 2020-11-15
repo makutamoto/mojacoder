@@ -51,6 +51,7 @@ type Submission {
   userID: ID! @aws_cognito_user_pools @aws_api_key
   datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   lang: String! @aws_cognito_user_pools @aws_api_key
+  status: String! @aws_cognito_user_pools @aws_api_key
 }
 
 type Mutation {
