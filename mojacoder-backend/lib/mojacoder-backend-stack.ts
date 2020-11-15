@@ -260,11 +260,11 @@ export class MojacoderBackendStack extends cdk.Stack {
             actions: ['dynamodb:UpdateItem'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({
-            resources: [playgroundCodeBucket.bucketArn],
+            resources: [playgroundCodeBucket.bucketArn + '/*'],
             actions: ['s3:GetObject', 's3:DeleteObject'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({
-            resources: [submittedCodeBucket.bucketArn],
+            resources: [submittedCodeBucket.bucketArn + '/*'],
             actions: ['s3:GetObject'],
         }));
         const accessKey = new CfnAccessKey(this, 'JudgeUserAccessKey', {
