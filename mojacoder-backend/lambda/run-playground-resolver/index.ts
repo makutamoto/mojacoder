@@ -1,4 +1,4 @@
-import { AppSyncResolverHandler } from 'aws-lambda'
+import { AppSyncResolverHandler, AppSyncIdentityCognito } from 'aws-lambda'
 import { S3, SQS } from 'aws-sdk'
 
 const PLAYGROUND_CODE_BUCKET_NAME = process.env.PLAYGROUND_CODE_BUCKET_NAME as string;
@@ -25,11 +25,13 @@ interface JudgeQueueMessage {
     lang: string
     code: string
     stdin: string
+    userID: string
 }
 
 export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (event) => {
     return new Promise((resolve, reject) => {
         const { sessionID, lang, code, stdin } = event.arguments.input;
+        const sub = (event.identity as AppSyncIdentityCognito).sub;
         s3.putObject({
             Body: code,
             Bucket: PLAYGROUND_CODE_BUCKET_NAME,
@@ -45,6 +47,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                 lang,
                 code,
                 stdin,
+                userID: sub,
             };
             sqs.sendMessage({
                 MessageBody: JSON.stringify(message),

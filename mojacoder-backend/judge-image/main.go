@@ -46,7 +46,6 @@ func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error
 		if err != nil {
 			return err
 		}
-		deleteFromStorage(PLAYGROUND_CODE_BUCKET_NAME, data.SessionID)
 	}
 	return nil
 }
@@ -83,6 +82,13 @@ func main() {
 		if err != nil {
 			log.Println(err)
 			// IE
+			continue
+		}
+		if message.data.Type == "PLAYGROUND" {
+			err = deleteFromStorage(PLAYGROUND_CODE_BUCKET_NAME, message.data.SessionID)
+			if err != nil {
+				log.Println(err)
+			}
 		}
 		deleteJudgeQueueMessage(message.message)
 	}
