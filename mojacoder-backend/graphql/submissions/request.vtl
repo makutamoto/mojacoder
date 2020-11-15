@@ -2,10 +2,15 @@
     "version" : "2018-05-29",
     "operation" : "Query",
     "query" : {
-        "expression" : "userID = :userID AND problemID = :problemID",
+        "expression" : "problemID = :problemID",
         "expressionValues" : {
-            ":userID" : $util.dynamodb.toDynamoDBJson($context.source.userID),
             ":problemID" : $util.dynamodb.toDynamoDBJson($context.source.id)
+        }
+    },
+    "filter" : {
+        "expression" : "userID = :userID",
+        "expressionValues" : {
+            ":userID" : $util.dynamodb.toDynamoDBJson($context.source.userID)
         }
     },
     "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
