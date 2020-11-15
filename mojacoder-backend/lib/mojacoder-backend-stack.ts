@@ -292,6 +292,10 @@ export class MojacoderBackendStack extends cdk.Stack {
                 JUDGEQUEUE_URL: JudgeQueue.queueUrl,
             },
         });
+        judgeTask.addToExecutionRolePolicy(new PolicyStatement({
+            resources: ['*'],
+            actions: ['logs:CreateLogStream', 'logs:PutLogEvents'],
+        }))
         const judgeService = new FargateService(this, 'judge-service', {
             cluster: judgeCluster,
             taskDefinition: judgeTask,
