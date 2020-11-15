@@ -1,8 +1,8 @@
 import { AppSyncResolverHandler } from 'aws-lambda'
 import { S3, SQS } from 'aws-sdk'
 
-const SUBMITTED_CODE_BUCKET_NAME = process.env.SUBMITTED_CODE_BUCKET_NAME as string;
-if(SUBMITTED_CODE_BUCKET_NAME === undefined) throw "SUBMITTED_CODE_BUCKET_NAME is not defined.";
+const PLAYGROUND_CODE_BUCKET_NAME = process.env.PLAYGROUND_CODE_BUCKET_NAME as string;
+if(PLAYGROUND_CODE_BUCKET_NAME === undefined) throw "PLAYGROUND_CODE_BUCKET_NAME is not defined.";
 const JUDGEQUEUE_URL = process.env.JUDGEQUEUE_URL as string;
 if(JUDGEQUEUE_URL === undefined) throw "JUDGEQUEUE_URL is not defined.";
 
@@ -32,7 +32,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
         const { sessionID, lang, code, stdin } = event.arguments.input;
         s3.putObject({
             Body: code,
-            Bucket: SUBMITTED_CODE_BUCKET_NAME,
+            Bucket: PLAYGROUND_CODE_BUCKET_NAME,
             Key: sessionID,
         }, (err) => {
             if(err) {
