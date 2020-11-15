@@ -255,6 +255,14 @@ export class MojacoderBackendStack extends cdk.Stack {
             resources: [JudgeQueue.queueArn],
             actions: ['sqs:ReceiveMessage', 'sqs:DeleteMessage'],
         }));
+        JudgeUser.addToPolicy(new PolicyStatement({
+            resources: [playgroundCodeBucket.bucketArn],
+            actions: ['s3:GetObject', 's3:DeleteObject'],
+        }));
+        JudgeUser.addToPolicy(new PolicyStatement({
+            resources: [submittedCodeBucket.bucketArn],
+            actions: ['s3:GetObject'],
+        }));
         const accessKey = new CfnAccessKey(this, 'JudgeUserAccessKey', {
             userName: JudgeUser.userName,
         });
