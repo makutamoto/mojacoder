@@ -142,17 +142,17 @@ export class MojacoderBackendStack extends cdk.Stack {
                 type: AttributeType.STRING,
             },
         });
-        // submissionTable.addGlobalSecondaryIndex({
-        //     indexName: 'problemID-index',
-        //     partitionKey: {
-        //         name: 'problemID',
-        //         type: AttributeType.STRING,
-        //     },
-        //     sortKey: {
-        //         name: 'datetime',
-        //         type: AttributeType.STRING,
-        //     },
-        // });
+        submissionTable.addGlobalSecondaryIndex({
+            indexName: 'problemID-index',
+            partitionKey: {
+                name: 'problemID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.STRING,
+            },
+        });
         const submittedCodeBucket = new Bucket(this, 'submittedCodeBucket');
         const submitCodeResolverLambda = new NodejsFunction(this, 'submitCodeResolverLambda', {
             entry: join(__dirname, '../lambda/submit-code-resolver/index.ts'),
