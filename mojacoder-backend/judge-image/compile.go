@@ -1,16 +1,16 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
 )
 
-func compile(definition LanguageDefinition, code string) (bool, string, error) {
+func compile(definition LanguageDefinition, bucket, key string) (bool, string, error) {
 	var err error
 	codePath := path.Join(TEMP_DIR, definition.Filename)
-	if err = ioutil.WriteFile(codePath, []byte(code), 0555); err != nil {
+	err = downloadFromS3(codePath, bucket, key)
+	if err != nil {
 		return false, "", err
 	}
 	if definition.CompileCommand == "" {

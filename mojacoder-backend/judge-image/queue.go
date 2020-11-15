@@ -12,7 +12,6 @@ type JudgeQueueData struct {
 	SessionID string `json:"sessionID"`
 	UserID    string `json:"userID"`
 	Lang      string `json:"Lang"`
-	Code      string `json:"code"`
 	Stdin     string `json:"stdin"`
 }
 
