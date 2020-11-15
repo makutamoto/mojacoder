@@ -256,6 +256,10 @@ export class MojacoderBackendStack extends cdk.Stack {
             actions: ['sqs:ReceiveMessage', 'sqs:DeleteMessage'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({
+            resources: [submissionTable.tableArn],
+            actions: ['dynamodb:UpdateItem'],
+        }));
+        JudgeUser.addToPolicy(new PolicyStatement({
             resources: [playgroundCodeBucket.bucketArn],
             actions: ['s3:GetObject', 's3:DeleteObject'],
         }));
@@ -281,6 +285,9 @@ export class MojacoderBackendStack extends cdk.Stack {
                 AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,
                 API_ENDPOINT: api.graphqlUrl,
                 JUDGEQUEUE_URL: JudgeQueue.queueUrl,
+                SUBMISSION_TABLE_NAME: submissionTable.tableName,
+                PLAYGROUND_CODE_BUCKET_NAME: playgroundCodeBucket.bucketName,
+                SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
             },
         });
         judgeTask.addToExecutionRolePolicy(new PolicyStatement({
