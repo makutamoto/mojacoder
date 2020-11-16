@@ -45,13 +45,26 @@ type SubmissionConnection {
   nextToken: String
 }
 
+type SubmissionStatus {
+  testcaseName: String! @aws_cognito_user_pools @aws_api_key
+  status: String! @aws_cognito_user_pools @aws_api_key
+}
+
 type Submission {
   id: ID! @aws_cognito_user_pools @aws_api_key
   problemID: ID! @aws_cognito_user_pools @aws_api_key
   userID: ID! @aws_cognito_user_pools @aws_api_key
   datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   lang: String! @aws_cognito_user_pools @aws_api_key
-  status: String! @aws_cognito_user_pools @aws_api_key
+  judged: Boolean! @aws_cognito_user_pools @aws_api_key
+  status: [SubmissionStatus]! @aws_cognito_user_pools @aws_api_key
+}
+
+type updateSubmissionStatusOutput {
+  id: ID! @aws_iam
+  judged: Boolean! @aws_iam
+  testcaseName: String! @aws_iam
+  status: String! @aws_iam
 }
 
 type Mutation {
@@ -59,6 +72,7 @@ type Mutation {
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
   postProblem: Problem! @aws_cognito_user_pools
   submitCode(input: SubmitCodeInput!): Submission! @aws_cognito_user_pools
+  updateSubmissionStatus(input: updateSubmissionStatusInput!): updateSubmissionStatusOutput! @aws_iam
 }
 
 type ResponsePlayground {
@@ -100,4 +114,11 @@ input SubmitCodeInput {
   problemID: ID!
   lang: String!
   code: String!
+}
+
+input updateSubmissionStatusInput {
+  id: ID!
+  judged: Boolean!
+  testcaseName: String!
+  status: String!
 }

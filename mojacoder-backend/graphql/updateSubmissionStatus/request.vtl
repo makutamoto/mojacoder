@@ -1,0 +1,16 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key" : {
+        "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.id)
+    },
+    "update" : {
+        "expression" : "SET status.#testcaseName = :status",
+        "expressionNames" : {
+            "#testcaseName" : "$context.arguments.input.testcaseName"
+        },
+        "expressionValues" : {
+            ":status": $util.dynamodb.toDynamoDBJson($context.arguments.input.status)
+        }
+    }
+}

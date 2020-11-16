@@ -1,1 +1,12 @@
-$util.toJson($context.result)
+#set($items = [])
+#foreach($item in $context.result.items)
+    #set($status = [])
+    #foreach($testcase in $item.status)
+        $status.add({ testcaseName: $testcase.getKey(), status: testcase.getValue() })
+    #end
+    $items.add({ id: $item.id, problemID: $item.problemID, userID: $item.userID, datetime: $item.datetime, lang: $item.lang, judged: $item.judged, status: $status })
+#end
+{
+    "items": $items,
+    "nextToken": $context.result.nextToken
+}

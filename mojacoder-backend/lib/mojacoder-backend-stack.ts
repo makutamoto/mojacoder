@@ -236,6 +236,12 @@ export class MojacoderBackendStack extends cdk.Stack {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submissions/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submissions/response.vtl')),
         });
+        submissionTableDataSource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'updateSubmissionStatus',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateSubmissionStatus/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateSubmissionStatus/response.vtl')),
+        });
 
         const vpc = new Vpc(this, 'vpc', {
             natGateways: 0,

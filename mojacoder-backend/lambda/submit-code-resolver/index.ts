@@ -52,8 +52,11 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                 datetime: {
                     S: datetime.toISOString(),
                 },
+                judged: {
+                    B: false,
+                },
                 status: {
-                    S: 'WJ',
+                    L: [],
                 },
             },
             ConditionExpression: 'attribute_not_exists(#id)',
