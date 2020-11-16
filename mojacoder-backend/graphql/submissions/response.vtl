@@ -8,5 +8,5 @@
 #end
 {
     "items": $items,
-    "nextToken": $context.result.nextToken
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.result.nextToken, null))
 }
