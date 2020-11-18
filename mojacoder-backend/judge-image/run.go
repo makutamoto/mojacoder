@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os/exec"
-	"strings"
 	"syscall"
 	"time"
 )
@@ -22,32 +22,31 @@ type RunResult struct {
 	exitCode int
 	time     int
 	memory   int
-	stdout   []byte
 }
 
-func run(definition LanguageDefinition, stdin string, timeLimit, memoryLimit int) (RunResult, error) {
+func run(definition LanguageDefinition, stdin io.Reader, stdout io.Writer, stderr io.Writer, timeLimit, memoryLimit int) (RunResult, error) {
 	var result RunResult
 	var err error
 	command := fmt.Sprintf("ulimit -u 10 -m %d && timeout --preserve-status -sSIGKILL %d %s; EXIT_CODE=$?; kill -SIGKILL -1; exit $EXIT_CODE", memoryLimit, timeLimit, definition.RunCommand)
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Env = []string{}
 	cmd.Dir = TEMP_DIR
-	cmd.Stdin = strings.NewReader(stdin)
+	cmd.Stdin = stdin
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Credential: &syscall.Credential{Uid: CHILD_UID, Gid: CHILD_GID},
 	}
 	start := time.Now()
-	stdout, err := cmd.Output()
+	err = cmd.Start()
+	cmd.Wait()
 	end := time.Now()
 	if err != nil {
-		if _, ok := err.(*exec.ExitError); !ok {
-			return result, err
-		}
+		return result, err
 	}
 	result.exitCode = cmd.ProcessState.ExitCode()
 	result.time = int((end.Sub(start)).Milliseconds())
 	result.memory = int(cmd.ProcessState.SysUsage().(*syscall.Rusage).Maxrss)
-	result.stdout = stdout
 	if !cmd.ProcessState.Success() {
 		if result.time > timeLimit*1000 {
 			result.status = RunResultStatusTimeLimitExceeded

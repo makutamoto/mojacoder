@@ -16,13 +16,15 @@ var AWS_REGION = os.Getenv("AWS_REGION")
 var API_ENDPOINT = os.Getenv("API_ENDPOINT")
 var JUDGEQUEUE_URL = os.Getenv("JUDGEQUEUE_URL")
 var PLAYGROUND_CODE_BUCKET_NAME = os.Getenv("PLAYGROUND_CODE_BUCKET_NAME")
+var SUBMITTED_CODE_BUCKET_NAME = os.Getenv("SUBMITTED_CODE_BUCKET_NAME")
+var TESTCASES_BUCKET_NAME = os.Getenv("TESTCASES_BUCKET_NAME")
 
 const TEMP_DIR = "/tmp/mojacoder-judge/"
 const CHILD_UID, CHILD_GID = 400, 400
 
 const LANGUAGE_DEFINITION_FILE = "./language-definition.json"
 
-func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error {
+func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData) error {
 	var err error
 	definition, exist := definitions[data.Lang]
 	if !exist {
@@ -33,6 +35,8 @@ func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error
 	switch data.Type {
 	case "PLAYGROUND":
 		compiled, stderr, err = compile(definition, PLAYGROUND_CODE_BUCKET_NAME, data.SessionID)
+	case "SUBMISSION":
+		compiled, stderr, err = compile(definition, SUBMITTED_CODE_BUCKET_NAME, data.ID)
 	}
 	if err != nil {
 		return err
@@ -46,6 +50,8 @@ func judge(definitions map[string]LanguageDefinition, data JudgeQueueData) error
 		if err != nil {
 			return err
 		}
+	} else if data.Type == "SUBMISSION" {
+
 	}
 	return nil
 }
@@ -78,7 +84,7 @@ func main() {
 			continue
 		}
 		log.Println(message.data)
-		err = judge(definitions, message.data)
+		err = processCode(definitions, message.data)
 		if err != nil {
 			log.Println(err)
 			// IE
