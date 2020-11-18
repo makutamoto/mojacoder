@@ -10,6 +10,7 @@ import (
 type JudgeQueueData struct {
 	Type      string `json:"type"`
 	SessionID string `json:"sessionID"`
+	ID        string `json:"id"`
 	UserID    string `json:"userID"`
 	Lang      string `json:"Lang"`
 	Stdin     string `json:"stdin"`
