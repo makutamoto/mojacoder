@@ -60,7 +60,7 @@ type Submission {
   status: [SubmissionStatus]! @aws_cognito_user_pools @aws_api_key
 }
 
-type updateSubmissionStatusOutput {
+type UpdateSubmissionStatusOutput {
   id: ID! @aws_iam
   judged: Boolean! @aws_iam
   testcaseName: String! @aws_iam
@@ -72,7 +72,7 @@ type Mutation {
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
   postProblem: Problem! @aws_cognito_user_pools
   submitCode(input: SubmitCodeInput!): Submission! @aws_cognito_user_pools
-  updateSubmissionStatus(input: updateSubmissionStatusInput!): updateSubmissionStatusOutput! @aws_iam
+  updateSubmissionStatus(input: UpdateSubmissionStatusInput!): updateSubmissionStatusOutput! @aws_iam
 }
 
 type ResponsePlayground {

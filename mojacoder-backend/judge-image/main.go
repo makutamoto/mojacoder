@@ -39,12 +39,13 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 		compiled, stderr, err = compile(definition, PLAYGROUND_CODE_BUCKET_NAME, data.SessionID)
 	case "SUBMISSION":
 		log.Println("Compiling for Submission...")
-		compiled, stderr, err = compile(definition, SUBMITTED_CODE_BUCKET_NAME, data.ID)
+		compiled, stderr, err = compile(definition, SUBMITTED_CODE_BUCKET_NAME, data.SubmissionID)
 	}
 	if err != nil {
 		return err
 	}
 	if !compiled {
+		log.Printf("Compile Error: %s", stderr)
 		err = responsePlayground(data.SessionID, data.UserID, -1, -1, -1, "", stderr)
 		return err
 	}
@@ -96,6 +97,7 @@ func main() {
 			// IE
 			continue
 		}
+		log.Println("Done!")
 		if message.data.Type == "PLAYGROUND" {
 			err = deleteFromStorage(PLAYGROUND_CODE_BUCKET_NAME, message.data.SessionID)
 			if err != nil {

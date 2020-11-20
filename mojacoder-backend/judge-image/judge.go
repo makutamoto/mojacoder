@@ -38,7 +38,7 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 	var err error
 	testcasesPath := filepath.Join(TEMP_DIR, "testcases")
 	testcasesZipPath := testcasesPath + ".zip"
-	err = downloadFromStorage(testcasesZipPath, TESTCASES_BUCKET_NAME, data.ProblemID)
+	err = downloadFromStorage(testcasesZipPath, TESTCASES_BUCKET_NAME, data.ProblemID+".zip")
 	if err != nil {
 		return fmt.Errorf(errorMessage, err)
 	}
@@ -74,9 +74,17 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 		}
 		stdoutReader := strings.NewReader(stdoutWriter.String())
 		if check(stdoutReader, outTestcaseFile, 0) {
-			updateSubmissionStatus(data.ID, false, inTestcase.Name(), "AC")
+			err = updateSubmissionStatus(data.SubmissionID, false, inTestcase.Name(), "AC")
+			if err != nil {
+				return err
+			}
+			log.Println("AC")
 		} else {
-			updateSubmissionStatus(data.ID, false, inTestcase.Name(), "WA")
+			err = updateSubmissionStatus(data.SubmissionID, false, inTestcase.Name(), "WA")
+			if err != nil {
+				return err
+			}
+			log.Println("WA")
 		}
 	}
 	return nil
