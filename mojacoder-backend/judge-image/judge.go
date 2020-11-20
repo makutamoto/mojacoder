@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -55,6 +56,7 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 		if inTestcase.IsDir() {
 			continue
 		}
+		log.Printf("Judging %s...", inTestcase.Name())
 		inTestcaseFilePath := filepath.Join(inPath, inTestcase.Name())
 		inTestcaseFile, err := os.Open(inTestcaseFilePath)
 		if err != nil {
