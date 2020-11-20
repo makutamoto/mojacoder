@@ -294,6 +294,7 @@ export class MojacoderBackendStack extends cdk.Stack {
                 SUBMISSION_TABLE_NAME: submissionTable.tableName,
                 PLAYGROUND_CODE_BUCKET_NAME: playgroundCodeBucket.bucketName,
                 SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
+                TESTCASES_BUCKET_NAME: testcases.bucketName,
             },
         });
         judgeTask.addToExecutionRolePolicy(new PolicyStatement({

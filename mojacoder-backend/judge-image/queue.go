@@ -14,6 +14,7 @@ type JudgeQueueData struct {
 	UserID    string `json:"userID"`
 	Lang      string `json:"Lang"`
 	Stdin     string `json:"stdin"`
+	ProblemID string `json:"problemID"`
 }
 
 type JudgeQueueMessage struct {

@@ -26,7 +26,8 @@ interface Response extends Arguments {
 type SUBMISSION = 'SUBMISSION';
 interface JudgeQueueMessage {
     type: SUBMISSION
-	submissionID: string
+    submissionID: string
+    problemID: string
 }
 
 export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (event) => {
@@ -56,7 +57,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                     BOOL: false,
                 },
                 status: {
-                    L: [],
+                    M: {},
                 },
             },
             ConditionExpression: 'attribute_not_exists(#id)',
@@ -81,6 +82,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                 const message: JudgeQueueMessage = {
                     type: "SUBMISSION",
                     submissionID: id,
+                    problemID,
                 };
                 sqs.sendMessage({
                     MessageBody: JSON.stringify(message),
