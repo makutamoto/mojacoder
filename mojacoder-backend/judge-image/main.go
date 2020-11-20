@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -28,14 +29,16 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 	var err error
 	definition, exist := definitions[data.Lang]
 	if !exist {
-		return err
+		return fmt.Errorf("Language not found: %s", data.Lang)
 	}
 	var compiled bool
 	var stderr string
 	switch data.Type {
 	case "PLAYGROUND":
+		log.Println("Compiling for Playground...")
 		compiled, stderr, err = compile(definition, PLAYGROUND_CODE_BUCKET_NAME, data.SessionID)
 	case "SUBMISSION":
+		log.Println("Compiling for Submission...")
 		compiled, stderr, err = compile(definition, SUBMITTED_CODE_BUCKET_NAME, data.ID)
 	}
 	if err != nil {
