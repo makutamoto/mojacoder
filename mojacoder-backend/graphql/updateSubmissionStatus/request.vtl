@@ -5,8 +5,9 @@
         "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.id)
     },
     "update" : {
-        "expression" : "SET status.#testcaseName = :status",
+        "expression" : "SET #status.#testcaseName = :status",
         "expressionNames" : {
+            "#status": "status",
             "#testcaseName" : "$context.arguments.input.testcaseName"
         },
         "expressionValues" : {
