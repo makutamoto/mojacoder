@@ -270,7 +270,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             actions: ['s3:GetObject', 's3:DeleteObject'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({
-            resources: [submittedCodeBucket.bucketArn + '/*'],
+            resources: [submittedCodeBucket.bucketArn + '/*', testcases.bucketArn + '/*'],
             actions: ['s3:GetObject'],
         }));
         const accessKey = new CfnAccessKey(this, 'JudgeUserAccessKey', {
