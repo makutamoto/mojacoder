@@ -51,7 +51,10 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 			return err
 		}
 	} else if data.Type == "SUBMISSION" {
-
+		err = judge(definition, data)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
