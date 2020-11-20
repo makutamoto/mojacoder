@@ -72,7 +72,7 @@ type Mutation {
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
   postProblem: Problem! @aws_cognito_user_pools
   submitCode(input: SubmitCodeInput!): Submission! @aws_cognito_user_pools
-  updateSubmissionStatus(input: UpdateSubmissionStatusInput!): updateSubmissionStatusOutput! @aws_iam
+  updateSubmissionStatus(input: UpdateSubmissionStatusInput!): UpdateSubmissionStatusOutput! @aws_iam
 }
 
 type ResponsePlayground {
@@ -116,7 +116,7 @@ input SubmitCodeInput {
   code: String!
 }
 
-input updateSubmissionStatusInput {
+input UpdateSubmissionStatusInput {
   id: ID!
   judged: Boolean!
   testcaseName: String!
