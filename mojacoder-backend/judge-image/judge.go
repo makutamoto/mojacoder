@@ -28,6 +28,7 @@ func updateSubmission(id string, userID string, status string, stderr *string, t
 		mutation UpdateSubmission($input: UpdateSubmissionInput!) {
 			updateSubmission(input: $input) {
 				id
+				userID
 				status
 				stderr
 				testcases {
