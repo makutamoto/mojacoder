@@ -53,7 +53,10 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 		case "SUBMISSION":
 			err = updateSubmission(data.SubmissionID, "CE", &stderr, nil)
 		}
-		return fmt.Errorf(errorMessage, err)
+		if err != nil {
+			return fmt.Errorf(errorMessage, err)
+		}
+		return nil
 	}
 	if data.Type == "PLAYGROUND" {
 		err = testCode(definition, data)

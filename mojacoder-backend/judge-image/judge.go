@@ -62,7 +62,7 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 		}
 		testcases[inTestcase.Name()] = "WJ"
 	}
-	for _, testcase := range testcases {
+	for testcase := range testcases {
 		log.Printf("Judging %s...", testcase)
 		inTestcaseFilePath := filepath.Join(inPath, testcase)
 		inTestcaseFile, err := os.Open(inTestcaseFilePath)
