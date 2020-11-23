@@ -9,11 +9,16 @@ import (
 	"strings"
 )
 
+type TestcaseInput struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+}
+
 type UpdateSubmissionStatusInput struct {
-	ID        string             `json:"id"`
-	Status    string             `json:"status"`
-	Stderr    *string            `json:"stderr"`
-	Testcases *map[string]string `json:"testcases"`
+	ID        string           `json:"id"`
+	Status    string           `json:"status"`
+	Stderr    *string          `json:"stderr"`
+	Testcases *[]TestcaseInput `json:"testcases"`
 }
 
 func updateSubmission(id string, status string, stderr *string, testcases *map[string]string) error {
@@ -31,7 +36,14 @@ func updateSubmission(id string, status string, stderr *string, testcases *map[s
 			}
 		}
 	`
-	variables["input"] = UpdateSubmissionStatusInput{id, status, stderr, testcases}
+	var testcasesForInput *[]TestcaseInput = nil
+	if testcases != nil {
+		testcasesForInput = &[]TestcaseInput{}
+		for name, status := range *testcases {
+			*testcasesForInput = append(*testcasesForInput, TestcaseInput{name, status})
+		}
+	}
+	variables["input"] = UpdateSubmissionStatusInput{id, status, stderr, testcasesForInput}
 	err := requestGraphql(query, variables)
 	return err
 }
