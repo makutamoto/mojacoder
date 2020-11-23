@@ -61,7 +61,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                     S: "",
                 },
                 testcases: {
-                    M: {},
+                    L: [],
                 },
             },
             ConditionExpression: 'attribute_not_exists(#id)',
