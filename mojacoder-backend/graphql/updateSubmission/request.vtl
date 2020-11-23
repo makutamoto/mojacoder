@@ -1,9 +1,9 @@
 #set($expression = "SET #status = :status")
 #if(!$util.isNull($context.arguments.input.stderr))
-    #set($expression = "{expression}, #stderr = :stderr"
+    #set($expression = "$expression, #stderr = :stderr")
 #end
 #if(!$util.isNull($context.arguments.input.testcases))
-    #set($expression = "{expression}, #testcases = :testcases"
+    #set($expression = "$expression, #testcases = :testcases")
 #end
 {
     "version" : "2018-05-29",
@@ -12,7 +12,7 @@
         "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.id)
     },
     "update" : {
-        "expression" : $expression,
+        "expression" : "$expression",
         "expressionNames" : {
             "#status": "status"
             #if(!$util.isNull($context.arguments.input.stderr))
