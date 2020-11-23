@@ -1,16 +1,18 @@
-export type JudgeStatus =
-    | 'WJ'
-    | 'CE'
-    | 'AC'
-    | 'WA'
-    | 'TLE'
-    | 'MLE'
-    | 'RE'
-    | 'IE'
+export const JudgeStatus = {
+    WJ: 'WJ',
+    CE: 'CE',
+    AC: 'AC',
+    WA: 'WA',
+    TLE: 'TLE',
+    MLE: 'MLE',
+    RE: 'RE',
+    IE: 'IE',
+} as const
+export type JudgeStatus = typeof JudgeStatus[keyof typeof JudgeStatus]
 
 export interface JudgeStatusDetail {
-    current: number
-    whole: number
+    name: string
+    status: JudgeStatus
 }
 
 export const JudgeStatusToText = {

@@ -31,6 +31,11 @@ const ProblemTab: React.FC<Props> = (props) => {
                     <Nav.Link eventKey="submissions">{t`submissions`}</Nav.Link>
                 </Link>
             </Nav.Item>
+            <Nav.Item>
+                <Link passHref href={join(basePath, 'testcases')}>
+                    <Nav.Link eventKey="testcases">{t`testcases`}</Nav.Link>
+                </Link>
+            </Nav.Item>
         </Nav>
     )
 }

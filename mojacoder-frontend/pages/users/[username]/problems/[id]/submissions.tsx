@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Spinner } from 'react-bootstrap'
+import { Alert, Spinner } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
+import { useI18n } from '../../../../../lib/i18n'
 import Auth from '../../../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../../../lib/backend'
-import { User, Submission } from '../../../../../lib/backend_types'
+import {
+    User,
+    Submission,
+    SubmissionStatus,
+} from '../../../../../lib/backend_types'
 import SubmissionTable from '../../../../../components/SubmissionTable'
 import ProblemTab from '../../../../../components/ProblemTab'
 
@@ -24,6 +29,11 @@ const GetSubmissions = gql`
                         userID
                         datetime
                         lang
+                        status
+                        testcases {
+                            name
+                            status
+                        }
                     }
                 }
             }
@@ -35,27 +45,42 @@ interface GetSubmissionsResponse {
 }
 
 const Submissions: React.FC = () => {
+    const { t } = useI18n('submissions')
     const { query } = useRouter()
     const { auth } = Auth.useContainer()
     const [submissions, setSubmissions] = useState<Submission[] | null>(null)
-    useEffect(() => {
+    const updateSubmissions = useCallback(() => {
         if (auth) {
             invokeQueryWithApiKey(GetSubmissions, {
                 authorUsername: query.username,
                 problemID: query.id,
                 userID: auth.userID,
             }).then((data: GetSubmissionsResponse) => {
-                setSubmissions(data.user.problem.submissions.items)
+                const items = data.user.problem.submissions.items
+                setSubmissions(items)
+                for (const item of items) {
+                    if (item.status === SubmissionStatus.WJ) {
+                        setTimeout(updateSubmissions, 1000)
+                        break
+                    }
+                }
             })
         }
     }, [query, auth])
+    useEffect(updateSubmissions, [updateSubmissions])
     return (
         <>
             <ProblemTab activeKey="submissions" />
-            {submissions === null ? (
-                <Spinner animation="border" />
+            {auth ? (
+                submissions === null ? (
+                    <div className="text-center">
+                        <Spinner animation="border" />
+                    </div>
+                ) : (
+                    <SubmissionTable submissions={submissions} />
+                )
             ) : (
-                <SubmissionTable submissions={submissions} />
+                <Alert variant="danger">{t`signInRequired`}</Alert>
             )}
         </>
     )

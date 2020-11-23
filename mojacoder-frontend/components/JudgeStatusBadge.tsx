@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { Badge, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import React from 'react'
+import { Badge, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap'
 
-import {
-    JudgeStatus,
-    JudgeStatusDetail,
-    JudgeStatusToText,
-} from '../lib/JudgeStatus'
+import { JudgeStatus, JudgeStatusToText } from '../lib/JudgeStatus'
 
-import styles from './JudgeStatusBadge.module.css'
+export interface JudgeStatusBadgeProgress {
+    current: number
+    whole: number
+}
 
 export interface JudgeStatusBadgeProps {
     status: JudgeStatus
-    detail?: JudgeStatusDetail
+    progress?: JudgeStatusBadgeProgress
 }
 
 export const JudgeStatusColors = {
@@ -26,39 +25,29 @@ export const JudgeStatusColors = {
 }
 
 const JudgeStatusBadge: React.FC<JudgeStatusBadgeProps> = (props) => {
-    const [progressDot, setProgressDot] = useState('')
-    useEffect(() => {
-        if (props.detail || props.status == 'WJ') {
-            const interval = setInterval(() => {
-                if (progressDot === '...') setProgressDot('')
-                else setProgressDot(progressDot + '.')
-            }, 250)
-            return () => clearInterval(interval)
-        } else {
-            setProgressDot('')
-        }
-    }, [progressDot, setProgressDot, props.status, props.detail])
     return (
-        <span>
-            <OverlayTrigger
-                placement="top"
-                overlay={
-                    <Tooltip id="judgestatusbadge-tooltip">
-                        {JudgeStatusToText[props.status]}
-                    </Tooltip>
-                }
+        <OverlayTrigger
+            placement="top"
+            overlay={
+                <Tooltip id="judgestatusbadge-tooltip">
+                    {JudgeStatusToText[props.status]}
+                </Tooltip>
+            }
+        >
+            <Badge
+                className="text-white p-2"
+                variant={JudgeStatusColors[props.status]}
             >
-                <Badge
-                    className="text-white"
-                    variant={JudgeStatusColors[props.status]}
-                >
-                    {props.detail &&
-                        `${props.detail.current}/${props.detail.whole} `}
-                    {props.detail && props.status == 'WJ' ? null : props.status}
-                </Badge>
-            </OverlayTrigger>
-            <span className={styles['align-sub']}>{progressDot}</span>
-        </span>
+                {(props.status === JudgeStatus.WJ || props.progress) && (
+                    <Spinner className="mr-2" animation="border" size="sm" />
+                )}
+                {props.progress &&
+                    `${props.progress.current}/${props.progress.whole} `}
+                {props.progress && props.status == JudgeStatus.WJ
+                    ? null
+                    : props.status}
+            </Badge>
+        </OverlayTrigger>
     )
 }
 

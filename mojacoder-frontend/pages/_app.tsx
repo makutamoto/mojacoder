@@ -67,9 +67,13 @@ const languages = {
             submit: '提出',
             signInRequired: '提出するにはサインインして下さい。',
         },
+        submissions: {
+            signInRequired: '自分の提出をみるにはサインインして下さい。',
+        },
         problemTab: {
             problem: '問題',
             submissions: '提出',
+            testcases: 'テストケース',
         },
         signIn: {
             title: 'サインイン',
@@ -138,9 +142,13 @@ const languages = {
             submit: 'Submit',
             signInRequired: 'Signing in is required to submit your code.',
         },
+        submissions: {
+            signInRequired: 'Signing in is required to see your submissions.',
+        },
         problemTab: {
             problem: 'Problem',
             submissions: 'Submissions',
+            testcases: 'Test cases',
         },
         signIn: {
             title: 'Sign in',
