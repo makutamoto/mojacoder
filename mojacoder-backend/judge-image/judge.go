@@ -19,8 +19,8 @@ type UpdateSubmissionStatusInput struct {
 func updateSubmission(id string, status string, stderr *string, testcases *map[string]string) error {
 	variables := make(map[string]interface{})
 	query := `
-		mutation UpdateSubmissionStatus($input: UpdateSubmissionStatusInput!) {
-			updateSubmissionStatus(input: $input) {
+		mutation UpdateSubmission($input: UpdateSubmissionInput!) {
+			updateSubmission(input: $input) {
 				id
 				status
 				stderr
