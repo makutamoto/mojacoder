@@ -75,9 +75,21 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 			return fmt.Errorf(errorMessage, err)
 		}
 		stdoutWriter := strings.Builder{}
-		_, err = run(definition, inTestcaseFile, &stdoutWriter, nil, 2, 1024)
+		result, err := run(definition, inTestcaseFile, &stdoutWriter, nil, 2, 1024)
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
+		}
+		if result.status != RunResultStatusSuccess {
+			switch result.status {
+			case RunResultStatusTimeLimitExceeded:
+				testcases[testcase] = "TLE"
+			case RunResultStatusMemoryLimitExceeded:
+				testcases[testcase] = "MLE"
+			case RunResultStatusRunTimeError:
+				testcases[testcase] = "RE"
+			}
+			updateSubmission(data.SubmissionID, "WJ", nil, &testcases)
+			continue
 		}
 		stdoutReader := strings.NewReader(stdoutWriter.String())
 		if check(stdoutReader, outTestcaseFile, 0) {
