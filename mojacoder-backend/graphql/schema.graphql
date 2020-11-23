@@ -33,7 +33,7 @@ type ProblemConnection {
 type Problem {
   id: ID! @aws_cognito_user_pools @aws_api_key
   userID: String! @aws_cognito_user_pools @aws_api_key
-  datetime: Int! @aws_cognito_user_pools @aws_api_key
+  datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
   title: String @aws_cognito_user_pools @aws_api_key
   statement: String @aws_cognito_user_pools @aws_api_key
