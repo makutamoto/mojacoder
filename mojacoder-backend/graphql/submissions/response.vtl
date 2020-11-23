@@ -1,8 +1,8 @@
 #set($items = [])
 #foreach($item in $context.result.items)
 	#set($testcases = [])
-	#foreach($testcase in $item.testcases.entrySet())
-		$util.qr($testcases.add({ "name": $testcase.key, "status": $testcase.value }))
+	#foreach($testcase in $item.testcases)
+		$util.qr($testcases.add({ "name": $testcase.get("name"), "status": $testcase.get("status") }))
 	#end
     $util.qr($items.add({ "id": $item.id, "problemID": $item.problemID, "userID": $item.userID, "datetime": $item.datetime, "lang": $item.lang, "status": $item.status, "stderr": $item.stderr, "testcases": $testcases }))
 #end
