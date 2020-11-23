@@ -21,7 +21,7 @@ type UpdateSubmissionStatusInput struct {
 	Testcases *[]TestcaseInput `json:"testcases"`
 }
 
-func updateSubmission(id string, status string, stderr *string, testcases *map[string]string) error {
+func updateSubmission(id string, status string, stderr *string, testcases *[]TestcaseInput) error {
 	variables := make(map[string]interface{})
 	query := `
 		mutation UpdateSubmission($input: UpdateSubmissionInput!) {
@@ -36,14 +36,7 @@ func updateSubmission(id string, status string, stderr *string, testcases *map[s
 			}
 		}
 	`
-	var testcasesForInput *[]TestcaseInput = nil
-	if testcases != nil {
-		testcasesForInput = &[]TestcaseInput{}
-		for name, status := range *testcases {
-			*testcasesForInput = append(*testcasesForInput, TestcaseInput{name, status})
-		}
-	}
-	variables["input"] = UpdateSubmissionStatusInput{id, status, stderr, testcasesForInput}
+	variables["input"] = UpdateSubmissionStatusInput{id, status, stderr, testcases}
 	err := requestGraphql(query, variables)
 	return err
 }
@@ -67,21 +60,21 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 	if err != nil {
 		return fmt.Errorf(errorMessage, err)
 	}
-	testcases := make(map[string]string)
+	testcases := []TestcaseInput{}
 	for _, inTestcase := range inTestcases {
 		if inTestcase.IsDir() {
 			continue
 		}
-		testcases[inTestcase.Name()] = "WJ"
+		testcases = append(testcases, TestcaseInput{inTestcase.Name(), "WJ"})
 	}
-	for testcase := range testcases {
-		log.Printf("Judging %s...", testcase)
-		inTestcaseFilePath := filepath.Join(inPath, testcase)
+	for i := range testcases {
+		log.Printf("Judging %s...", testcases[i].Name)
+		inTestcaseFilePath := filepath.Join(inPath, testcases[i].Name)
 		inTestcaseFile, err := os.Open(inTestcaseFilePath)
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
 		}
-		outTestcaseFilePath := filepath.Join(outPath, testcase)
+		outTestcaseFilePath := filepath.Join(outPath, testcases[i].Name)
 		outTestcaseFile, err := os.Open(outTestcaseFilePath)
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
@@ -94,11 +87,11 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 		if result.status != RunResultStatusSuccess {
 			switch result.status {
 			case RunResultStatusTimeLimitExceeded:
-				testcases[testcase] = "TLE"
+				testcases[i].Status = "TLE"
 			case RunResultStatusMemoryLimitExceeded:
-				testcases[testcase] = "MLE"
+				testcases[i].Status = "MLE"
 			case RunResultStatusRunTimeError:
-				testcases[testcase] = "RE"
+				testcases[i].Status = "RE"
 			}
 			updateSubmission(data.SubmissionID, "WJ", nil, &testcases)
 			continue
@@ -106,14 +99,14 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 		stdoutReader := strings.NewReader(stdoutWriter.String())
 		if check(stdoutReader, outTestcaseFile, 0) {
 			log.Println("AC")
-			testcases[testcase] = "AC"
+			testcases[i].Status = "AC"
 			err = updateSubmission(data.SubmissionID, "WJ", nil, &testcases)
 			if err != nil {
 				return fmt.Errorf(errorMessage, err)
 			}
 		} else {
 			log.Println("WA")
-			testcases[testcase] = "WA"
+			testcases[i].Status = "WA"
 			err = updateSubmission(data.SubmissionID, "WJ", nil, &testcases)
 			if err != nil {
 				return fmt.Errorf(errorMessage, err)
