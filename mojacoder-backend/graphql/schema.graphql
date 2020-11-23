@@ -132,9 +132,14 @@ input SubmitCodeInput {
   code: String!
 }
 
+type TestcaseInput {
+  name: String! @aws_cognito_user_pools @aws_api_key
+  status: TestcaseStatus! @aws_cognito_user_pools @aws_api_key
+}
+
 input UpdateSubmissionInput {
   id: ID!
   status: SubmissionStatus!
   stderr: String
-  testcases: [Testcase]
+  testcases: [TestcaseInput]
 }
