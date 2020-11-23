@@ -238,9 +238,9 @@ export class MojacoderBackendStack extends cdk.Stack {
         });
         submissionTableDataSource.createResolver({
             typeName: 'Mutation',
-            fieldName: 'updateSubmissionStatus',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateSubmissionStatus/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateSubmissionStatus/response.vtl')),
+            fieldName: 'updateSubmission',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateSubmission/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateSubmission/response.vtl')),
         });
 
         const vpc = new Vpc(this, 'vpc', {

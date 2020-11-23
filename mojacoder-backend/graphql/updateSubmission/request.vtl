@@ -1,0 +1,35 @@
+#set($expression = "SET #status = :status")
+#if(!$util.isNull($context.arguments.input.stderr))
+    #set($expression = "{expression}, #stderr = :stderr"
+#end
+#if(!$util.isNull($context.arguments.input.testcases))
+    #set($expression = "{expression}, #testcases = :testcases"
+#end
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key" : {
+        "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.id)
+    },
+    "update" : {
+        "expression" : $expression,
+        "expressionNames" : {
+            "#status": "status"
+            #if(!$util.isNull($context.arguments.input.stderr))
+                , "#stderr": "stderr"
+            #end
+            #if(!$util.isNull($context.arguments.input.testcases))
+                , "#testcases" : "testcases"
+            #end
+        },
+        "expressionValues" : {
+            ":status": $util.dynamodb.toDynamoDBJson($context.arguments.input.status)
+            #if(!$util.isNull($context.arguments.input.stderr))
+                , ":stderr": $util.dynamodb.toDynamoDBJson($context.arguments.input.stderr)
+            #end
+            #if(!$util.isNull($context.arguments.input.testcases))
+                , ":testcases": $util.dynamodb.toDynamoDBJson($context.arguments.input.testcases)
+            #end
+        }
+    }
+}

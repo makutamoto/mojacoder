@@ -54,10 +54,13 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                 datetime: {
                     S: datetime.toISOString(),
                 },
-                judged: {
-                    BOOL: false,
-                },
                 status: {
+                    S: "WJ",
+                },
+                stderr: {
+                    S: "",
+                },
+                testcases: {
                     M: {},
                 },
             },

@@ -45,9 +45,24 @@ type SubmissionConnection {
   nextToken: String
 }
 
-type SubmissionStatus {
-  testcaseName: String! @aws_cognito_user_pools @aws_api_key
-  status: String! @aws_cognito_user_pools @aws_api_key
+enum TestcaseStatus {
+  WJ
+  AC
+  WA
+  TLE
+  RE
+  IE
+}
+
+type Testcase {
+  name: String! @aws_cognito_user_pools @aws_api_key
+  status: TestcaseStatus! @aws_cognito_user_pools @aws_api_key
+}
+
+enum SubmissionStatus {
+  WJ
+  CE
+  JUDGED
 }
 
 type Submission {
@@ -56,15 +71,16 @@ type Submission {
   userID: ID! @aws_cognito_user_pools @aws_api_key
   datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   lang: String! @aws_cognito_user_pools @aws_api_key
-  judged: Boolean! @aws_cognito_user_pools @aws_api_key
-  status: [SubmissionStatus]! @aws_cognito_user_pools @aws_api_key
+  status: SubmissionStatus! @aws_cognito_user_pools @aws_api_key
+  stderr: String! @aws_cognito_user_pools @aws_api_key
+  testcases: [Testcase]! @aws_cognito_user_pools @aws_api_key
 }
 
-type UpdateSubmissionStatusOutput {
+type UpdateSubmissionOutput {
   id: ID! @aws_iam
-  judged: Boolean! @aws_iam
-  testcaseName: String! @aws_iam
-  status: String! @aws_iam
+  status: SubmissionStatus! @aws_iam
+  stderr: String
+  testcases: [Testcase]! @aws_iam
 }
 
 type Mutation {
@@ -72,7 +88,7 @@ type Mutation {
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
   postProblem: Problem! @aws_cognito_user_pools
   submitCode(input: SubmitCodeInput!): Submission! @aws_cognito_user_pools
-  updateSubmissionStatus(input: UpdateSubmissionStatusInput!): UpdateSubmissionStatusOutput! @aws_iam
+  updateSubmission(input: UpdateSubmissionStatus!): UpdateSubmissionOutput! @aws_iam
 }
 
 type ResponsePlayground {
@@ -116,9 +132,9 @@ input SubmitCodeInput {
   code: String!
 }
 
-input UpdateSubmissionStatusInput {
+input UpdateSubmissionInput {
   id: ID!
-  judged: Boolean!
-  testcaseName: String!
-  status: String!
+  status: SubmissionStatus!
+  stderr: String
+  testcases: [Testcase]
 }
