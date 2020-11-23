@@ -27,6 +27,7 @@ type SUBMISSION = 'SUBMISSION';
 interface JudgeQueueMessage {
     type: SUBMISSION
     submissionID: string
+    userID: string
     lang: string
     problemID: string
 }
@@ -86,6 +87,7 @@ export const handler: AppSyncResolverHandler<{ input: Arguments }, Response> = (
                 const message: JudgeQueueMessage = {
                     type: "SUBMISSION",
                     submissionID: id,
+                    userID: sub,
                     lang,
                     problemID,
                 };
