@@ -55,8 +55,8 @@ enum TestcaseStatus {
 }
 
 type Testcase {
-  name: String! @aws_cognito_user_pools @aws_api_key
-  status: TestcaseStatus! @aws_cognito_user_pools @aws_api_key
+  name: String! @aws_api_key @aws_iam
+  status: TestcaseStatus! @aws_api_key @aws_iam
 }
 
 enum SubmissionStatus {
@@ -77,10 +77,10 @@ type Submission {
 }
 
 type UpdateSubmissionOutput {
-  id: ID! @aws_iam
-  status: SubmissionStatus! @aws_iam
-  stderr: String
-  testcases: [Testcase]! @aws_iam
+  id: ID! @aws_iam @aws_api_key
+  status: SubmissionStatus! @aws_iam @aws_api_key
+  stderr: String @aws_iam @aws_api_key
+  testcases: [Testcase] @aws_iam @aws_api_key
 }
 
 type Mutation {
