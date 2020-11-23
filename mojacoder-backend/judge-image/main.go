@@ -26,6 +26,7 @@ const CHILD_UID, CHILD_GID = 400, 400
 const LANGUAGE_DEFINITION_FILE = "./language-definition.json"
 
 func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData) error {
+	const errorMessage = "Failed to process a code: %v"
 	var err error
 	definition, exist := definitions[data.Lang]
 	if !exist {
@@ -42,22 +43,31 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 		compiled, stderr, err = compile(definition, SUBMITTED_CODE_BUCKET_NAME, data.SubmissionID)
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf(errorMessage, err)
 	}
 	if !compiled {
 		log.Printf("Compile Error: %s", stderr)
-		err = responsePlayground(data.SessionID, data.UserID, -1, -1, -1, "", stderr)
-		return err
+		switch data.Type {
+		case "PLAYGROUND":
+			err = responsePlayground(data.SessionID, data.UserID, -1, -1, -1, "", stderr)
+		case "SUBMISSION":
+			err = updateSubmission(data.SubmissionID, "CE", &stderr, nil)
+		}
+		return fmt.Errorf(errorMessage, err)
 	}
 	if data.Type == "PLAYGROUND" {
 		err = testCode(definition, data)
 		if err != nil {
-			return err
+			return fmt.Errorf(errorMessage, err)
 		}
 	} else if data.Type == "SUBMISSION" {
+		err = updateSubmission(data.SubmissionID, "WJ", &stderr, nil)
+		if err != nil {
+			return fmt.Errorf(errorMessage, err)
+		}
 		err = judge(definition, data)
 		if err != nil {
-			return err
+			return fmt.Errorf(errorMessage, err)
 		}
 	}
 	return nil
