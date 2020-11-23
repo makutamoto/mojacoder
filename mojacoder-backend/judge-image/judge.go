@@ -16,12 +16,13 @@ type TestcaseInput struct {
 
 type UpdateSubmissionStatusInput struct {
 	ID        string           `json:"id"`
+	UserID    string           `json:"userID"`
 	Status    string           `json:"status"`
 	Stderr    *string          `json:"stderr"`
 	Testcases *[]TestcaseInput `json:"testcases"`
 }
 
-func updateSubmission(id string, status string, stderr *string, testcases *[]TestcaseInput) error {
+func updateSubmission(id string, userID string, status string, stderr *string, testcases *[]TestcaseInput) error {
 	variables := make(map[string]interface{})
 	query := `
 		mutation UpdateSubmission($input: UpdateSubmissionInput!) {
@@ -36,7 +37,7 @@ func updateSubmission(id string, status string, stderr *string, testcases *[]Tes
 			}
 		}
 	`
-	variables["input"] = UpdateSubmissionStatusInput{id, status, stderr, testcases}
+	variables["input"] = UpdateSubmissionStatusInput{id, userID, status, stderr, testcases}
 	err := requestGraphql(query, variables)
 	return err
 }
@@ -93,27 +94,27 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 			case RunResultStatusRunTimeError:
 				testcases[i].Status = "RE"
 			}
-			updateSubmission(data.SubmissionID, "WJ", nil, &testcases)
+			updateSubmission(data.SubmissionID, data.UserID, "WJ", nil, &testcases)
 			continue
 		}
 		stdoutReader := strings.NewReader(stdoutWriter.String())
 		if check(stdoutReader, outTestcaseFile, 0) {
 			log.Println("AC")
 			testcases[i].Status = "AC"
-			err = updateSubmission(data.SubmissionID, "WJ", nil, &testcases)
+			err = updateSubmission(data.SubmissionID, data.UserID, "WJ", nil, &testcases)
 			if err != nil {
 				return fmt.Errorf(errorMessage, err)
 			}
 		} else {
 			log.Println("WA")
 			testcases[i].Status = "WA"
-			err = updateSubmission(data.SubmissionID, "WJ", nil, &testcases)
+			err = updateSubmission(data.SubmissionID, data.UserID, "WJ", nil, &testcases)
 			if err != nil {
 				return fmt.Errorf(errorMessage, err)
 			}
 		}
 	}
-	err = updateSubmission(data.SubmissionID, "JUDGED", nil, nil)
+	err = updateSubmission(data.SubmissionID, data.UserID, "JUDGED", nil, nil)
 	if err != nil {
 		return fmt.Errorf(errorMessage, err)
 	}

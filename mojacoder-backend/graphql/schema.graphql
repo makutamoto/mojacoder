@@ -78,6 +78,7 @@ type Submission {
 
 type UpdateSubmissionOutput {
   id: ID! @aws_iam @aws_api_key
+  userID: ID! @aws_iam @aws_api_key
   status: SubmissionStatus! @aws_iam @aws_api_key
   stderr: String @aws_iam @aws_api_key
   testcases: [Testcase] @aws_iam @aws_api_key
@@ -107,6 +108,7 @@ type Query {
 
 type Subscription {
   onResponsePlayground(sessionID: ID!, userID: ID!): ResponsePlayground @aws_cognito_user_pools @aws_subscribe(mutations : ["responsePlayground"])
+  onUpdateSubmission(userID: ID!): UpdateSubmissionOutput @aws_api_key @aws_subscribe(mutations : ["updateSubmission"])
 }
 
 input ResponsePlaygroundInput {
@@ -139,6 +141,7 @@ input TestcaseInput {
 
 input UpdateSubmissionInput {
   id: ID!
+  userID: ID! @aws_iam @aws_api_key
   status: SubmissionStatus!
   stderr: String
   testcases: [TestcaseInput]

@@ -51,7 +51,7 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 		case "PLAYGROUND":
 			err = responsePlayground(data.SessionID, data.UserID, -1, -1, -1, "", stderr)
 		case "SUBMISSION":
-			err = updateSubmission(data.SubmissionID, "CE", &stderr, nil)
+			err = updateSubmission(data.SubmissionID, data.UserID, "CE", &stderr, nil)
 		}
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
@@ -64,7 +64,7 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 			return fmt.Errorf(errorMessage, err)
 		}
 	} else if data.Type == "SUBMISSION" {
-		err = updateSubmission(data.SubmissionID, "WJ", &stderr, nil)
+		err = updateSubmission(data.SubmissionID, data.UserID, "WJ", &stderr, nil)
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
 		}
