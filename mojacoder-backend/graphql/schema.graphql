@@ -113,7 +113,6 @@ type Query {
 
 type Subscription {
   onResponsePlayground(sessionID: ID!, userID: ID!): ResponsePlayground @aws_cognito_user_pools @aws_subscribe(mutations : ["responsePlayground"])
-  onUpdateSubmission(userID: ID!): UpdateSubmissionOutput @aws_api_key @aws_subscribe(mutations : ["updateSubmission"])
 }
 
 input ResponsePlaygroundInput {
