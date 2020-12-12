@@ -13,10 +13,15 @@ type Playground {
 }
 
 type User {
-  userID: ID!
-  screenName: String!
-  problem(id: ID!): Problem
-  problems(nextToken: String): ProblemConnection!
+  userID: ID! @aws_cognito_user_pools @aws_api_key
+  detail: UserDetail @aws_cognito_user_pools @aws_api_key
+}
+
+type UserDetail {
+  userID: ID! @aws_cognito_user_pools @aws_api_key
+  screenName: String! @aws_cognito_user_pools @aws_api_key
+  problem(id: ID!): Problem @aws_cognito_user_pools @aws_api_key
+  problems(nextToken: String): ProblemConnection! @aws_cognito_user_pools @aws_api_key
 }
 
 enum ProblemStatus {
@@ -68,7 +73,7 @@ enum SubmissionStatus {
 type Submission {
   id: ID! @aws_cognito_user_pools @aws_api_key
   problemID: ID! @aws_cognito_user_pools @aws_api_key
-  userID: ID! @aws_cognito_user_pools @aws_api_key
+  user: User! @aws_cognito_user_pools @aws_api_key
   datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   lang: String! @aws_cognito_user_pools @aws_api_key
   status: SubmissionStatus! @aws_cognito_user_pools @aws_api_key
@@ -103,7 +108,7 @@ type ResponsePlayground {
 }
 
 type Query {
-  user(userID: ID, username: String): User
+  user(userID: ID, username: String): UserDetail
 }
 
 type Subscription {
