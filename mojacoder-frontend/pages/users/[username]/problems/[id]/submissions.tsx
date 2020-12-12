@@ -7,7 +7,7 @@ import { useI18n } from '../../../../../lib/i18n'
 import Auth from '../../../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../../../lib/backend'
 import {
-    User,
+    UserDetail,
     Submission,
     SubmissionStatus,
 } from '../../../../../lib/backend_types'
@@ -26,7 +26,11 @@ const GetSubmissions = gql`
                     items {
                         id
                         problemID
-                        userID
+                        user {
+                            detail {
+                                screenName
+                            }
+                        }
                         datetime
                         lang
                         status
@@ -41,7 +45,7 @@ const GetSubmissions = gql`
     }
 `
 interface GetSubmissionsResponse {
-    user: User | null
+    user: UserDetail | null
 }
 
 const Submissions: React.FC = () => {

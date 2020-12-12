@@ -1,16 +1,17 @@
 import React, { useMemo } from 'react'
 import { Table } from 'react-bootstrap'
+import Link from 'next/link'
 
 import JudgeStatusBadge, {
     JudgeStatusBadgeProgress,
 } from '../components/JudgeStatusBadge'
 import { JudgeStatus, JudgeStatusDetail } from '../lib/JudgeStatus'
-import { SubmissionStatus } from '../lib/backend_types'
+import { SubmissionStatus, User } from '../lib/backend_types'
 
 interface Submission {
     id: string
     problemID: string
-    userID: string
+    user: User
     datetime: string
     lang: string
     status: SubmissionStatus
@@ -57,10 +58,15 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
         () => new Date(props.submission.datetime).toLocaleString(),
         [props.submission.datetime]
     )
+    const screenName = props.submission.user.detail.screenName
     return (
         <tr key={props.submission.id}>
             <td>{datetime}</td>
-            <td>{props.submission.userID}</td>
+            <td>
+                <Link href={`/users/${screenName}`} passHref>
+                    <a>{screenName}</a>
+                </Link>
+            </td>
             <td>{props.submission.lang}</td>
             <td className="text-center">
                 <JudgeStatusBadge status={wholeStatus} progress={progress} />

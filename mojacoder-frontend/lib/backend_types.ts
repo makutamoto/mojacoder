@@ -22,7 +22,7 @@ export type SubmissionStatus = typeof SubmissionStatus[keyof typeof SubmissionSt
 export interface Submission {
     id: string
     problemID: string
-    userID: string
+    user: User
     datetime: string
     lang: string
     status: SubmissionStatus
@@ -30,6 +30,11 @@ export interface Submission {
 }
 
 export interface User {
+    userID: string
+    detail: UserDetail
+}
+
+export interface UserDetail {
     userID: string | null
     screenName: string | null
     problem: Problem

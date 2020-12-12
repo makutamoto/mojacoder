@@ -8,10 +8,10 @@ import gql from 'graphql-tag'
 import { useI18n } from '../../../lib/i18n'
 import Auth from '../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../lib/backend'
-import { User } from '../../../lib/backend_types'
+import { UserDetail } from '../../../lib/backend_types'
 
 interface Props {
-    user: User
+    user: UserDetail
 }
 
 const UserPage: React.FC<Props> = (props) => {
@@ -103,7 +103,7 @@ const GetUser = gql`
     }
 `
 interface GetUserResponse {
-    user: User | null
+    user: UserDetail | null
 }
 export const getServerSideProps: GetServerSideProps<Props> = async ({
     query,

@@ -12,7 +12,7 @@ import {
     invokeQueryWithApiKey,
     invokeMutation,
 } from '../../../../../lib/backend'
-import { User } from '../../../../../lib/backend_types'
+import { UserDetail } from '../../../../../lib/backend_types'
 import Sample from '../../../../../components/Sample'
 import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import ProblemTab from '../../../../../components/ProblemTab'
@@ -32,7 +32,7 @@ const SubmitCode = gql`
 `
 
 interface Props {
-    user: User
+    user: UserDetail
 }
 
 const ProblemPage: React.FC<Props> = (props) => {
@@ -125,7 +125,7 @@ const GetProblem = gql`
     }
 `
 interface GetProblemResponse {
-    user: User | null
+    user: UserDetail | null
 }
 export const getServerSideProps: GetServerSideProps<Props> = async ({
     query,
