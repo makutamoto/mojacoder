@@ -7,6 +7,7 @@ import JudgeStatusBadge, {
 } from '../components/JudgeStatusBadge'
 import { JudgeStatus, JudgeStatusDetail } from '../lib/JudgeStatus'
 import { SubmissionStatus, User } from '../lib/backend_types'
+import { getProgrammingLanguageNameFromID } from '../lib/programming_language'
 
 interface Submission {
     id: string
@@ -59,6 +60,7 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
         [props.submission.datetime]
     )
     const screenName = props.submission.user.detail.screenName
+    const lang = props.submission.lang
     return (
         <tr key={props.submission.id}>
             <td>{datetime}</td>
@@ -67,7 +69,7 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
                     <a>{screenName}</a>
                 </Link>
             </td>
-            <td>{props.submission.lang}</td>
+            <td>{getProgrammingLanguageNameFromID(lang)}</td>
             <td className="text-center">
                 <JudgeStatusBadge status={wholeStatus} progress={progress} />
             </td>
