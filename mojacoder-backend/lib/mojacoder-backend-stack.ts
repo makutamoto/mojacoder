@@ -207,8 +207,14 @@ export class MojacoderBackendStack extends cdk.Stack {
         userTableDataSource.createResolver({
             typeName: 'Query',
             fieldName: 'user',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/user/response.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/response.vtl')),
+        });
+        userTableDataSource.createResolver({
+            typeName: 'User',
+            fieldName: 'detail',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/response.vtl')),
         });
         const problemTableDataSource = api.addDynamoDbDataSource('problem_table', problemTable);
         problemTableDataSource.createResolver({
@@ -218,13 +224,13 @@ export class MojacoderBackendStack extends cdk.Stack {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/response.vtl')),
         });
         problemTableDataSource.createResolver({
-            typeName: 'User',
+            typeName: 'UserDetail',
             fieldName: 'problem',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/response.vtl')),
         });
         problemTableDataSource.createResolver({
-            typeName: 'User',
+            typeName: 'UserDetail',
             fieldName: 'problems',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
