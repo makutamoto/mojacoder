@@ -143,6 +143,8 @@ input SubmitCodeInput {
 input TestcaseInput {
   name: String! @aws_cognito_user_pools @aws_api_key
   status: TestcaseStatus! @aws_cognito_user_pools @aws_api_key
+  time: Int!  @aws_cognito_user_pools @aws_api_key
+  memory: Int!  @aws_cognito_user_pools @aws_api_key
 }
 
 input UpdateSubmissionInput {
