@@ -1,6 +1,7 @@
 import App, { AppProps, AppContext } from 'next/app'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
+import NProgress from 'nprogress'
 import { Amplify, withSSRContext } from 'aws-amplify'
 import { AuthClass } from '@aws-amplify/auth/lib-esm/Auth'
 
@@ -9,6 +10,7 @@ import Auth, { AuthSession, genAuthSession } from '../lib/auth'
 import Session from '../lib/session'
 import Layout from '../containers/Layout'
 
+import 'nprogress/nprogress.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'codemirror/lib/codemirror.css'
 
@@ -211,3 +213,8 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
     }
     return { ...appProps, pageProps: { initialAuth } }
 }
+
+NProgress.configure({ showSpinner: false })
+Router.events.on('routeChangeStart', () => NProgress.start())
+Router.events.on('routeChangeComplete', () => NProgress.done())
+Router.events.on('routeChangeError', () => NProgress.done())
