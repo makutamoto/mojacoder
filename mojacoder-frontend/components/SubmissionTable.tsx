@@ -24,7 +24,7 @@ interface SubmissionTableRowProps {
 }
 const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
     const { status, testcases } = props.submission
-    const { wholeStatus, progress } = useMemo(() => {
+    const { wholeStatus, time, memory, progress } = useMemo(() => {
         if (status === SubmissionStatus.CE) {
             return { wholeStatus: JudgeStatus.CE, progress: null }
         }
@@ -32,6 +32,8 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
             return { wholeStatus: JudgeStatus.WJ, progress: null }
         }
         let wholeStatus: JudgeStatus = JudgeStatus.AC
+        let time = -1,
+            memory = -1
         const progress: JudgeStatusBadgeProgress = {
             current: 0,
             whole: testcases.length,
@@ -46,12 +48,16 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
             ) {
                 wholeStatus = JudgeStatus.TLE
             }
+            time = Math.max(time, testcase.time)
+            memory = Math.max(memory, testcase.memory)
         }
         if (wholeStatus === JudgeStatus.AC && status === SubmissionStatus.WJ) {
             wholeStatus = JudgeStatus.WJ
         }
         return {
             wholeStatus,
+            time,
+            memory,
             progress: status === SubmissionStatus.WJ ? progress : null,
         }
     }, [status, testcases])
@@ -73,6 +79,8 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
             <td className="text-center">
                 <JudgeStatusBadge status={wholeStatus} progress={progress} />
             </td>
+            <td>{time} ms</td>
+            <td>{memory} kb</td>
         </tr>
     )
 }

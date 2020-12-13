@@ -37,6 +37,8 @@ const GetSubmissions = gql`
                         testcases {
                             name
                             status
+                            time
+                            memory
                         }
                     }
                 }

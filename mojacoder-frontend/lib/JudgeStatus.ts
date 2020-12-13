@@ -13,6 +13,8 @@ export type JudgeStatus = typeof JudgeStatus[keyof typeof JudgeStatus]
 export interface JudgeStatusDetail {
     name: string
     status: JudgeStatus
+    time: number
+    memory: number
 }
 
 export const JudgeStatusToText = {
