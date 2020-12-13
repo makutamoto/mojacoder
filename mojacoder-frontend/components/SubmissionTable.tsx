@@ -47,6 +47,11 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
                 testcase.status === JudgeStatus.TLE
             ) {
                 wholeStatus = JudgeStatus.TLE
+            } else if (
+                wholeStatus === JudgeStatus.AC &&
+                testcase.status === JudgeStatus.MLE
+            ) {
+                wholeStatus = JudgeStatus.MLE
             }
             time = Math.max(time, testcase.time)
             memory = Math.max(memory, testcase.memory)
