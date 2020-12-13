@@ -12,6 +12,8 @@ import (
 type TestcaseInput struct {
 	Name   string `json:"name"`
 	Status string `json:"status"`
+	Time   int    `json:"time"`
+	Memory int    `json:"memory"`
 }
 
 type UpdateSubmissionStatusInput struct {
@@ -67,7 +69,7 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 		if inTestcase.IsDir() {
 			continue
 		}
-		testcases = append(testcases, TestcaseInput{inTestcase.Name(), "WJ"})
+		testcases = append(testcases, TestcaseInput{inTestcase.Name(), "WJ", -1, -1})
 	}
 	for i := range testcases {
 		log.Printf("Judging %s...", testcases[i].Name)
@@ -86,6 +88,8 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
 		}
+		testcases[i].Time = result.time
+		testcases[i].Memory = result.memory
 		if result.status != RunResultStatusSuccess {
 			switch result.status {
 			case RunResultStatusTimeLimitExceeded:

@@ -62,6 +62,8 @@ enum TestcaseStatus {
 type Testcase {
   name: String! @aws_api_key @aws_iam
   status: TestcaseStatus! @aws_api_key @aws_iam
+  time: Int!  @aws_api_key @aws_iam
+  memory: Int!  @aws_api_key @aws_iam
 }
 
 enum SubmissionStatus {
