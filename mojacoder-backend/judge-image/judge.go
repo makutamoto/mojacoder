@@ -99,7 +99,11 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 			case RunResultStatusRunTimeError:
 				testcases[i].Status = "RE"
 			}
-			updateSubmission(data.SubmissionID, data.UserID, "WJ", nil, &testcases)
+			log.Println(testcases[i].Status)
+			err = updateSubmission(data.SubmissionID, data.UserID, "WJ", nil, &testcases)
+			if err != nil {
+				return fmt.Errorf(errorMessage, err)
+			}
 			continue
 		}
 		stdoutReader := strings.NewReader(stdoutWriter.String())
