@@ -55,6 +55,7 @@ enum TestcaseStatus {
   AC
   WA
   TLE
+  MLE
   RE
   IE
 }
