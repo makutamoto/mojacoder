@@ -1,0 +1,5 @@
+#if($context.source.id == $context.result.id)
+    $util.toJson($context.result)
+#else
+    null
+#end

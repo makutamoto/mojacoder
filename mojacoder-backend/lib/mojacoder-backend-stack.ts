@@ -254,6 +254,12 @@ export class MojacoderBackendStack extends cdk.Stack {
         const submissionTableDataSource = api.addDynamoDbDataSource('submission_table', submissionTable);
         submissionTableDataSource.createResolver({
             typeName: 'Problem',
+            fieldName: 'submission',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submission/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submission/response.vtl')),
+        });
+        submissionTableDataSource.createResolver({
+            typeName: 'Problem',
             fieldName: 'submissions',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submissions/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submissions/response.vtl')),

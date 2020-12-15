@@ -42,6 +42,7 @@ type Problem {
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
   title: String @aws_cognito_user_pools @aws_api_key
   statement: String @aws_cognito_user_pools @aws_api_key
+  submission(id: ID!): Submission
   submissions(nextToken: String, userID: ID): SubmissionConnection!
 }
 
