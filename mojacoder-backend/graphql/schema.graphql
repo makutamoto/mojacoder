@@ -80,6 +80,7 @@ type Submission {
   datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   lang: String! @aws_cognito_user_pools @aws_api_key
   status: SubmissionStatus! @aws_cognito_user_pools @aws_api_key
+  code: String! @aws_cognito_user_pools @aws_api_key
   stderr: String! @aws_cognito_user_pools @aws_api_key
   testcases: [Testcase]! @aws_cognito_user_pools @aws_api_key
 }

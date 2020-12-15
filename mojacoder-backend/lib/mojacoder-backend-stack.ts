@@ -190,6 +190,22 @@ export class MojacoderBackendStack extends cdk.Stack {
             typeName: 'Mutation',
             fieldName: 'runPlayground',
         })
+        const submissionCodeResolverLambda = new NodejsFunction(this, 'submissionCodeResolverLambda', {
+            entry: join(__dirname, '../lambda/submission-code-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
+            },
+        })
+        submissionCodeResolverLambda.addToRolePolicy(new PolicyStatement({
+            resources: [submittedCodeBucket.bucketArn + '/*'],
+            actions: ['s3:GetObject'],
+        }));
+        const submissionCodeResolverLambdaDataSource = api.addLambdaDataSource('submissionCodeResolverLambdaDataSource', submissionCodeResolverLambda)
+        submissionCodeResolverLambdaDataSource.createResolver({
+            typeName: 'Submission',
+            fieldName: 'code',
+        })
         const PlaygroundDataSource = api.addNoneDataSource('Playground');
         PlaygroundDataSource.createResolver({
             typeName: 'Mutation',
