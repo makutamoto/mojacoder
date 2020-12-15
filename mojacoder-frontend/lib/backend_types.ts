@@ -9,6 +9,7 @@ export interface Problem {
     id: string
     title: string
     statement
+    submission: Submission
     submissions: Connection<Submission>
 }
 
@@ -26,6 +27,7 @@ export interface Submission {
     datetime: string
     lang: string
     status: SubmissionStatus
+    code: string
     testcases: JudgeStatusDetail[]
 }
 

@@ -8,8 +8,13 @@ if (process.browser) {
     require('codemirror/mode/markdown/markdown')
 }
 
+const LANGUAGE_TO_MODE: { [index: string]: string } = {
+    'python3.8': 'python',
+    'go-1.14': 'text/x-go',
+}
+
 export interface EditorProps {
-    mode?: string
+    lang?: string
     lineNumbers?: boolean
     readOnly?: boolean
     value?: string
@@ -26,7 +31,7 @@ const Editor: React.FC<EditorProps> = (props) => {
                     className="my-2"
                     value={props.value}
                     options={{
-                        mode: props.mode,
+                        mode: LANGUAGE_TO_MODE[props.lang],
                         lineNumbers: props.lineNumbers,
                         readOnly: props.readOnly,
                     }}

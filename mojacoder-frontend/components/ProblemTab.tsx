@@ -17,7 +17,7 @@ const ProblemTab: React.FC<Props> = (props) => {
         '/users',
         query.username as string,
         'problems',
-        query.id as string
+        query.problemID as string
     )
     return (
         <Nav className="mb-3" variant="tabs" activeKey={props.activeKey}>

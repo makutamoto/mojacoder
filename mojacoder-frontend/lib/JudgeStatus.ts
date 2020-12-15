@@ -1,3 +1,6 @@
+import { SubmissionStatus } from './backend_types'
+import { JudgeStatusBadgeProgress } from '../components/JudgeStatusBadge'
+
 export const JudgeStatus = {
     WJ: 'WJ',
     CE: 'CE',
@@ -26,4 +29,50 @@ export const JudgeStatusToText = {
     MLE: 'メモリ制限超過',
     RE: '実行時エラー',
     IE: '内部エラー',
+}
+
+export function getJudgeStatusFromTestcases(
+    status: SubmissionStatus,
+    testcases: JudgeStatusDetail[]
+) {
+    if (status === SubmissionStatus.CE) {
+        return { wholeStatus: JudgeStatus.CE, progress: null }
+    }
+    if (status === SubmissionStatus.WJ && testcases.length === 0) {
+        return { wholeStatus: JudgeStatus.WJ, progress: null }
+    }
+    let wholeStatus: JudgeStatus = JudgeStatus.AC
+    let time = -1,
+        memory = -1
+    const progress: JudgeStatusBadgeProgress = {
+        current: 0,
+        whole: testcases.length,
+    }
+    for (const testcase of testcases) {
+        if (testcase.status !== JudgeStatus.WJ) progress.current++
+        if (testcase.status === JudgeStatus.WA) {
+            wholeStatus = JudgeStatus.WA
+        } else if (
+            wholeStatus === JudgeStatus.AC &&
+            testcase.status === JudgeStatus.TLE
+        ) {
+            wholeStatus = JudgeStatus.TLE
+        } else if (
+            wholeStatus === JudgeStatus.AC &&
+            testcase.status === JudgeStatus.MLE
+        ) {
+            wholeStatus = JudgeStatus.MLE
+        }
+        time = Math.max(time, testcase.time)
+        memory = Math.max(memory, testcase.memory)
+    }
+    if (wholeStatus === JudgeStatus.AC && status === SubmissionStatus.WJ) {
+        wholeStatus = JudgeStatus.WJ
+    }
+    return {
+        wholeStatus,
+        time,
+        memory,
+        progress: status === SubmissionStatus.WJ ? progress : null,
+    }
 }

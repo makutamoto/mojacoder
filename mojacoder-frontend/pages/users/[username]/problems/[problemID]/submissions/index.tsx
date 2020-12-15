@@ -3,16 +3,16 @@ import { useRouter } from 'next/router'
 import { Alert, Spinner } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
-import { useI18n } from '../../../../../lib/i18n'
-import Auth from '../../../../../lib/auth'
-import { invokeQueryWithApiKey } from '../../../../../lib/backend'
+import { useI18n } from '../../../../../../lib/i18n'
+import Auth from '../../../../../../lib/auth'
+import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
     UserDetail,
     Submission,
     SubmissionStatus,
-} from '../../../../../lib/backend_types'
-import SubmissionTable from '../../../../../components/SubmissionTable'
-import ProblemTab from '../../../../../components/ProblemTab'
+} from '../../../../../../lib/backend_types'
+import SubmissionTable from '../../../../../../components/SubmissionTable'
+import ProblemTab from '../../../../../../components/ProblemTab'
 
 const GetSubmissions = gql`
     query GetSubmissions(
@@ -59,7 +59,7 @@ const Submissions: React.FC = () => {
         if (auth) {
             invokeQueryWithApiKey(GetSubmissions, {
                 authorUsername: query.username,
-                problemID: query.id,
+                problemID: query.problemID,
                 userID: auth.userID,
             }).then((data: GetSubmissionsResponse) => {
                 const items = data.user.problem.submissions.items

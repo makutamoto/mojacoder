@@ -14,11 +14,6 @@ export interface CodeEditorProps {
     onChange: (value: Code) => void
 }
 
-const LANGUAGE_TO_MODE: { [index: string]: string } = {
-    'python3.8': 'python',
-    'go-1.14': 'text/x-go',
-}
-
 const CodeEditor: React.FC<CodeEditorProps> = (props) => {
     return (
         <div>
@@ -28,7 +23,7 @@ const CodeEditor: React.FC<CodeEditorProps> = (props) => {
                 onChange={(lang) => props.onChange({ ...props.value, lang })}
             />
             <Editor
-                mode={LANGUAGE_TO_MODE[props.value.lang]}
+                lang={props.value.lang}
                 lineNumbers
                 value={props.value.code}
                 onChange={(value) =>

@@ -132,7 +132,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
     const res = (await invokeQueryWithApiKey(GetProblem, {
         username: query.username,
-        id: query.id,
+        id: query.problemID,
     })) as GetProblemResponse
     return {
         props: {

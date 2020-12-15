@@ -1,13 +1,17 @@
 import React, { useMemo } from 'react'
 import { Table } from 'react-bootstrap'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-import JudgeStatusBadge, {
-    JudgeStatusBadgeProgress,
-} from '../components/JudgeStatusBadge'
-import { JudgeStatus, JudgeStatusDetail } from '../lib/JudgeStatus'
+import {
+    JudgeStatusDetail,
+    getJudgeStatusFromTestcases,
+} from '../lib/JudgeStatus'
 import { SubmissionStatus, User } from '../lib/backend_types'
 import { getProgrammingLanguageNameFromID } from '../lib/programming_language'
+import DateTime from './DateTime'
+import JudgeStatusBadge from './JudgeStatusBadge'
+import Username from './Username'
 
 interface Submission {
     id: string
@@ -23,68 +27,20 @@ interface SubmissionTableRowProps {
     submission: Submission
 }
 const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
+    const { query } = useRouter()
     const { status, testcases } = props.submission
     const { wholeStatus, time, memory, progress } = useMemo(() => {
-        if (status === SubmissionStatus.CE) {
-            return { wholeStatus: JudgeStatus.CE, progress: null }
-        }
-        if (status === SubmissionStatus.WJ && testcases.length === 0) {
-            return { wholeStatus: JudgeStatus.WJ, progress: null }
-        }
-        let wholeStatus: JudgeStatus = JudgeStatus.AC
-        let time = -1,
-            memory = -1
-        const progress: JudgeStatusBadgeProgress = {
-            current: 0,
-            whole: testcases.length,
-        }
-        for (const testcase of testcases) {
-            if (testcase.status !== JudgeStatus.WJ) progress.current++
-            if (testcase.status === JudgeStatus.WA) {
-                wholeStatus = JudgeStatus.WA
-            } else if (
-                wholeStatus === JudgeStatus.AC &&
-                testcase.status === JudgeStatus.TLE
-            ) {
-                wholeStatus = JudgeStatus.TLE
-            } else if (
-                wholeStatus === JudgeStatus.AC &&
-                testcase.status === JudgeStatus.MLE
-            ) {
-                wholeStatus = JudgeStatus.MLE
-            }
-            time = Math.max(time, testcase.time)
-            memory = Math.max(memory, testcase.memory)
-        }
-        if (wholeStatus === JudgeStatus.AC && status === SubmissionStatus.WJ) {
-            wholeStatus = JudgeStatus.WJ
-        }
-        return {
-            wholeStatus,
-            time,
-            memory,
-            progress: status === SubmissionStatus.WJ ? progress : null,
-        }
+        return getJudgeStatusFromTestcases(status, testcases)
     }, [status, testcases])
-    const datetime = useMemo(() => new Date(props.submission.datetime), [
-        props.submission.datetime,
-    ])
-    const screenName = props.submission.user.detail.screenName
-    const lang = props.submission.lang
+    const { id, lang } = props.submission
+    const userDetail = props.submission.user.detail
     return (
         <tr key={props.submission.id}>
-            <td>{`${datetime.getFullYear()}-${(
-                '0' +
-                (datetime.getMonth() + 1)
-            ).slice(-2)}-${('0' + datetime.getDate()).slice(-2)} ${(
-                '0' + datetime.getHours()
-            ).slice(-2)}:${('0' + datetime.getMinutes()).slice(-2)}:${(
-                '0' + datetime.getSeconds()
-            ).slice(-2)}`}</td>
             <td>
-                <Link href={`/users/${screenName}`} passHref>
-                    <a>{screenName}</a>
-                </Link>
+                <DateTime>{props.submission.datetime}</DateTime>
+            </td>
+            <td>
+                <Username>{userDetail}</Username>
             </td>
             <td>{getProgrammingLanguageNameFromID(lang)}</td>
             <td className="text-center">
@@ -92,6 +48,14 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
             </td>
             <td>{time} ms</td>
             <td>{memory} kb</td>
+            <td className="text-center">
+                <Link
+                    href={`/users/${query.username}/problems/${query.problemID}/submissions/${id}`}
+                    passHref
+                >
+                    <a>詳細</a>
+                </Link>
+            </td>
         </tr>
     )
 }
@@ -110,6 +74,7 @@ const SubmissionTable: React.FC<SubmissionTableProps> = (props) => {
                     <th>結果</th>
                     <th>実行時間</th>
                     <th>メモリ</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
