@@ -9,7 +9,7 @@ export interface Problem {
     id: string
     title: string
     statement
-    submission: Submission
+    submission: Submission | null
     submissions: Connection<Submission>
 }
 

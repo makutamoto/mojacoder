@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import { Spinner, Table } from 'react-bootstrap'
+import { Alert, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
@@ -51,21 +52,27 @@ interface GetSubmissionsResponse {
     user: UserDetail | null
 }
 
-const Submissions: React.FC = () => {
+interface Props {
+    submission: Submission | null
+}
+
+const Submissions: React.FC<Props> = (props) => {
     const { query } = useRouter()
-    const [submission, setSubmission] = useState<Submission | null>(null)
+    const [submission, setSubmission] = useState<Submission | null>(
+        props.submission
+    )
     const updateSubmissions = useCallback(() => {
-        invokeQueryWithApiKey(GetSubmission, {
-            authorUsername: query.username,
-            problemID: query.problemID,
-            submissionID: query.submissionID,
-        }).then((data: GetSubmissionsResponse) => {
-            const submission = data.user.problem.submission
-            setSubmission(submission)
-            if (submission && submission.status === SubmissionStatus.WJ) {
+        if (submission && submission.status === SubmissionStatus.WJ) {
+            invokeQueryWithApiKey(GetSubmission, {
+                authorUsername: query.username,
+                problemID: query.problemID,
+                submissionID: query.submissionID,
+            }).then((data: GetSubmissionsResponse) => {
+                const submission = data.user.problem.submission
+                setSubmission(submission)
                 setTimeout(updateSubmissions, 1000)
-            }
-        })
+            })
+        }
     }, [query])
     const result = useMemo(() => {
         if (submission)
@@ -80,9 +87,7 @@ const Submissions: React.FC = () => {
         <>
             <ProblemTab activeKey="submissions" />
             {submission === null ? (
-                <div className="text-center">
-                    <Spinner animation="border" />
-                </div>
+                <Alert variant="danger">提出が存在しません。</Alert>
             ) : (
                 <>
                     <Editor
@@ -165,3 +170,22 @@ const Submissions: React.FC = () => {
     )
 }
 export default Submissions
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+    query,
+}) => {
+    const {
+        user: {
+            problem: { submission },
+        },
+    } = (await invokeQueryWithApiKey(GetSubmission, {
+        authorUsername: query.username,
+        problemID: query.problemID,
+        submissionID: query.submissionID,
+    })) as GetSubmissionsResponse
+    return {
+        props: {
+            submission,
+        },
+    }
+}
