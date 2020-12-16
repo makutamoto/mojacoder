@@ -28,6 +28,7 @@ export interface Submission {
     lang: string
     status: SubmissionStatus
     code: string
+    stderr: string
     testcases: JudgeStatusDetail[]
 }
 

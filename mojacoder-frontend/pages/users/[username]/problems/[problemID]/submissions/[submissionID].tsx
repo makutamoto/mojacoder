@@ -35,6 +35,7 @@ const GetSubmission = gql`
                     lang
                     status
                     code
+                    stderr
                     testcases {
                         name
                         status
@@ -90,6 +91,8 @@ const Submissions: React.FC = () => {
                         lineNumbers
                         readOnly
                     />
+                    <h2>コンパイルエラー</h2>
+                    <Editor value={submission.stderr} lineNumbers readOnly />
                     <Table responsive striped bordered hover>
                         <tbody>
                             <tr>
