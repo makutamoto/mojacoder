@@ -8,6 +8,7 @@ export interface Connection<T> {
 export interface Problem {
     id: string
     title: string
+    user: User
     statement
     submission: Submission | null
     submissions: Connection<Submission>

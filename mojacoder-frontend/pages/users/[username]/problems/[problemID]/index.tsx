@@ -5,8 +5,14 @@ import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
 import Tex from '@matejmazur/react-katex'
 import math from 'remark-math'
-import { Alert, Button, Spinner } from 'react-bootstrap'
+import { Alert, Button, Jumbotron, Spinner } from 'react-bootstrap'
 import { join } from 'path'
+import {
+    BeakerIcon,
+    ClockIcon,
+    HeartIcon,
+    SmileyIcon,
+} from '@primer/octicons-react'
 
 import { useI18n } from '../../../../../lib/i18n'
 import Auth from '../../../../../lib/auth'
@@ -18,6 +24,8 @@ import { UserDetail } from '../../../../../lib/backend_types'
 import Sample from '../../../../../components/Sample'
 import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import ProblemTab from '../../../../../components/ProblemTab'
+import IconWithText from '../../../../../components/IconWithText'
+import Username from '../../../../../components/Username'
 
 import 'katex/dist/katex.min.css'
 
@@ -61,8 +69,27 @@ const ProblemPage: React.FC<Props> = (props) => {
     return (
         <>
             <ProblemTab activeKey={'problem'} />
-            <h1>{user.problem.title}</h1>
-            <hr />
+            <Jumbotron className="text-center">
+                <h1>{user.problem.title}</h1>
+                <div>
+                    <IconWithText icon={<ClockIcon />}>2 secs</IconWithText>{' '}
+                    <IconWithText icon={<BeakerIcon />}>1024 MB</IconWithText>
+                </div>
+                <div>
+                    <IconWithText icon={<SmileyIcon />}>
+                        <Username>{user.problem.user.detail}</Username>
+                    </IconWithText>
+                </div>
+                <div className="mt-2">
+                    <Button variant="secondary" size="sm">
+                        <IconWithText icon={<HeartIcon />}>0</IconWithText>
+                    </Button>{' '}
+                    <Button variant="secondary" size="sm">
+                        Tweet
+                    </Button>
+                </div>
+                <div></div>
+            </Jumbotron>
             <ReactMarkdown
                 source={user.problem.statement}
                 plugins={[math]}
@@ -127,6 +154,11 @@ const GetProblem = gql`
                 id
                 title
                 statement
+                user {
+                    detail {
+                        screenName
+                    }
+                }
             }
         }
     }

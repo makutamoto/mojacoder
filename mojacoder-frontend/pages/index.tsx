@@ -1,7 +1,9 @@
 import React from 'react'
-import { Badge, Jumbotron, Image } from 'react-bootstrap'
+import { Jumbotron, Image } from 'react-bootstrap'
+import { MarkGithubIcon, SmileyIcon } from '@primer/octicons-react'
 
 import { useI18n } from '../lib/i18n'
+import IconWithText from '../components/IconWithText'
 
 import styles from './index.module.css'
 
@@ -19,24 +21,26 @@ export const Index: React.FC = () => {
                         src="/illustrations/undraw_programming_2svr.svg"
                     />
                     <h2 className="mt-4">{t`description`}</h2>
-                    <Badge
-                        as="a"
-                        variant="dark"
-                        href={TWITTER_LINK}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        Author: @makutamoto
-                    </Badge>{' '}
-                    <Badge
-                        as="a"
-                        variant="dark"
-                        href={GITHUB_LINK}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        GitHub: makutamoto/mojacoder
-                    </Badge>
+                    <div>
+                        <IconWithText icon={<SmileyIcon />}>
+                            <a
+                                href={TWITTER_LINK}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                @makutamoto
+                            </a>
+                        </IconWithText>{' '}
+                        <IconWithText icon={<MarkGithubIcon />}>
+                            <a
+                                href={GITHUB_LINK}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                makutamoto/mojacoder
+                            </a>
+                        </IconWithText>
+                    </div>
                 </div>
             </Jumbotron>
             <h2>{t`timeline`}</h2>
