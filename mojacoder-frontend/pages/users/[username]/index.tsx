@@ -9,6 +9,8 @@ import { useI18n } from '../../../lib/i18n'
 import Auth from '../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../lib/backend'
 import { UserDetail } from '../../../lib/backend_types'
+import Layout from '../../../components/Layout'
+import Top from '../../../components/Top'
 
 interface Props {
     user: UserDetail
@@ -31,7 +33,7 @@ const UserPage: React.FC<Props> = (props) => {
                 <Alert variant="danger">{t`userNotFound`}</Alert>
             ) : (
                 <>
-                    <Jumbotron>
+                    <Top>
                         <div className="text-center">
                             {browser && (
                                 <Image
@@ -57,29 +59,31 @@ const UserPage: React.FC<Props> = (props) => {
                                 </Button>
                             )}
                         </div>
-                    </Jumbotron>
-                    <h2>{t`problem`}</h2>
-                    <hr />
-                    <Table bordered striped hover>
-                        <thead>
-                            <tr>
-                                <th>{t`problemName`}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {props.user.problems.items.map((item) => (
-                                <tr key={item.id}>
-                                    <td>
-                                        <Link
-                                            href={`/users/${props.user.screenName}/problems/${item.id}`}
-                                        >
-                                            <a>{item.title}</a>
-                                        </Link>
-                                    </td>
+                    </Top>
+                    <Layout>
+                        <h2>{t`problem`}</h2>
+                        <hr />
+                        <Table bordered striped hover>
+                            <thead>
+                                <tr>
+                                    <th>{t`problemName`}</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                            </thead>
+                            <tbody>
+                                {props.user.problems.items.map((item) => (
+                                    <tr key={item.id}>
+                                        <td>
+                                            <Link
+                                                href={`/users/${props.user.screenName}/problems/${item.id}`}
+                                            >
+                                                <a>{item.title}</a>
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </Layout>
                 </>
             )}
         </>

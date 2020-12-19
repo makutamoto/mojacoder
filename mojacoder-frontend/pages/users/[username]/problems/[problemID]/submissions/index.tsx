@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { Alert, Spinner } from 'react-bootstrap'
 import gql from 'graphql-tag'
@@ -8,17 +9,19 @@ import Auth from '../../../../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
     UserDetail,
+    Problem,
     Submission,
     SubmissionStatus,
 } from '../../../../../../lib/backend_types'
 import SubmissionTable from '../../../../../../components/SubmissionTable'
-import ProblemTab from '../../../../../../components/ProblemTab'
+import Layout from '../../../../../../components/Layout'
+import ProblemTop from '../../../../../../containers/ProblemTop'
 
 const GetSubmissions = gql`
     query GetSubmissions(
         $authorUsername: String!
         $problemID: ID!
-        $userID: ID!
+        $userID: ID
     ) {
         user(username: $authorUsername) {
             problem(id: $problemID) {
@@ -50,10 +53,14 @@ interface GetSubmissionsResponse {
     user: UserDetail | null
 }
 
-const Submissions: React.FC = () => {
+interface Props {
+    problem: Problem
+}
+const Submissions: React.FC<Props> = (props) => {
     const { t } = useI18n('submissions')
     const { query } = useRouter()
     const { auth } = Auth.useContainer()
+    const { problem } = props
     const [submissions, setSubmissions] = useState<Submission[] | null>(null)
     const updateSubmissions = useCallback(() => {
         if (auth) {
@@ -76,19 +83,52 @@ const Submissions: React.FC = () => {
     useEffect(updateSubmissions, [updateSubmissions])
     return (
         <>
-            <ProblemTab activeKey="submissions" />
-            {auth ? (
-                submissions === null ? (
-                    <div className="text-center">
-                        <Spinner animation="border" />
-                    </div>
+            <ProblemTop activeKey="submissions" problem={problem} />
+            <Layout>
+                {auth ? (
+                    submissions === null ? (
+                        <div className="text-center">
+                            <Spinner animation="border" />
+                        </div>
+                    ) : (
+                        <SubmissionTable submissions={submissions} />
+                    )
                 ) : (
-                    <SubmissionTable submissions={submissions} />
-                )
-            ) : (
-                <Alert variant="danger">{t`signInRequired`}</Alert>
-            )}
+                    <Alert variant="danger">{t`signInRequired`}</Alert>
+                )}
+            </Layout>
         </>
     )
 }
 export default Submissions
+
+const GetProblemOverview = gql`
+    query GetProblemOverview($username: String!, $id: ID!) {
+        user(username: $username) {
+            problem(id: $id) {
+                title
+                user {
+                    detail {
+                        screenName
+                    }
+                }
+            }
+        }
+    }
+`
+interface GetProblemOverviewResponse {
+    user: UserDetail | null
+}
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+    query,
+}) => {
+    const res = (await invokeQueryWithApiKey(GetProblemOverview, {
+        username: query.username,
+        id: query.problemID,
+    })) as GetProblemOverviewResponse
+    return {
+        props: {
+            problem: res.user.problem,
+        },
+    }
+}

@@ -4,6 +4,8 @@ import { MarkGithubIcon, SmileyIcon } from '@primer/octicons-react'
 
 import { useI18n } from '../lib/i18n'
 import IconWithText from '../components/IconWithText'
+import Layout from '../components/Layout'
+import Top from '../components/Top'
 
 import styles from './index.module.css'
 
@@ -14,7 +16,7 @@ export const Index: React.FC = () => {
     const { t } = useI18n('home')
     return (
         <>
-            <Jumbotron>
+            <Top>
                 <div className="text-center">
                     <Image
                         className={styles['top-image']}
@@ -42,8 +44,10 @@ export const Index: React.FC = () => {
                         </IconWithText>
                     </div>
                 </div>
-            </Jumbotron>
-            <h2>{t`timeline`}</h2>
+            </Top>
+            <Layout>
+                <h2>{t`timeline`}</h2>
+            </Layout>
         </>
     )
 }

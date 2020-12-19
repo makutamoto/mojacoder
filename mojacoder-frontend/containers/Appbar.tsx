@@ -1,13 +1,13 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Container, Nav, Navbar } from 'react-bootstrap'
+import { Nav, Navbar } from 'react-bootstrap'
 
 import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
 
-const Layout: React.FC = (props) => {
-    const { t } = useI18n('layout')
+const Appbar: React.FC = () => {
+    const { t } = useI18n('appbar')
     const { asPath, locale, pathname } = useRouter()
     const { auth } = Auth.useContainer()
     return (
@@ -73,10 +73,7 @@ const Layout: React.FC = (props) => {
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-            <Container className="py-4 bg-white shadow rounded">
-                {props.children}
-            </Container>
         </>
     )
 }
-export default Layout
+export default Appbar

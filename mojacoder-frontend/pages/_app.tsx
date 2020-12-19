@@ -8,7 +8,7 @@ import { AuthClass } from '@aws-amplify/auth/lib-esm/Auth'
 import { I18nProvider } from '../lib/i18n'
 import Auth, { AuthSession, genAuthSession } from '../lib/auth'
 import Session from '../lib/session'
-import Layout from '../containers/Layout'
+import Appbar from '../containers/Appbar'
 
 import 'nprogress/nprogress.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -32,7 +32,7 @@ Amplify.configure({
 
 const languages = {
     ja: {
-        layout: {
+        appbar: {
             mojacoder: 'MojaCoder',
             playground: 'Playground',
             signUp: '登録',
@@ -106,7 +106,7 @@ const languages = {
         },
     },
     en: {
-        layout: {
+        appbar: {
             mojacoder: 'MojaCoder',
             playground: 'Playground',
             signUp: 'Sign up',
@@ -190,9 +190,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                         <title>MojaCoder</title>
                         <link rel="manifest" href="/manifest.json" />
                     </Head>
-                    <Layout>
-                        <Component {...pageProps} />
-                    </Layout>
+                    <Appbar />
+                    <Component {...pageProps} />
                 </Session.Provider>
             </Auth.Provider>
         </I18nProvider>

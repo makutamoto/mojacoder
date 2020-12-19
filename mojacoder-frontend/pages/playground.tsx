@@ -8,6 +8,8 @@ import { useSubscription, invokeMutation } from '../lib/backend'
 import Title from '../components/Title'
 import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
+import Layout from '../components/Layout'
+import Top from '../components/Top'
 
 import Session from '../lib/session'
 
@@ -98,70 +100,73 @@ const Playground: React.FC = () => {
     return (
         <>
             <Title>{t`title`}</Title>
-            <h1>{t`title`}</h1>
-            <hr />
-            <Alert variant="primary">{t`description`}</Alert>
-            {auth ? (
-                <>
-                    <div className="mb-2">
-                        <CodeEditor
-                            id="playground-code-editor"
-                            value={code}
-                            onChange={setCode}
-                        />
-                        <h2>{t`stdin`}</h2>
-                        <hr />
-                        <Editor value={stdin} onChange={setStdin} />
-                        <Button
+            <Top>
+                <h1 className="text-center">{t`title`}</h1>
+            </Top>
+            <Layout>
+                <Alert variant="primary">{t`description`}</Alert>
+                {auth ? (
+                    <>
+                        <div className="mb-2">
+                            <CodeEditor
+                                id="playground-code-editor"
+                                value={code}
+                                onChange={setCode}
+                            />
+                            <h2>{t`stdin`}</h2>
+                            <hr />
+                            <Editor value={stdin} onChange={setStdin} />
+                            <Button
+                                variant="primary"
+                                onClick={onRun}
+                                disabled={status === Status.Waiting}
+                            >
+                                {t`run`}
+                            </Button>
+                        </div>
+                        <Alert
+                            show={status === Status.Waiting}
+                            className="my-4"
                             variant="primary"
-                            onClick={onRun}
-                            disabled={status === Status.Waiting}
                         >
-                            {t`run`}
-                        </Button>
-                    </div>
-                    <Alert
-                        show={status === Status.Waiting}
-                        className="my-4"
-                        variant="primary"
-                    >
-                        <Spinner
-                            className="mr-3"
-                            size="sm"
-                            animation="border"
-                        />
-                        {t`runningCode`}
-                    </Alert>
-                    {status === Status.Received && (
-                        <Table className="my-4" bordered striped hover>
-                            <tbody>
-                                <tr>
-                                    <td>{t`exitCode`}</td>
-                                    <td>{result.exitCode}</td>
-                                </tr>
-                                <tr>
-                                    <td>{t`time`}</td>
-                                    <td>{result.time} ms</td>
-                                </tr>
-                                <tr>
-                                    <td>{t`memory`}</td>
-                                    <td>{result.memory} kb</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    )}
-                    <div>
-                        <h2>{t`stdout`}</h2>
-                        <hr />
-                        <Editor value={result.stdout} readOnly />
-                        <h2>{t`stderr`}</h2>
-                        <hr />
-                        <Editor value={result.stderr} readOnly />
-                    </div>
-                </>
-            ) : (
-                <Alert variant="danger">{t`signInRequired`}</Alert>
-            )}
+                            <Spinner
+                                className="mr-3"
+                                size="sm"
+                                animation="border"
+                            />
+                            {t`runningCode`}
+                        </Alert>
+                        {status === Status.Received && (
+                            <Table className="my-4" bordered striped hover>
+                                <tbody>
+                                    <tr>
+                                        <td>{t`exitCode`}</td>
+                                        <td>{result.exitCode}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{t`time`}</td>
+                                        <td>{result.time} ms</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{t`memory`}</td>
+                                        <td>{result.memory} kb</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        )}
+                        <div>
+                            <h2>{t`stdout`}</h2>
+                            <hr />
+                            <Editor value={result.stdout} readOnly />
+                            <h2>{t`stderr`}</h2>
+                            <hr />
+                            <Editor value={result.stderr} readOnly />
+                        </div>
+                    </>
+                ) : (
+                    <Alert variant="danger">{t`signInRequired`}</Alert>
+                )}
+            </Layout>
         </>
     )
 }
