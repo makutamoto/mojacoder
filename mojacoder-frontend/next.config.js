@@ -15,7 +15,7 @@ module.exports = (phase) => {
                     USER_POOL_CLIENT_ID: '2lcpbuka7ago7r8gk2a9d58f8s',
                     APPSYNC_ENDPOINT:
                         'https://toheblmzlnfbfckl74t2nnndri.appsync-api.ap-northeast-1.amazonaws.com/graphql',
-                    APPSYNC_APIKEY: 'da2-eg74d7xekfg65jbmkxxr2jqsgm',
+                    APPSYNC_APIKEY: 'da2-ssx3indjkvgcpomuztdnnsqwfa',
                     COOKIE_DOMAIN: 'localhost',
                 },
                 i18n,
@@ -28,7 +28,7 @@ module.exports = (phase) => {
                     USER_POOL_CLIENT_ID: '2lcpbuka7ago7r8gk2a9d58f8s',
                     APPSYNC_ENDPOINT:
                         'https://toheblmzlnfbfckl74t2nnndri.appsync-api.ap-northeast-1.amazonaws.com/graphql',
-                    APPSYNC_APIKEY: 'da2-eg74d7xekfg65jbmkxxr2jqsgm',
+                    APPSYNC_APIKEY: 'da2-ssx3indjkvgcpomuztdnnsqwfa',
                     COOKIE_DOMAIN: 'mojacoder.vercel.app',
                 },
                 i18n,
