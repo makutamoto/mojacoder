@@ -17,6 +17,7 @@ const Sample: React.FC<Props> = (props) => {
     return (
         <>
             <div className="my-2 p-2 border rounded bg-light">
+                <h6 className="d-inline">{props.title}</h6>
                 <Button
                     ref={copyButton}
                     className="px-1 py-0"
@@ -30,8 +31,7 @@ const Sample: React.FC<Props> = (props) => {
                         )
                     }}
                 >
-                    <CopyIcon size={24} />
-                    <h3 className="ml-1 d-inline">{props.title}</h3>
+                    <CopyIcon size={16} />
                 </Button>
                 <Form.Control
                     type="text"
