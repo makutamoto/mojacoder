@@ -10,7 +10,7 @@
     "filter" : {
         "expression" : "userID = :userID",
         "expressionValues" : {
-            ":userID" : $util.dynamodb.toDynamoDBJson($context.source.userID)
+            ":userID" : $util.dynamodb.toDynamoDBJson($context.source.user.userID)
         }
     },
     "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
