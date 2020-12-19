@@ -3,6 +3,8 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
+import Tex from '@matejmazur/react-katex'
+import math from 'remark-math'
 import { Alert, Button, Spinner } from 'react-bootstrap'
 import { join } from 'path'
 
@@ -16,6 +18,8 @@ import { UserDetail } from '../../../../../lib/backend_types'
 import Sample from '../../../../../components/Sample'
 import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import ProblemTab from '../../../../../components/ProblemTab'
+
+import 'katex/dist/katex.min.css'
 
 const Status = {
     Normal: 'Normal',
@@ -61,6 +65,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             <hr />
             <ReactMarkdown
                 source={user.problem.statement}
+                plugins={[math]}
                 renderers={{
                     code: ({ language, value }) => (
                         <Sample title={language} value={value} />
@@ -77,6 +82,8 @@ const ProblemPage: React.FC<Props> = (props) => {
                             </div>
                         )
                     },
+                    inlineMath: ({ value }) => <Tex math={value} />,
+                    math: ({ value }) => <Tex block math={value} />,
                 }}
             />
             <div>
