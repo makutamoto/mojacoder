@@ -1,6 +1,6 @@
 #set($items = [])
 #foreach($item in $context.result.items)
-	$util.qr($items.add({"id": $context.result.id, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "statement": $context.result.statement, "submission": $context.result.submission, "submissions": $context.result.submissions}))
+	$util.qr($items.add({"id": $item.id, "user": { "userID": $item.userID }, "datetime": $item.datetime, "status": $item.status, "title": $item.title, "statement": $item.statement, "submission": $item.submission, "submissions": $item.submissions}))
 #end
 {
     "items": $util.toJson($items),
