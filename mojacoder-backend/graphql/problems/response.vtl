@@ -1,1 +1,8 @@
-$util.toJson($context.result)
+#set($items = [])
+#foreach($item in $context.result.items)
+	$util.qr($items.add({"id": $context.result.id, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "statement": $context.result.statement, "submission": $context.result.submission, "submissions": $context.result.submissions}))
+#end
+{
+    "items": $util.toJson($items),
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.result.nextToken, null))
+}
