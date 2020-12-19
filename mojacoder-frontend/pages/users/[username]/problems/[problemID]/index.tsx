@@ -81,12 +81,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                     </IconWithText>
                 </div>
                 <div className="mt-2">
-                    <Button variant="secondary" size="sm">
-                        <IconWithText icon={<HeartIcon />}>0</IconWithText>
-                    </Button>{' '}
-                    <Button variant="secondary" size="sm">
-                        Tweet
-                    </Button>
+                    <IconWithText icon={<HeartIcon />}>0</IconWithText> Tweet
                 </div>
                 <div></div>
             </Jumbotron>
