@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { Auth as Cognito } from 'aws-amplify'
-import { Alert, Button, Image, Jumbotron, Table } from 'react-bootstrap'
+import { Alert, Button, Image, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../../../lib/i18n'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Jumbotron, Image } from 'react-bootstrap'
+import { Image } from 'react-bootstrap'
 import { MarkGithubIcon, SmileyIcon } from '@primer/octicons-react'
 
 import { useI18n } from '../lib/i18n'

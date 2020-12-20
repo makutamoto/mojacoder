@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import { Alert, Spinner } from 'react-bootstrap'
+import Link from 'next/link'
+import { Alert, Nav, Spinner } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../../../../../../lib/i18n'
@@ -58,34 +59,73 @@ interface Props {
 }
 const Submissions: React.FC<Props> = (props) => {
     const { t } = useI18n('submissions')
-    const { query } = useRouter()
+    const { query, pathname } = useRouter()
     const { auth } = Auth.useContainer()
     const { problem } = props
+    const me = query.me === 'true'
     const [submissions, setSubmissions] = useState<Submission[] | null>(null)
-    const updateSubmissions = useCallback(() => {
-        if (auth) {
-            invokeQueryWithApiKey(GetSubmissions, {
-                authorUsername: query.username,
-                problemID: query.problemID,
-                userID: auth.userID,
-            }).then((data: GetSubmissionsResponse) => {
-                const items = data.user.problem.submissions.items
-                setSubmissions(items)
-                for (const item of items) {
-                    if (item.status === SubmissionStatus.WJ) {
+    useEffect(() => {
+        let valid = true
+        setSubmissions(null)
+        const updateSubmissions = () => {
+            if (!me || auth) {
+                invokeQueryWithApiKey(GetSubmissions, {
+                    authorUsername: query.username,
+                    problemID: query.problemID,
+                    userID: me ? auth.userID : null,
+                }).then((data: GetSubmissionsResponse) => {
+                    const items = data.user.problem.submissions.items
+                    setSubmissions(items)
+                    if (
+                        valid &&
+                        items.some(
+                            (item) => item.status === SubmissionStatus.WJ
+                        )
+                    ) {
                         setTimeout(updateSubmissions, 1000)
-                        break
                     }
-                }
-            })
+                })
+            }
         }
-    }, [query, auth])
-    useEffect(updateSubmissions, [updateSubmissions])
+        updateSubmissions()
+        return () => (valid = false)
+    }, [query, me, auth])
     return (
         <>
             <ProblemTop activeKey="submissions" problem={problem} />
             <Layout>
-                {auth ? (
+                <Nav variant="pills" activeKey={me ? 'me' : 'all'}>
+                    <Nav.Item>
+                        <Link
+                            href={{
+                                pathname: pathname,
+                                query: {
+                                    ...query,
+                                    me: true,
+                                },
+                            }}
+                            passHref
+                        >
+                            <Nav.Link eventKey="me">自分の提出</Nav.Link>
+                        </Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Link
+                            href={{
+                                pathname: pathname,
+                                query: {
+                                    ...query,
+                                    me: false,
+                                },
+                            }}
+                            passHref
+                        >
+                            <Nav.Link eventKey="all">すべての提出</Nav.Link>
+                        </Link>
+                    </Nav.Item>
+                </Nav>
+                <hr />
+                {!me || auth ? (
                     submissions === null ? (
                         <div className="text-center">
                             <Spinner animation="border" />

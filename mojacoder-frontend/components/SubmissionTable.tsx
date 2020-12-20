@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { Table } from 'react-bootstrap'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { join } from 'path'
 
 import {
     JudgeStatusDetail,
@@ -27,7 +28,7 @@ interface SubmissionTableRowProps {
     submission: Submission
 }
 const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
-    const { query } = useRouter()
+    const router = useRouter()
     const { status, testcases } = props.submission
     const { wholeStatus, time, memory, progress } = useMemo(() => {
         return getJudgeStatusFromTestcases(status, testcases)
@@ -50,7 +51,13 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
             <td>{memory} kb</td>
             <td className="text-center">
                 <Link
-                    href={`/users/${query.username}/problems/${query.problemID}/submissions/${id}`}
+                    href={{
+                        pathname: join(router.pathname, '[id]'),
+                        query: {
+                            ...router.query,
+                            id,
+                        },
+                    }}
                     passHref
                 >
                     <a>詳細</a>
