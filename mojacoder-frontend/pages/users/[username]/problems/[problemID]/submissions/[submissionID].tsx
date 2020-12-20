@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { Alert, Table } from 'react-bootstrap'
@@ -70,19 +70,6 @@ const Submissions: React.FC<Props> = (props) => {
         props.problem.submission
     )
     const { problem } = props
-    const updateSubmissions = useCallback(() => {
-        if (submission && submission.status === SubmissionStatus.WJ) {
-            invokeQueryWithApiKey(GetSubmission, {
-                authorUsername: query.username,
-                problemID: query.problemID,
-                submissionID: query.submissionID,
-            }).then((data: GetSubmissionsResponse) => {
-                const submission = data.user.problem.submission
-                setSubmission(submission)
-                setTimeout(updateSubmissions, 1000)
-            })
-        }
-    }, [query])
     const result = useMemo(() => {
         if (submission)
             return getJudgeStatusFromTestcases(
@@ -91,7 +78,28 @@ const Submissions: React.FC<Props> = (props) => {
             )
         else return null
     }, [submission])
-    useEffect(updateSubmissions, [updateSubmissions])
+    useEffect(() => {
+        let valid = true
+        const updateSubmissions = () => {
+            if (
+                valid &&
+                submission &&
+                submission.status === SubmissionStatus.WJ
+            ) {
+                invokeQueryWithApiKey(GetSubmission, {
+                    authorUsername: query.username,
+                    problemID: query.problemID,
+                    submissionID: query.submissionID,
+                }).then((data: GetSubmissionsResponse) => {
+                    const submission = data.user.problem.submission
+                    setSubmission(submission)
+                    setTimeout(updateSubmissions, 1000)
+                })
+            }
+        }
+        updateSubmissions()
+        return () => (valid = false)
+    }, [])
     return (
         <>
             <ProblemTop activeKey="submissions" problem={problem} />
