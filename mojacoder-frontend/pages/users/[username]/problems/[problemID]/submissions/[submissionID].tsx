@@ -107,13 +107,19 @@ const Submissions: React.FC<Props> = (props) => {
                             readOnly
                         />
                         <h2>コンパイルエラー</h2>
-                        <Editor value={submission.stderr} lineNumbers readOnly />
+                        <Editor
+                            value={submission.stderr}
+                            lineNumbers
+                            readOnly
+                        />
                         <Table responsive striped bordered hover>
                             <tbody>
                                 <tr>
                                     <td>提出日時</td>
                                     <td>
-                                        <DateTime>{submission.datetime}</DateTime>
+                                        <DateTime>
+                                            {submission.datetime}
+                                        </DateTime>
                                     </td>
                                 </tr>
                                 <tr>
@@ -186,9 +192,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     query,
 }) => {
     const {
-        user: {
-            problem,
-        },
+        user: { problem },
     } = (await invokeQueryWithApiKey(GetSubmission, {
         authorUsername: query.username,
         problemID: query.problemID,

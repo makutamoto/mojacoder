@@ -72,7 +72,10 @@ const SignUp: React.FC = () => {
                 <h1 className="text-center">{t`title`}</h1>
             </Top>
             <Layout>
-                <Alert show={status === Status.UserAlreadyExists} variant="danger">
+                <Alert
+                    show={status === Status.UserAlreadyExists}
+                    variant="danger"
+                >
                     {t`userAlreadyExists`}
                 </Alert>
                 <Alert show={status === Status.Error} variant="danger">
@@ -145,9 +148,16 @@ const SignUp: React.FC = () => {
                         {t`passwordNotMatch`}
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Button onClick={onSubmit} disabled={status === Status.SigningUp}>
+                <Button
+                    onClick={onSubmit}
+                    disabled={status === Status.SigningUp}
+                >
                     {status === Status.SigningUp && (
-                        <Spinner className="mr-2" animation="border" size="sm" />
+                        <Spinner
+                            className="mr-2"
+                            animation="border"
+                            size="sm"
+                        />
                     )}
                     {t`signUp`}
                 </Button>

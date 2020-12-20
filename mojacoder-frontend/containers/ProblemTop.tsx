@@ -38,7 +38,9 @@ const ProblemTab: React.FC<Props> = (props) => {
                 <div className="my-2">
                     <div>
                         <IconWithText icon={<ClockIcon />}>2 secs</IconWithText>{' '}
-                        <IconWithText icon={<BeakerIcon />}>1024 MB</IconWithText>
+                        <IconWithText icon={<BeakerIcon />}>
+                            1024 MB
+                        </IconWithText>
                     </div>
                     <div>
                         <IconWithText icon={<SmileyIcon />}>
@@ -46,10 +48,15 @@ const ProblemTab: React.FC<Props> = (props) => {
                         </IconWithText>
                     </div>
                     <div className="mt-2">
-                        <IconWithText icon={<HeartIcon />}>0</IconWithText> Tweet
+                        <IconWithText icon={<HeartIcon />}>0</IconWithText>{' '}
+                        Tweet
                     </div>
                 </div>
-                <Nav className="mb-3 justify-content-center" variant="pills" activeKey={activeKey}>
+                <Nav
+                    className="mb-3 justify-content-center"
+                    variant="pills"
+                    activeKey={activeKey}
+                >
                     <Nav.Item>
                         <Link passHref href={basePath}>
                             <Nav.Link eventKey="problem">{t`problem`}</Nav.Link>

@@ -61,7 +61,7 @@ const ProblemPage: React.FC<Props> = (props) => {
     }, [setStatus, user, code])
     return (
         <>
-            <ProblemTop activeKey="problem" problem={user.problem} />  
+            <ProblemTop activeKey="problem" problem={user.problem} />
             <Layout>
                 <ReactMarkdown
                     source={user.problem.statement}
