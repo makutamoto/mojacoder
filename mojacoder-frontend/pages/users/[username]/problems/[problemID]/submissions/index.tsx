@@ -68,23 +68,24 @@ const Submissions: React.FC<Props> = (props) => {
         let valid = true
         setSubmissions(null)
         const updateSubmissions = () => {
-            if (!me || auth) {
-                invokeQueryWithApiKey(GetSubmissions, {
-                    authorUsername: query.username,
-                    problemID: query.problemID,
-                    userID: me ? auth.userID : null,
-                }).then((data: GetSubmissionsResponse) => {
-                    const items = data.user.problem.submissions.items
-                    setSubmissions(items)
-                    if (
-                        valid &&
-                        items.some(
-                            (item) => item.status === SubmissionStatus.WJ
-                        )
-                    ) {
-                        setTimeout(updateSubmissions, 1000)
-                    }
-                })
+            if (valid) {
+                if (!me || auth) {
+                    invokeQueryWithApiKey(GetSubmissions, {
+                        authorUsername: query.username,
+                        problemID: query.problemID,
+                        userID: me ? auth.userID : null,
+                    }).then((data: GetSubmissionsResponse) => {
+                        const items = data.user.problem.submissions.items
+                        setSubmissions(items)
+                        if (
+                            items.some(
+                                (item) => item.status === SubmissionStatus.WJ
+                            )
+                        ) {
+                            setTimeout(updateSubmissions, 1000)
+                        }
+                    })
+                }
             }
         }
         updateSubmissions()
