@@ -150,5 +150,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         props: {
             user: res.user,
         },
+        notFound: res.user === null || res.user.problem === null,
     }
 }

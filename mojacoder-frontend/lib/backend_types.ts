@@ -41,6 +41,6 @@ export interface User {
 export interface UserDetail {
     userID: string | null
     screenName: string | null
-    problem: Problem
+    problem: Problem | null
     problems: Connection<Problem>
 }
