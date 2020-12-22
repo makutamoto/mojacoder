@@ -125,6 +125,7 @@ const GetProblem = gql`
     query GetProblem($username: String!, $id: ID!) {
         user(username: $username) {
             problem(id: $id) {
+                id
                 title
                 statement
                 user {
@@ -146,10 +147,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         username: query.username,
         id: query.problemID,
     })) as GetProblemResponse
+    if (res.user === null || res.user.problem === null) {
+        return {
+            notFound: true,
+        }
+    }
     return {
         props: {
             user: res.user,
         },
-        notFound: res.user === null || res.user.problem === null,
     }
 }
