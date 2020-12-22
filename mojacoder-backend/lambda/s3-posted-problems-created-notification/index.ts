@@ -70,12 +70,13 @@ async function uploadToS3(keyPath: ParsedPath, testcases: Buffer, testcasesDir: 
     const outTestcases = testcasesDir.folder('out')!
     const inTestcaseFiles = inTestcases.filter((_, file) => !file.dir)
     for(let file of inTestcaseFiles) {
-        const outTestcaseFile = outTestcases.file(file.name)
-        if(outTestcaseFile === null || outTestcaseFile.dir) return
+        const { base } = parse(file.name)
+        const outTestcaseFile = outTestcases.file(base)
+        if(outTestcaseFile === null || outTestcaseFile.dir) continue
         const inTestcaseBuffer = await file.async("nodebuffer")
-        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'in', file.name), inTestcaseBuffer)
+        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'in', base), inTestcaseBuffer)
         const outTestcaseBuffer = await outTestcaseFile.async("nodebuffer")
-        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'out', file.name), outTestcaseBuffer)
+        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'out', base), outTestcaseBuffer)
     }
 }
 
