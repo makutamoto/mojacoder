@@ -36,6 +36,7 @@ export class Problems extends cdk.Construct {
         });
         const postedProblems = new Bucket(this, 'postedProblems');
         this.testcases = new Bucket(this, 'testcases');
+        const testcasesForView = new Bucket(this, 'testcases-for-view');
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
@@ -43,11 +44,12 @@ export class Problems extends cdk.Construct {
                 TABLE_NAME: problemTable.tableName,
                 POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
                 TESTCASES_BUCKET_NAME: this.testcases.bucketName,
+                TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
             },
         });
         postedProblemsCreatedNotification.addToRolePolicy(new PolicyStatement({
             actions: ['s3:GetObject', 's3:PutObject', 'dynamodb:UpdateItem'],
-            resources: [postedProblems.bucketArn + '/*', this.testcases.bucketArn + '/*', problemTable.tableArn],
+            resources: [postedProblems.bucketArn + '/*', this.testcases.bucketArn + '/*', testcasesForView.bucketArn + '/*', problemTable.tableArn],
         }))
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'

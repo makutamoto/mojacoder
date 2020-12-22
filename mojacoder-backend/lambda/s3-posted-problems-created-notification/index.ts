@@ -1,7 +1,7 @@
 import { S3Handler } from 'aws-lambda'
 import { DynamoDB, S3 } from 'aws-sdk'
 import * as JSZip from 'jszip'
-import { parse } from 'path'
+import { join, parse, ParsedPath } from 'path'
 
 const TABLE_NAME = process.env.TABLE_NAME as string;
 if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
@@ -9,6 +9,8 @@ const POSTED_PROBLEMS_BUCKET_NAME = process.env.POSTED_PROBLEMS_BUCKET_NAME as s
 if(POSTED_PROBLEMS_BUCKET_NAME === undefined) throw "POSTED_PROBLEMS_BUCKET_NAME is not defined.";
 const TESTCASES_BUCKET_NAME = process.env.TESTCASES_BUCKET_NAME as string;
 if(TESTCASES_BUCKET_NAME === undefined) throw "TESTCASES_BUCKET_NAME is not defined.";
+const TESTCASES_FOR_VIEW_BUCKET_NAME = process.env.TESTCASES_FOR_VIEW_BUCKET_NAME as string;
+if(TESTCASES_FOR_VIEW_BUCKET_NAME === undefined) throw "TESTCASES_FOR_VIEW_BUCKET_NAME is not defined.";
 
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new S3({apiVersion: '2006-03-01'});
@@ -18,9 +20,10 @@ interface Config {
 }
 
 interface Problem {
-    title: string,
-    statement: string,
-    testcases: Buffer,
+    title: string
+    statement: string
+    testcases: Buffer
+    testcasesDir: JSZip
 }
 
 async function parseZip(data: Buffer): Promise<Problem> {
@@ -40,6 +43,39 @@ async function parseZip(data: Buffer): Promise<Problem> {
         title,
         statement,
         testcases,
+        testcasesDir,
+    }
+}
+
+function putObject(bucket: string, key: string, body: Buffer) {
+    return new Promise((resolve, reject) => {
+        s3.putObject({
+            Bucket: bucket,
+            Key: key,
+            Body: body,
+        }, (err) => {
+            if(err) {
+                console.error(err);
+                reject("Failed to update testcases.");
+                return;
+            }
+            resolve();
+        });
+    })
+}
+
+async function uploadToS3(keyPath: ParsedPath, testcases: Buffer, testcasesDir: JSZip) {
+    await putObject(TESTCASES_BUCKET_NAME, keyPath.base, testcases)
+    const inTestcases = testcasesDir.folder('in')!
+    const outTestcases = testcasesDir.folder('out')!
+    for(let [path, file] of Object.entries(inTestcases.files)) {
+        if(!file.dir) return
+        const outTestcaseFile = outTestcases.file(path)
+        if(outTestcaseFile === null) return
+        const inTestcaseBuffer = await file.async("nodebuffer")
+        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'in', path), inTestcaseBuffer)
+        const outTestcaseBuffer = await outTestcaseFile.async("nodebuffer")
+        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'out', path), outTestcaseBuffer)
     }
 }
 
@@ -78,18 +114,9 @@ function deployProblem(key: string): Promise<void> {
                         reject("Failed to update Database.");
                         return;
                     }
-                    s3.putObject({
-                        Bucket: TESTCASES_BUCKET_NAME,
-                        Key: keyPath.base,
-                        Body: problem.testcases,
-                    }, (err) => {
-                        if(err) {
-                            console.error(err);
-                            reject("Failed to update testcases.");
-                            return;
-                        }
-                        resolve();
-                    });
+                    uploadToS3(keyPath, problem.testcases, problem.testcasesDir).then(() => {
+                        resolve()
+                    }).catch((err) => reject(err))
                 });
             }).catch((err) => reject(err));
         });
