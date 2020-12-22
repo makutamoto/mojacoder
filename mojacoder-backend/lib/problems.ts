@@ -31,7 +31,7 @@ export class Problems extends cdk.Construct {
             },
             sortKey: {
                 name: 'datetime',
-                type: AttributeType.NUMBER,
+                type: AttributeType.STRING,
             },
         });
         const postedProblems = new Bucket(this, 'postedProblems');
