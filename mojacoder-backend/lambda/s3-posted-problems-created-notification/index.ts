@@ -69,7 +69,7 @@ async function uploadToS3(keyPath: ParsedPath, testcases: Buffer, testcasesDir: 
     const inTestcases = testcasesDir.folder('in')!
     const outTestcases = testcasesDir.folder('out')!
     for(let [path, file] of Object.entries(inTestcases.files)) {
-        if(!file.dir) return
+        if(file.dir) return
         const outTestcaseFile = outTestcases.file(path)
         if(outTestcaseFile === null) return
         const inTestcaseBuffer = await file.async("nodebuffer")
