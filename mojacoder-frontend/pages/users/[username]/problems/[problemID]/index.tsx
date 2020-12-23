@@ -59,6 +59,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             router.push(join(router.asPath, 'submissions'))
         })
     }, [setStatus, user, code])
+    if (!user) return <></>
     return (
         <>
             <ProblemTop activeKey="problem" problem={user.problem} />
