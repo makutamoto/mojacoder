@@ -54,6 +54,38 @@ export class Problems extends cdk.Construct {
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'
         });
+        const testcaseInResolverLambda = new NodejsFunction(this, 'testcase-in-resolver', {
+            entry: join(__dirname, '../lambda/testcase-in-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
+            },
+        });
+        testcaseInResolverLambda.addToRolePolicy(new PolicyStatement({
+            actions: ['s3:GetObject'],
+            resources: [testcasesForView.bucketArn + '/*'],
+        }))
+        const testcaseInResolverLambdaDatasource = props.api.addLambdaDataSource('testcase-in-resolver', testcaseInResolverLambda)
+        testcaseInResolverLambdaDatasource.createResolver({
+            typeName: 'Testcase',
+            fieldName: 'in',
+        })
+        const testcaseOutResolverLambda = new NodejsFunction(this, 'testcase-out-resolver', {
+            entry: join(__dirname, '../lambda/testcase-out-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
+            },
+        });
+        testcaseOutResolverLambda.addToRolePolicy(new PolicyStatement({
+            actions: ['s3:GetObject'],
+            resources: [testcasesForView.bucketArn + '/*'],
+        }))
+        const testcaseOutResolverLambdaDatasource = props.api.addLambdaDataSource('testcase-out-resolver', testcaseOutResolverLambda)
+        testcaseOutResolverLambdaDatasource.createResolver({
+            typeName: 'Testcase',
+            fieldName: 'out',
+        })
         const problemTableDataSource = props.api.addDynamoDbDataSource('problem_table', problemTable);
         problemTableDataSource.createResolver({
             typeName: 'Mutation',
