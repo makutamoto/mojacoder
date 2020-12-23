@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
 import { Auth as Cognito } from 'aws-amplify'
-import { Alert, Button, Image, Table } from 'react-bootstrap'
+import { Button, Image, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../../../lib/i18n'
@@ -30,63 +30,57 @@ const UserPage: React.FC<Props> = (props) => {
     useEffect(() => setBroser(true), [])
     return (
         <>
-            {!user ? (
-                <Alert variant="danger">{t`userNotFound`}</Alert>
-            ) : (
-                <>
-                    <Top>
-                        <div className="text-center">
-                            {browser && (
-                                <Image
-                                    roundedCircle
-                                    height={256}
-                                    src={
-                                        iconNotFound
-                                            ? '/images/avatar.png'
-                                            : '/images/avatar.png'
-                                    }
-                                    onError={() =>
-                                        iconNotFound || setIconNotFound(true)
-                                    }
-                                />
-                            )}
-                            <h2>{user.screenName}</h2>
-                            {auth && auth.userID === user.userID && (
-                                <Button
-                                    variant="danger"
-                                    onClick={OnClickSignOutCallback}
-                                >
-                                    {t`signOut`}
-                                </Button>
-                            )}
-                        </div>
-                    </Top>
-                    <Layout>
-                        <h2>{t`problem`}</h2>
-                        <hr />
-                        <Table bordered striped hover>
-                            <thead>
-                                <tr>
-                                    <th>{t`problemName`}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {user.problems.items.map((item) => (
-                                    <tr key={item.id}>
-                                        <td>
-                                            <Link
-                                                href={`/users/${user.screenName}/problems/${item.id}`}
-                                            >
-                                                <a>{item.title}</a>
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    </Layout>
-                </>
-            )}
+            <Top>
+                <div className="text-center">
+                    {browser && (
+                        <Image
+                            roundedCircle
+                            height={256}
+                            src={
+                                iconNotFound
+                                    ? '/images/avatar.png'
+                                    : '/images/avatar.png'
+                            }
+                            onError={() =>
+                                iconNotFound || setIconNotFound(true)
+                            }
+                        />
+                    )}
+                    <h2>{user.screenName}</h2>
+                    {auth && auth.userID === user.userID && (
+                        <Button
+                            variant="danger"
+                            onClick={OnClickSignOutCallback}
+                        >
+                            {t`signOut`}
+                        </Button>
+                    )}
+                </div>
+            </Top>
+            <Layout>
+                <h2>{t`problem`}</h2>
+                <hr />
+                <Table bordered striped hover>
+                    <thead>
+                        <tr>
+                            <th>{t`problemName`}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {user.problems.items.map((item) => (
+                            <tr key={item.id}>
+                                <td>
+                                    <Link
+                                        href={`/users/${user.screenName}/problems/${item.id}`}
+                                    >
+                                        <a>{item.title}</a>
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </Layout>
         </>
     )
 }
@@ -114,6 +108,11 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = (await invokeQueryWithApiKey(GetUser, {
         username: params.username || '',
     })) as GetUserResponse
+    if (res.user === null) {
+        return {
+            notFound: true,
+        }
+    }
     return {
         props: {
             user: res.user,
