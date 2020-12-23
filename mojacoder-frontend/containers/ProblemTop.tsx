@@ -16,12 +16,12 @@ import {
     SmileyIcon,
 } from '@primer/octicons-react'
 
-interface Props {
+export interface ProblemTopProps {
     activeKey: 'problem' | 'submissions' | 'testcases'
-    problem: Problem
+    problem: Problem | undefined
 }
 
-const ProblemTab: React.FC<Props> = (props) => {
+const ProblemTop: React.FC<ProblemTopProps> = (props) => {
     const { t } = useI18n('problemTab')
     const { query } = useRouter()
     const { activeKey, problem } = props
@@ -34,7 +34,7 @@ const ProblemTab: React.FC<Props> = (props) => {
     return (
         <Top>
             <div className="text-center">
-                <h1>{problem.title}</h1>
+                <h1>{problem?.title}</h1>
                 <div className="my-2">
                     <div>
                         <IconWithText icon={<ClockIcon />}>2 secs</IconWithText>{' '}
@@ -44,7 +44,7 @@ const ProblemTab: React.FC<Props> = (props) => {
                     </div>
                     <div>
                         <IconWithText icon={<SmileyIcon />}>
-                            <Username>{problem.user.detail}</Username>
+                            <Username>{problem?.user.detail}</Username>
                         </IconWithText>
                     </div>
                     <div className="mt-2">
@@ -77,4 +77,4 @@ const ProblemTab: React.FC<Props> = (props) => {
         </Top>
     )
 }
-export default ProblemTab
+export default ProblemTop
