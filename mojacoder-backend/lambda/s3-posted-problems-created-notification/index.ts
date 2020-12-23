@@ -24,6 +24,7 @@ interface Problem {
     statement: string
     testcases: Buffer
     testcasesDir: JSZip
+    testcaseNames: string[]
 }
 
 async function parseZip(data: Buffer): Promise<Problem> {
@@ -39,11 +40,27 @@ async function parseZip(data: Buffer): Promise<Problem> {
     const testcases = await testcasesDir.generateAsync({
         type: "nodebuffer",
     });
+    const testcaseNames: string[] = []
+    const inTestcases = testcasesDir.folder('in')
+    if(inTestcases === null) {
+        throw "Testcase directory 'in' not found."
+    }
+    const outTestcases = testcasesDir.folder('out')
+    if(outTestcases === null) {
+        throw "Testcase directory 'out' not found."
+    }
+    inTestcases.forEach((path, file) => {
+        if(file.dir) return
+        const outTestcaseFile = outTestcases.file(path)
+        if(outTestcaseFile === null || outTestcaseFile.dir) return
+        testcaseNames.push(path)
+    })
     return {
         title,
         statement,
         testcases,
         testcasesDir,
+        testcaseNames,
     }
 }
 
@@ -107,8 +124,11 @@ function deployProblem(key: string): Promise<void> {
                         ":statement": {
                             S: problem.statement,
                         },
+                        ":testcases": {
+                            L: problem.testcaseNames.map((name) => ({ S: name })),
+                        },
                     },
-                    UpdateExpression: "SET title = :title, statement = :statement",
+                    UpdateExpression: "SET title = :title, statement = :statement, testcases = :testcases",
                 }, (err) => {
                     if(err) {
                         console.error(err);
