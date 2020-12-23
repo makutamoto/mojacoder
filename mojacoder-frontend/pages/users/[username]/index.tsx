@@ -13,7 +13,7 @@ import Layout from '../../../components/Layout'
 import Top from '../../../components/Top'
 
 interface Props {
-    user: UserDetail | undefined
+    user?: UserDetail
 }
 
 const UserPage: React.FC<Props> = (props) => {

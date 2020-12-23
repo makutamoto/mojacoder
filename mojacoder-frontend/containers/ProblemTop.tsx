@@ -18,7 +18,7 @@ import {
 
 export interface ProblemTopProps {
     activeKey: 'problem' | 'submissions' | 'testcases'
-    problem: Problem | undefined
+    problem?: Problem
 }
 
 const ProblemTop: React.FC<ProblemTopProps> = (props) => {
