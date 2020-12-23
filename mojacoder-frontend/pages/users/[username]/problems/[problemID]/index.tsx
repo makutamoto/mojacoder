@@ -142,16 +142,9 @@ interface GetProblemResponse {
     user: UserDetail | null
 }
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-    if (!params.username || !params.problemID) {
-        return {
-            props: {
-                user: null,
-            },
-        }
-    }
     const res = (await invokeQueryWithApiKey(GetProblem, {
-        username: params.username,
-        id: params.problemID,
+        username: params.username || '',
+        id: params.problemID || '',
     })) as GetProblemResponse
     if (res.user === null || res.user.problem === null) {
         return {

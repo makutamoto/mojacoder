@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
 import { Auth as Cognito } from 'aws-amplify'
 import { Alert, Button, Image, Table } from 'react-bootstrap'
@@ -109,11 +109,9 @@ const GetUser = gql`
 interface GetUserResponse {
     user: UserDetail | null
 }
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-    query,
-}) => {
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = (await invokeQueryWithApiKey(GetUser, {
-        username: query.username,
+        username: params.username || '',
     })) as GetUserResponse
     return {
         props: {
@@ -121,3 +119,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         },
     }
 }
+
+export const getStaticPaths: GetStaticPaths = async () => ({
+    paths: [],
+    fallback: true,
+})
