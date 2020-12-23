@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
@@ -157,3 +157,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
         revalidate: 1,
     }
 }
+
+export const getStaticPaths: GetStaticPaths = async () => ({
+    paths: [],
+    fallback: true,
+})
