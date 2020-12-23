@@ -30,12 +30,6 @@ enum ProblemStatus {
   FAILED
 }
 
-type Testcase {
-  name: String!
-  in: String!
-  out: String!
-}
-
 type ProblemConnection {
 	items: [Problem]
 	nextToken: String

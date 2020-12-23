@@ -11,10 +11,14 @@ interface Arguments {
     name: string
 }
 
-export const handler: AppSyncResolverHandler<Arguments, string> = (event) => {
+export const handler: AppSyncResolverHandler<Arguments, string | null> = (event) => {
     return new Promise((resolve, reject) => {
         const id = event.source!.id as string
+        const testcaseNames = event.source!.testcaseNames as string[]
         const name = event.arguments.name
+        if(testcaseNames.indexOf(name) === -1) {
+            resolve(null)
+        }
         s3.getObject({
             Bucket: TESTCASES_FOR_VIEW_BUCKET_NAME,
             Key: join(id, 'out', name),

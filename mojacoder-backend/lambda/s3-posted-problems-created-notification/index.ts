@@ -124,7 +124,7 @@ function deployProblem(key: string): Promise<void> {
                         ":statement": {
                             S: problem.statement,
                         },
-                        ":testcases": {
+                        ":testcaseNames": {
                             L: problem.testcaseNames.map((name) => ({ S: name })),
                         },
                     },
