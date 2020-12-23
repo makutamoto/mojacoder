@@ -128,7 +128,7 @@ function deployProblem(key: string): Promise<void> {
                             L: problem.testcaseNames.map((name) => ({ S: name })),
                         },
                     },
-                    UpdateExpression: "SET title = :title, statement = :statement, testcases = :testcases",
+                    UpdateExpression: "SET title = :title, statement = :statement, testcaseNames = :testcaseNames",
                 }, (err) => {
                     if(err) {
                         console.error(err);
