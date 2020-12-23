@@ -48,7 +48,9 @@ type Problem {
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
   title: String @aws_cognito_user_pools @aws_api_key
   statement: String @aws_cognito_user_pools @aws_api_key
-  testcases: [Testcase]! @aws_cognito_user_pools @aws_api_key
+  inTestcase(name: String!): String @aws_cognito_user_pools @aws_api_key
+  outTestcase(name: String!): String @aws_cognito_user_pools @aws_api_key
+  testcaseNames: [String]! @aws_cognito_user_pools @aws_api_key
   submission(id: ID!): Submission @aws_cognito_user_pools @aws_api_key
   submissions(nextToken: String, userID: ID): SubmissionConnection! @aws_cognito_user_pools @aws_api_key
 }

@@ -1,10 +1,6 @@
 #set($items = [])
 #foreach($item in $context.result.items)
-    #set($testcases = [])
-    #foreach($name in $context.result.testcases)
-        $util.qr($testcases.add({ "name": $name }))
-    #end
-	$util.qr($items.add({"id": $item.id, "user": { "userID": $item.userID }, "datetime": $item.datetime, "status": $item.status, "title": $item.title, "statement": $item.statement, "testcases": $testcases, "submission": $item.submission, "submissions": $item.submissions}))
+    $util.qr($items.add({"id": $item.id, "user": { "userID": $item.userID }, "datetime": $item.datetime, "status": $item.status, "title": $item.title, "statement": $item.statement, "testcases": $context.result.testcases, "submission": $item.submission, "submissions": $item.submissions}))
 #end
 {
     "items": $util.toJson($items),

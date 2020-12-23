@@ -54,37 +54,37 @@ export class Problems extends cdk.Construct {
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'
         });
-        const testcaseInResolverLambda = new NodejsFunction(this, 'testcase-in-resolver', {
-            entry: join(__dirname, '../lambda/testcase-in-resolver/index.ts'),
+        const inTestcaseResolverLambda = new NodejsFunction(this, 'in-testcase-resolver', {
+            entry: join(__dirname, '../lambda/in-testcase-resolver/index.ts'),
             handler: 'handler',
             environment: {
                 TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
             },
         });
-        testcaseInResolverLambda.addToRolePolicy(new PolicyStatement({
+        inTestcaseResolverLambda.addToRolePolicy(new PolicyStatement({
             actions: ['s3:GetObject'],
             resources: [testcasesForView.bucketArn + '/*'],
         }))
-        const testcaseInResolverLambdaDatasource = props.api.addLambdaDataSource('testcaseInResolver', testcaseInResolverLambda)
-        testcaseInResolverLambdaDatasource.createResolver({
-            typeName: 'Testcase',
-            fieldName: 'in',
+        const inTestcaseResolverLambdaDatasource = props.api.addLambdaDataSource('inTestcaseResolver', inTestcaseResolverLambda)
+        inTestcaseResolverLambdaDatasource.createResolver({
+            typeName: 'Problem',
+            fieldName: 'inTestcase',
         })
-        const testcaseOutResolverLambda = new NodejsFunction(this, 'testcase-out-resolver', {
-            entry: join(__dirname, '../lambda/testcase-out-resolver/index.ts'),
+        const outTestcaseResolverLambda = new NodejsFunction(this, 'out-testcase-resolver', {
+            entry: join(__dirname, '../lambda/out-testcase-resolver/index.ts'),
             handler: 'handler',
             environment: {
                 TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
             },
         });
-        testcaseOutResolverLambda.addToRolePolicy(new PolicyStatement({
+        outTestcaseResolverLambda.addToRolePolicy(new PolicyStatement({
             actions: ['s3:GetObject'],
             resources: [testcasesForView.bucketArn + '/*'],
         }))
-        const testcaseOutResolverLambdaDatasource = props.api.addLambdaDataSource('testcaseOutResolver', testcaseOutResolverLambda)
-        testcaseOutResolverLambdaDatasource.createResolver({
-            typeName: 'Testcase',
-            fieldName: 'out',
+        const outTestcaseResolverLambdaDatasource = props.api.addLambdaDataSource('outTestcaseResolver', outTestcaseResolverLambda)
+        outTestcaseResolverLambdaDatasource.createResolver({
+            typeName: 'Problem',
+            fieldName: 'outTestcase',
         })
         const problemTableDataSource = props.api.addDynamoDbDataSource('problem_table', problemTable);
         problemTableDataSource.createResolver({

@@ -7,10 +7,14 @@ if(TESTCASES_FOR_VIEW_BUCKET_NAME === undefined) throw "TESTCASES_FOR_VIEW_BUCKE
 
 const s3 = new S3({apiVersion: '2006-03-01'});
 
-export const handler: AppSyncResolverHandler<{}, string> = (event) => {
+interface Arguments {
+    name: string
+}
+
+export const handler: AppSyncResolverHandler<Arguments, string> = (event) => {
     return new Promise((resolve, reject) => {
         const id = event.source!.id as string
-        const name = event.source!.name as string
+        const name = event.arguments.name
         s3.getObject({
             Bucket: TESTCASES_FOR_VIEW_BUCKET_NAME,
             Key: join(id, 'out', name),
