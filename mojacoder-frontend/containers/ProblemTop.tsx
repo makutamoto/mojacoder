@@ -17,7 +17,7 @@ import {
 } from '@primer/octicons-react'
 
 interface Props {
-    activeKey: 'problem' | 'submissions'
+    activeKey: 'problem' | 'submissions' | 'testcases'
     problem: Problem
 }
 

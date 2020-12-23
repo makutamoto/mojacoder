@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { GetServerSideProps } from 'next'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Alert, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
+import { join } from 'path'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
@@ -65,7 +67,7 @@ interface Props {
 }
 
 const Submissions: React.FC<Props> = (props) => {
-    const { query } = useRouter()
+    const { query, pathname } = useRouter()
     const [submission, setSubmission] = useState<Submission | null>(
         props.problem.submission
     )
@@ -176,7 +178,23 @@ const Submissions: React.FC<Props> = (props) => {
                             <tbody>
                                 {submission.testcases.map((testcase) => (
                                     <tr key={testcase.name}>
-                                        <td>{testcase.name}</td>
+                                        <td>
+                                            <Link
+                                                href={{
+                                                    pathname: join(
+                                                        pathname,
+                                                        '../../testcases/[testcaseName]'
+                                                    ),
+                                                    query: {
+                                                        ...query,
+                                                        testcaseName:
+                                                            testcase.name,
+                                                    },
+                                                }}
+                                            >
+                                                <a>{testcase.name}</a>
+                                            </Link>
+                                        </td>
                                         <td>
                                             <JudgeStatusBadge
                                                 status={testcase.status}

@@ -10,6 +10,9 @@ export interface Problem {
     title: string
     user: User
     statement
+    inTestcase: string
+    outTestcase: string
+    testcaseNames: string[]
     submission: Submission | null
     submissions: Connection<Submission>
 }
