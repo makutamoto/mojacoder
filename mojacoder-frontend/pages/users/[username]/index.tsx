@@ -18,6 +18,7 @@ interface Props {
 
 const UserPage: React.FC<Props> = (props) => {
     const { t } = useI18n('user')
+    const { user } = props
     const { auth, setAuth } = Auth.useContainer()
     const [browser, setBroser] = useState(false)
     const [iconNotFound, setIconNotFound] = useState(false)
@@ -29,7 +30,7 @@ const UserPage: React.FC<Props> = (props) => {
     useEffect(() => setBroser(true), [])
     return (
         <>
-            {props.user === null ? (
+            {!user ? (
                 <Alert variant="danger">{t`userNotFound`}</Alert>
             ) : (
                 <>
@@ -49,8 +50,8 @@ const UserPage: React.FC<Props> = (props) => {
                                     }
                                 />
                             )}
-                            <h2>{props.user.screenName}</h2>
-                            {auth && auth.userID === props.user.userID && (
+                            <h2>{user.screenName}</h2>
+                            {auth && auth.userID === user.userID && (
                                 <Button
                                     variant="danger"
                                     onClick={OnClickSignOutCallback}
@@ -70,11 +71,11 @@ const UserPage: React.FC<Props> = (props) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {props.user.problems.items.map((item) => (
+                                {user.problems.items.map((item) => (
                                     <tr key={item.id}>
                                         <td>
                                             <Link
-                                                href={`/users/${props.user.screenName}/problems/${item.id}`}
+                                                href={`/users/${user.screenName}/problems/${item.id}`}
                                             >
                                                 <a>{item.title}</a>
                                             </Link>
