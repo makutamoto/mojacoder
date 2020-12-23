@@ -53,19 +53,18 @@ const ProblemPage: React.FC<Props> = (props) => {
             input: {
                 lang: code.lang,
                 code: code.code,
-                problemID: user.problem.id,
+                problemID: user?.problem.id || '',
             },
         }).then(() => {
             router.push(join(router.asPath, 'submissions'))
         })
     }, [setStatus, user, code])
-    if (!user) return <></>
     return (
         <>
-            <ProblemTop activeKey="problem" problem={user.problem} />
+            <ProblemTop activeKey="problem" problem={user?.problem} />
             <Layout>
                 <ReactMarkdown
-                    source={user.problem.statement}
+                    source={user?.problem.statement}
                     plugins={[math]}
                     renderers={{
                         code: ({ language, value }) => (
