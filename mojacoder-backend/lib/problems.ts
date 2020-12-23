@@ -65,7 +65,7 @@ export class Problems extends cdk.Construct {
             actions: ['s3:GetObject'],
             resources: [testcasesForView.bucketArn + '/*'],
         }))
-        const testcaseInResolverLambdaDatasource = props.api.addLambdaDataSource('testcase-in-resolver', testcaseInResolverLambda)
+        const testcaseInResolverLambdaDatasource = props.api.addLambdaDataSource('testcaseInResolver', testcaseInResolverLambda)
         testcaseInResolverLambdaDatasource.createResolver({
             typeName: 'Testcase',
             fieldName: 'in',
@@ -81,7 +81,7 @@ export class Problems extends cdk.Construct {
             actions: ['s3:GetObject'],
             resources: [testcasesForView.bucketArn + '/*'],
         }))
-        const testcaseOutResolverLambdaDatasource = props.api.addLambdaDataSource('testcase-out-resolver', testcaseOutResolverLambda)
+        const testcaseOutResolverLambdaDatasource = props.api.addLambdaDataSource('testcaseOutResolver', testcaseOutResolverLambda)
         testcaseOutResolverLambdaDatasource.createResolver({
             typeName: 'Testcase',
             fieldName: 'out',
