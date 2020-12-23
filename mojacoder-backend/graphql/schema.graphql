@@ -51,7 +51,7 @@ type SubmissionConnection {
   nextToken: String
 }
 
-enum TestcaseStatus {
+enum TestcaseResultStatus {
   WJ
   AC
   WA
@@ -61,9 +61,9 @@ enum TestcaseStatus {
   IE
 }
 
-type Testcase {
+type TestcaseResult {
   name: String! @aws_api_key @aws_iam
-  status: TestcaseStatus! @aws_api_key @aws_iam
+  status: TestcaseResultStatus! @aws_api_key @aws_iam
   time: Int!  @aws_api_key @aws_iam
   memory: Int!  @aws_api_key @aws_iam
 }
@@ -83,7 +83,7 @@ type Submission {
   status: SubmissionStatus! @aws_cognito_user_pools @aws_api_key
   code: String! @aws_cognito_user_pools @aws_api_key
   stderr: String! @aws_cognito_user_pools @aws_api_key
-  testcases: [Testcase]! @aws_cognito_user_pools @aws_api_key
+  testcases: [TestcaseResult]! @aws_cognito_user_pools @aws_api_key
 }
 
 type UpdateSubmissionOutput {
@@ -91,7 +91,7 @@ type UpdateSubmissionOutput {
   userID: ID! @aws_iam @aws_api_key
   status: SubmissionStatus! @aws_iam @aws_api_key
   stderr: String @aws_iam @aws_api_key
-  testcases: [Testcase] @aws_iam @aws_api_key
+  testcases: [TestcaseResult] @aws_iam @aws_api_key
 }
 
 type Mutation {
@@ -143,9 +143,9 @@ input SubmitCodeInput {
   code: String!
 }
 
-input TestcaseInput {
+input TestcaseResultInput {
   name: String! @aws_cognito_user_pools @aws_api_key
-  status: TestcaseStatus! @aws_cognito_user_pools @aws_api_key
+  status: TestcaseResultStatus! @aws_cognito_user_pools @aws_api_key
   time: Int!  @aws_cognito_user_pools @aws_api_key
   memory: Int!  @aws_cognito_user_pools @aws_api_key
 }
@@ -155,5 +155,5 @@ input UpdateSubmissionInput {
   userID: ID! @aws_iam @aws_api_key
   status: SubmissionStatus!
   stderr: String
-  testcases: [TestcaseInput]
+  testcases: [TestcaseResultInput]
 }

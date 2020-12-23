@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type TestcaseInput struct {
+type TestcaseResultInput struct {
 	Name   string `json:"name"`
 	Status string `json:"status"`
 	Time   int    `json:"time"`
@@ -17,14 +17,14 @@ type TestcaseInput struct {
 }
 
 type UpdateSubmissionStatusInput struct {
-	ID        string           `json:"id"`
-	UserID    string           `json:"userID"`
-	Status    string           `json:"status"`
-	Stderr    *string          `json:"stderr"`
-	Testcases *[]TestcaseInput `json:"testcases"`
+	ID        string                 `json:"id"`
+	UserID    string                 `json:"userID"`
+	Status    string                 `json:"status"`
+	Stderr    *string                `json:"stderr"`
+	Testcases *[]TestcaseResultInput `json:"testcases"`
 }
 
-func updateSubmission(id string, userID string, status string, stderr *string, testcases *[]TestcaseInput) error {
+func updateSubmission(id string, userID string, status string, stderr *string, testcases *[]TestcaseResultInput) error {
 	variables := make(map[string]interface{})
 	query := `
 		mutation UpdateSubmission($input: UpdateSubmissionInput!) {
@@ -64,12 +64,12 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 	if err != nil {
 		return fmt.Errorf(errorMessage, err)
 	}
-	testcases := []TestcaseInput{}
+	testcases := []TestcaseResultInput{}
 	for _, inTestcase := range inTestcases {
 		if inTestcase.IsDir() {
 			continue
 		}
-		testcases = append(testcases, TestcaseInput{inTestcase.Name(), "WJ", -1, -1})
+		testcases = append(testcases, TestcaseResultInput{inTestcase.Name(), "WJ", -1, -1})
 	}
 	for i := range testcases {
 		log.Printf("Judging %s...", testcases[i].Name)
