@@ -13,7 +13,7 @@ import Layout from '../../../components/Layout'
 import Top from '../../../components/Top'
 
 interface Props {
-    user: UserDetail
+    user: UserDetail | undefined
 }
 
 const UserPage: React.FC<Props> = (props) => {
@@ -46,8 +46,8 @@ const UserPage: React.FC<Props> = (props) => {
                             }
                         />
                     )}
-                    <h2>{user.screenName}</h2>
-                    {auth && auth.userID === user.userID && (
+                    <h2>{user?.screenName}</h2>
+                    {auth && auth.userID === user?.userID && (
                         <Button
                             variant="danger"
                             onClick={OnClickSignOutCallback}
@@ -67,11 +67,11 @@ const UserPage: React.FC<Props> = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {user.problems.items.map((item) => (
+                        {user?.problems.items.map((item) => (
                             <tr key={item.id}>
                                 <td>
                                     <Link
-                                        href={`/users/${user.screenName}/problems/${item.id}`}
+                                        href={`/users/${user?.screenName}/problems/${item.id}`}
                                     >
                                         <a>{item.title}</a>
                                     </Link>
