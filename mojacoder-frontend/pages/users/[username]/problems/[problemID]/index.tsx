@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
@@ -140,12 +140,10 @@ const GetProblem = gql`
 interface GetProblemResponse {
     user: UserDetail | null
 }
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-    query,
-}) => {
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = (await invokeQueryWithApiKey(GetProblem, {
-        username: query.username,
-        id: query.problemID,
+        username: params.username,
+        id: params.problemID,
     })) as GetProblemResponse
     if (res.user === null || res.user.problem === null) {
         return {
@@ -156,5 +154,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         props: {
             user: res.user,
         },
+        revalidate: 1,
     }
 }
