@@ -37,7 +37,7 @@ const SubmitCode = gql`
 `
 
 interface Props {
-    user: UserDetail
+    user: UserDetail | null
 }
 
 const ProblemPage: React.FC<Props> = (props) => {
@@ -142,6 +142,13 @@ interface GetProblemResponse {
     user: UserDetail | null
 }
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+    if (!params.username || !params.problemID) {
+        return {
+            props: {
+                user: null,
+            },
+        }
+    }
     const res = (await invokeQueryWithApiKey(GetProblem, {
         username: params.username,
         id: params.problemID,
