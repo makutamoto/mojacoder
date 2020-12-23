@@ -30,6 +30,12 @@ enum ProblemStatus {
   FAILED
 }
 
+type Testcase {
+  name: String!
+  in: String!
+  out: String!
+}
+
 type ProblemConnection {
 	items: [Problem]
 	nextToken: String
@@ -42,8 +48,9 @@ type Problem {
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
   title: String @aws_cognito_user_pools @aws_api_key
   statement: String @aws_cognito_user_pools @aws_api_key
-  submission(id: ID!): Submission
-  submissions(nextToken: String, userID: ID): SubmissionConnection!
+  testcases: [Testcase]! @aws_cognito_user_pools @aws_api_key
+  submission(id: ID!): Submission @aws_cognito_user_pools @aws_api_key
+  submissions(nextToken: String, userID: ID): SubmissionConnection! @aws_cognito_user_pools @aws_api_key
 }
 
 type SubmissionConnection {

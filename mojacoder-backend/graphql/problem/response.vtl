@@ -1,5 +1,9 @@
 #if($context.source.userID == $context.result.userID)
-    $util.toJson({"id": $context.result.id, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "statement": $context.result.statement, "submission": $context.result.submission, "submissions": $context.result.submissions})
+    #set($testcases = [])
+    #foreach($name in $context.result.testcases)
+        $util.qr($testcases.add({ "name": $name }))
+    #end
+    $util.toJson({"id": $context.result.id, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "statement": $context.result.statement, "testcases": $testcases, "submission": $context.result.submission, "submissions": $context.result.submissions})
 #else
     null
 #end
