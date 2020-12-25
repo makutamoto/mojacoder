@@ -128,6 +128,10 @@ export class Problems extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
         });
         const likersTableDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
+        likersTableDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['dynamodb:UpdateItem'],
+            resources: [problemTable.tableArn],
+        }));
         likersTableDatasource.createResolver({
             typeName: 'Mutation',
             fieldName: 'likeProblem',
