@@ -52,7 +52,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             input: {
                 lang: code.lang,
                 code: code.code,
-                problemID: user?.problem.id || '',
+                problemID: router.query.problemID || '',
             },
         }).then(() => {
             router.push(join(router.asPath, 'submissions'))
@@ -131,7 +131,6 @@ const GetProblem = gql`
     query GetProblem($username: String!, $id: ID!) {
         user(username: $username) {
             problem(id: $id) {
-                id
                 title
                 statement
                 user {
