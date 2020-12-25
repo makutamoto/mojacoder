@@ -1,14 +1,14 @@
-import App, { AppProps, AppContext } from 'next/app'
+import { AppProps } from 'next/app'
 import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { Amplify, withSSRContext } from 'aws-amplify'
-import { AuthClass } from '@aws-amplify/auth/lib-esm/Auth'
+import { Amplify } from 'aws-amplify'
 
 import { I18nProvider } from '../lib/i18n'
-import Auth, { AuthSession, genAuthSession } from '../lib/auth'
+import Auth from '../lib/auth'
 import Session from '../lib/session'
 import Appbar from '../containers/Appbar'
+import Authenticate from '../containers/Authenticate'
 
 import 'nprogress/nprogress.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -185,7 +185,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     const { locale } = useRouter()
     return (
         <I18nProvider defaultLanguage="ja" lang={locale} languages={languages}>
-            <Auth.Provider initialState={pageProps.initialAuth}>
+            <Auth.Provider>
+                <Authenticate />
                 <Session.Provider>
                     <Head>
                         <title>MojaCoder</title>
@@ -197,21 +198,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </Auth.Provider>
         </I18nProvider>
     )
-}
-
-MyApp.getInitialProps = async (appContext: AppContext) => {
-    const appProps = await App.getInitialProps(appContext)
-    let initialAuth: AuthSession | undefined = undefined
-    if (appContext.ctx.req) {
-        const SSR = withSSRContext({ req: appContext.ctx.req })
-        try {
-            const session = await (SSR.Auth as AuthClass).currentSession()
-            initialAuth = await genAuthSession(session)
-        } catch {
-            initialAuth = null
-        }
-    }
-    return { ...appProps, pageProps: { initialAuth } }
 }
 
 NProgress.configure({ showSpinner: false })
