@@ -71,8 +71,8 @@ const Submissions: React.FC<Props> = (props) => {
             if (valid) {
                 if (!me || auth) {
                     invokeQueryWithApiKey(GetSubmissions, {
-                        authorUsername: query.username,
-                        problemID: query.problemID,
+                        authorUsername: query.username || '',
+                        problemID: query.problemID || '',
                         userID: me ? auth.userID : null,
                     }).then((data: GetSubmissionsResponse) => {
                         const items = data.user.problem.submissions.items

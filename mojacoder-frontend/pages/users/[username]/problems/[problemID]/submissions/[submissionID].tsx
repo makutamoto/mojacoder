@@ -89,9 +89,9 @@ const Submissions: React.FC<Props> = (props) => {
                 submission.status === SubmissionStatus.WJ
             ) {
                 invokeQueryWithApiKey(GetSubmission, {
-                    authorUsername: query.username,
-                    problemID: query.problemID,
-                    submissionID: query.submissionID,
+                    authorUsername: query.username || '',
+                    problemID: query.problemID || '',
+                    submissionID: query.submissionID || '',
                 }).then((data: GetSubmissionsResponse) => {
                     const submission = data.user.problem.submission
                     setSubmission(submission)
