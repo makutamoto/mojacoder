@@ -23,13 +23,13 @@ export interface ProblemTopProps {
 
 const ProblemTop: React.FC<ProblemTopProps> = (props) => {
     const { t } = useI18n('problemTab')
-    const { query } = useRouter()
+    const { query, locale } = useRouter()
     const { activeKey, problem } = props
     const basePath = join(
         '/users',
-        query.username as string,
+        (query.username || '') as string,
         'problems',
-        query.problemID as string
+        (query.problemID || '') as string
     )
     return (
         <Top>
@@ -49,7 +49,13 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                     </div>
                     <div className="mt-2">
                         <IconWithText icon={<HeartIcon />}>0</IconWithText>{' '}
-                        Tweet
+                        <a
+                            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                                join(process.env.ORIGIN, locale, basePath)
+                            )}`}
+                        >
+                            Tweet
+                        </a>
                     </div>
                 </div>
                 <Nav

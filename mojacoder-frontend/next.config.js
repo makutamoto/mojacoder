@@ -17,6 +17,7 @@ module.exports = (phase) => {
                         'https://6ts42hdrufflnirxr4nqsclaa4.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-7rkmupgngreipjuqs3uqobxksq',
                     COOKIE_DOMAIN: 'localhost',
+                    ORIGIN: 'http://localhost:3000',
                 },
                 i18n,
             }
@@ -30,6 +31,7 @@ module.exports = (phase) => {
                         'https://6ts42hdrufflnirxr4nqsclaa4.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-7rkmupgngreipjuqs3uqobxksq',
                     COOKIE_DOMAIN: 'mojacoder.vercel.app',
+                    ORIGIN: 'https://mojacoder.vercel.app'
                 },
                 i18n,
             }
