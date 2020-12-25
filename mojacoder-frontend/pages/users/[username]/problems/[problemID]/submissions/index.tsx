@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Alert, Nav, Spinner } from 'react-bootstrap'
@@ -55,7 +55,7 @@ interface GetSubmissionsResponse {
 }
 
 interface Props {
-    problem: Problem
+    problem?: Problem
 }
 const Submissions: React.FC<Props> = (props) => {
     const { t } = useI18n('submissions')
@@ -160,16 +160,19 @@ const GetProblemOverview = gql`
 interface GetProblemOverviewResponse {
     user: UserDetail | null
 }
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-    query,
-}) => {
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = (await invokeQueryWithApiKey(GetProblemOverview, {
-        username: query.username,
-        id: query.problemID,
+        username: params.username || '',
+        id: params.problemID || '',
     })) as GetProblemOverviewResponse
     return {
         props: {
-            problem: res.user.problem,
+            problem: res.user?.problem,
         },
     }
 }
+
+export const getStaticPaths: GetStaticPaths = async () => ({
+    paths: [],
+    fallback: true,
+})
