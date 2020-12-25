@@ -127,12 +127,12 @@ export class Problems extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
         });
-        const likersTableDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
-        likersTableDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+        const likeProblemDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
+        likeProblemDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['dynamodb:UpdateItem'],
             resources: [problemTable.tableArn],
         }));
-        likersTableDatasource.createResolver({
+        likeProblemDatasource.createResolver({
             typeName: 'Mutation',
             fieldName: 'likeProblem',
             requestMappingTemplate: MappingTemplate.fromString(
@@ -141,6 +141,13 @@ export class Problems extends cdk.Construct {
                     .replace(/%PROBLEM_TABLE%/g, problemTable.tableName)
             ),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likeProblem/response.vtl')),
+        });
+        const likersTableDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
+        likersTableDatasource.createResolver({
+            typeName: 'Problem',
+            fieldName: 'likers',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/response.vtl')),
         });
     }
 }

@@ -1,0 +1,8 @@
+#set($items = [])
+#foreach($item in $context.result.items)
+	$util.qr($items.add({ "userID": $item.userID }))
+#end
+{
+    "items": $util.toJson($items),
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.result.nextToken, null))
+}

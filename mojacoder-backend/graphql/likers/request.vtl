@@ -1,0 +1,13 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "problemID = :problemID",
+        "expressionValues" : {
+            ":problemID" : $util.dynamodb.toDynamoDBJson($context.source.id)
+        }
+    },
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
+    "index" : "datetime-index",
+    "scanIndexForward": false
+}
