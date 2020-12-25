@@ -139,16 +139,18 @@ const Submissions: React.FC<Props> = (props) => {
                         <tr>
                             <td>結果</td>
                             <td>
-                                <JudgeStatusBadge status={result.wholeStatus} />
+                                <JudgeStatusBadge
+                                    status={result?.wholeStatus}
+                                />
                             </td>
                         </tr>
                         <tr>
                             <td>実行時間</td>
-                            <td>{result.time} kb</td>
+                            <td>{result?.time} kb</td>
                         </tr>
                         <tr>
                             <td>メモリ</td>
-                            <td>{result.memory} kb</td>
+                            <td>{result?.memory} kb</td>
                         </tr>
                     </tbody>
                 </Table>

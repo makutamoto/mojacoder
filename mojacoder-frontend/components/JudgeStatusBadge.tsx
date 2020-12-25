@@ -9,7 +9,7 @@ export interface JudgeStatusBadgeProgress {
 }
 
 export interface JudgeStatusBadgeProps {
-    status: JudgeStatus
+    status?: JudgeStatus
     progress?: JudgeStatusBadgeProgress
 }
 
