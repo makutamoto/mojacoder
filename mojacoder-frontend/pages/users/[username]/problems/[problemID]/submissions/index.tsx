@@ -165,10 +165,16 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
         username: params.username || '',
         id: params.problemID || '',
     })) as GetProblemOverviewResponse
+    if (res.user === null || res.user.problem === null) {
+        return {
+            notFound: true,
+        }
+    }
     return {
         props: {
-            problem: res.user?.problem,
+            problem: res.user.problem,
         },
+        revalidate: 1,
     }
 }
 
