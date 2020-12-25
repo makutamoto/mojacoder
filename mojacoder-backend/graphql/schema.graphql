@@ -125,7 +125,7 @@ type ResponsePlayground {
 }
 
 type Query {
-  user(userID: ID, username: String): UserDetail
+  user(userID: ID, username: String): UserDetail @aws_cognito_user_pools @aws_api_key
 }
 
 type Subscription {
