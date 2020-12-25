@@ -1,0 +1,56 @@
+{
+    "version" : "2018-05-29",
+    "transactItems": [
+        #if($context.arguments.input.like)
+        {
+            "table": "%LIKERS_TABLE%",
+            "operation" : "PutItem",
+            "key": {
+                "problemID" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID),
+                "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub)
+            },
+            "attributeValues" : {
+                "datetime"    : $util.dynamodb.toDynamoDBJson($util.time.nowISO8601()),
+            },
+            "condition" : {
+                "expression": "attribute_not_exists(problemID) AND attribute_not_exists(userID)"
+            }
+        },
+        #else
+        {
+            "table": "%LIKERS_TABLE%",
+            "operation" : "DeleteItem",
+            "key": {
+                "problemID" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID),
+                "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub)
+            },
+            "condition" : {
+                "expression": "attribute_exists(problemID) AND attribute_exists(userID)"
+            }
+        },
+        #end
+        {
+            "table": "%PROBLEM_TABLE%",
+            "operation" : "UpdateItem",
+            "key" : {
+                "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID)
+            },
+            "update" : {
+                #if($context.arguments.input.like)
+                "expression" : "SET #likes = #likes + :one",
+                #else
+                "expression" : "SET #likes = #likes - :one",
+                #end
+                "expressionNames" : {
+                    "#likes": "likes"
+                },
+                "expressionValues" : {
+                    ":one": $util.dynamodb.toDynamoDBJson(1)
+                },
+            },
+            "condition" : {
+                "expression": "attribute_exists(problemID) AND attribute_exists(userID)"
+            }
+        }
+    ]
+}

@@ -34,6 +34,28 @@ export class Problems extends cdk.Construct {
                 type: AttributeType.STRING,
             },
         });
+        const likersTable = new Table(this, 'likers-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
+            partitionKey: {
+                name: 'problemID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'userID',
+                type: AttributeType.STRING,
+            }
+        });
+        likersTable.addGlobalSecondaryIndex({
+            indexName: 'datetime-index',
+            partitionKey: {
+                name: 'problemID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.STRING,
+            },
+        });
         const postedProblems = new Bucket(this, 'postedProblems');
         this.testcases = new Bucket(this, 'testcases');
         const testcasesForView = new Bucket(this, 'testcases-for-view');
@@ -104,6 +126,17 @@ export class Problems extends cdk.Construct {
             fieldName: 'problems',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
+        });
+        const likersTableDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
+        likersTableDatasource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'likeProblem',
+            requestMappingTemplate: MappingTemplate.fromString(
+                MappingTemplate.fromFile(join(__dirname, '../graphql/likeProblem/request.vtl')).renderTemplate()
+                    .replace(/%LIKERS_TABLE%/g, likersTable.tableName)
+                    .replace(/%PROBLEM_TABLE%/g, problemTable.tableName)
+            ),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likeProblem/response.vtl')),
         });
     }
 }
