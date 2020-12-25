@@ -50,7 +50,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                     <div className="mt-2">
                         <IconWithText icon={<HeartIcon />}>0</IconWithText>{' '}
                         <a
-                            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                            href={`https://twitter.com/intent/tweet?hashtags=MojaCoder&url=${encodeURIComponent(
                                 join(process.env.ORIGIN, locale, basePath)
                             )}`}
                         >
