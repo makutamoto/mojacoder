@@ -25,6 +25,7 @@ const GetIfLiked = gql`
         user(username: $authorUsername) {
             problem(id: $problemID) {
                 likedByMe
+                likes
             }
         }
     }
@@ -72,11 +73,11 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                 authorUsername: query.username || '',
                 problemID: query.problemID || '',
             }).then((res) => {
+                setLikes(res.user?.problem.likes || 0)
                 setLikedByMe(res.user?.problem.likedByMe || false)
             })
         }
     }, [auth, query, setLikedByMe])
-    useEffect(() => setLikes(problem?.likes || 0), [problem])
     return (
         <Top>
             <div className="text-center">

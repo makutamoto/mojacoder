@@ -134,7 +134,6 @@ const GetProblem = gql`
                 id
                 title
                 statement
-                likes
                 user {
                     detail {
                         screenName

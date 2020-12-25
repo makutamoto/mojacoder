@@ -72,7 +72,6 @@ const GetTestcaseNames = gql`
                         screenName
                     }
                 }
-                likes
                 testcaseNames
             }
         }

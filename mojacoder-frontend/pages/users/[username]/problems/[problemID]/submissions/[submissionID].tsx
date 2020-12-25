@@ -35,7 +35,6 @@ const GetSubmission = gql`
                         screenName
                     }
                 }
-                likes
                 submission(id: $submissionID) {
                     user {
                         detail {

@@ -150,7 +150,6 @@ const GetProblemOverview = gql`
                         screenName
                     }
                 }
-                likes
             }
         }
     }

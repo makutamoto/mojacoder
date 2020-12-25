@@ -46,7 +46,6 @@ const GetProblem = gql`
         user(username: $username) {
             problem(id: $id) {
                 title
-                likes
                 likers {
                     items {
                         userID

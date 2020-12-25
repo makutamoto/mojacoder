@@ -49,7 +49,6 @@ const GetProblemOverview = gql`
                         screenName
                     }
                 }
-                likes
                 inTestcase(name: $testcaseName)
             }
         }
