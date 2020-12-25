@@ -31,26 +31,26 @@
         },
         #end
         {
-            "table": "%PROBLEM_TABLE%",
+            "table": "MojacoderBackendStack-problemsproblemtable947F2821-1E6MQOR793G5N",
             "operation" : "UpdateItem",
             "key" : {
                 "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID)
             },
             "update" : {
-                #if($context.arguments.input.like)
-                "expression" : "SET #likes = #likes + :one",
-                #else
-                "expression" : "SET #likes = #likes - :one",
-                #end
+                "expression" : "ADD #likes :diff",
                 "expressionNames" : {
                     "#likes": "likes"
                 },
                 "expressionValues" : {
-                    ":one": $util.dynamodb.toDynamoDBJson(1)
+                	#if($context.arguments.input.like)
+                    ":diff": $util.dynamodb.toDynamoDBJson(1)
+                    #else
+                    ":diff": $util.dynamodb.toDynamoDBJson(-1)
+                    #end
                 },
             },
             "condition" : {
-                "expression": "attribute_exists(problemID) AND attribute_exists(userID)"
+                "expression": "attribute_exists(id)"
             }
         }
     ]
