@@ -74,7 +74,7 @@ interface GetProblemOverviewResponse {
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const resIn = (await invokeQueryWithApiKey(GetProblemOverview, {
         authorUsername: params.username || '',
-        id: params.problemID || '',
+        problemID: params.problemID || '',
         testcaseName: params.testcaseName || '',
     })) as GetProblemOverviewResponse
     if (
@@ -88,7 +88,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     }
     const resOut = (await invokeQueryWithApiKey(GetOutTestcase, {
         authorUsername: params.username || '',
-        id: params.problemID || '',
+        problemID: params.problemID || '',
         testcaseName: params.testcaseName || '',
     })) as GetProblemOverviewResponse
     if (
