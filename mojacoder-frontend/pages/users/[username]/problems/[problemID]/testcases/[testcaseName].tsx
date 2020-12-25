@@ -41,7 +41,7 @@ const GetProblemOverview = gql`
         $problemID: ID!
         $testcaseName: String!
     ) {
-        user(username: $username) {
+        user(username: $authorUsername) {
             problem(id: $problemID) {
                 title
                 user {
