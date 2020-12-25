@@ -3,7 +3,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import gql from 'graphql-tag'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
-import { UserDetail, Problem } from '../../../../../../lib/backend_types'
+import { Problem } from '../../../../../../lib/backend_types'
 import Editor from '../../../../../../components/Editor'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
@@ -49,6 +49,7 @@ const GetProblemOverview = gql`
                         screenName
                     }
                 }
+                likes
                 inTestcase(name: $testcaseName)
             }
         }
@@ -68,15 +69,12 @@ const GetOutTestcase = gql`
         }
     }
 `
-interface GetProblemOverviewResponse {
-    user: UserDetail | null
-}
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-    const resIn = (await invokeQueryWithApiKey(GetProblemOverview, {
+    const resIn = await invokeQueryWithApiKey(GetProblemOverview, {
         authorUsername: params.username || '',
         problemID: params.problemID || '',
         testcaseName: params.testcaseName || '',
-    })) as GetProblemOverviewResponse
+    })
     if (
         resIn.user === null ||
         resIn.user.problem === null ||
@@ -86,11 +84,11 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
             notFound: true,
         }
     }
-    const resOut = (await invokeQueryWithApiKey(GetOutTestcase, {
+    const resOut = await invokeQueryWithApiKey(GetOutTestcase, {
         authorUsername: params.username || '',
         problemID: params.problemID || '',
         testcaseName: params.testcaseName || '',
-    })) as GetProblemOverviewResponse
+    })
     if (
         resOut.user === null ||
         resOut.user.problem === null ||

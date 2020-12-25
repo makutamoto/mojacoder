@@ -134,6 +134,7 @@ const GetProblem = gql`
                 id
                 title
                 statement
+                likes
                 user {
                     detail {
                         screenName
@@ -143,14 +144,11 @@ const GetProblem = gql`
         }
     }
 `
-interface GetProblemResponse {
-    user: UserDetail | null
-}
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-    const res = (await invokeQueryWithApiKey(GetProblem, {
+    const res = await invokeQueryWithApiKey(GetProblem, {
         username: params.username || '',
         id: params.problemID || '',
-    })) as GetProblemResponse
+    })
     if (res.user === null || res.user.problem === null) {
         return {
             notFound: true,

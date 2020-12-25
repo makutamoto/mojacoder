@@ -3,7 +3,8 @@ import { Auth as Cognito } from 'aws-amplify'
 import AWSAppSyncClient from 'aws-appsync'
 import { DocumentNode } from 'graphql'
 
-import Auth from '../lib/auth'
+import Auth from './auth'
+import { Query } from './backend_types'
 
 export interface SubscriptionPayload<T> {
     data: T
@@ -56,9 +57,9 @@ export async function invokeMutation<D, V>(
     return (await client.mutate<D>({ mutation, variables })).data
 }
 
-export async function invokeQuery<D, V>(query: DocumentNode, variables: V) {
+export async function invokeQuery<V>(query: DocumentNode, variables: V) {
     return (
-        await client.query<D>({
+        await client.query<Query>({
             fetchPolicy: 'network-only',
             query,
             variables,
@@ -66,12 +67,12 @@ export async function invokeQuery<D, V>(query: DocumentNode, variables: V) {
     ).data
 }
 
-export async function invokeQueryWithApiKey<D, V>(
+export async function invokeQueryWithApiKey<V>(
     query: DocumentNode,
     variables: V
 ) {
     return (
-        await clientWithApiKey.query<D>({
+        await clientWithApiKey.query<Query>({
             fetchPolicy: 'network-only',
             query,
             variables,

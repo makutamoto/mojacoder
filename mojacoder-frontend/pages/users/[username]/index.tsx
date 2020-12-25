@@ -101,13 +101,10 @@ const GetUser = gql`
         }
     }
 `
-interface GetUserResponse {
-    user: UserDetail | null
-}
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-    const res = (await invokeQueryWithApiKey(GetUser, {
+    const res = await invokeQueryWithApiKey(GetUser, {
         username: params.username || '',
-    })) as GetUserResponse
+    })
     if (res.user === null) {
         return {
             notFound: true,

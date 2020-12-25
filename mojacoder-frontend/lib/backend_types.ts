@@ -9,7 +9,10 @@ export interface Problem {
     id: string
     title: string
     user: User
-    statement
+    statement: string
+    likedByMe: boolean
+    likes: number
+    likers: Connection<User>
     inTestcase: string
     outTestcase: string
     testcaseNames: string[]
@@ -46,4 +49,8 @@ export interface UserDetail {
     screenName: string | null
     problem: Problem | null
     problems: Connection<Problem>
+}
+
+export interface Query {
+    user: UserDetail | null
 }

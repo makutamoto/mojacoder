@@ -9,7 +9,6 @@ import { useI18n } from '../../../../../../lib/i18n'
 import Auth from '../../../../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
-    UserDetail,
     Problem,
     Submission,
     SubmissionStatus,
@@ -50,9 +49,6 @@ const GetSubmissions = gql`
         }
     }
 `
-interface GetSubmissionsResponse {
-    user: UserDetail | null
-}
 
 interface Props {
     problem?: Problem
@@ -74,10 +70,11 @@ const Submissions: React.FC<Props> = (props) => {
                         authorUsername: query.username || '',
                         problemID: query.problemID || '',
                         userID: me ? auth.userID : null,
-                    }).then((data: GetSubmissionsResponse) => {
-                        const items = data.user.problem.submissions.items
+                    }).then((data) => {
+                        const items = data.user?.problem.submissions.items
                         setSubmissions(items)
                         if (
+                            items &&
                             items.some(
                                 (item) => item.status === SubmissionStatus.WJ
                             )
@@ -127,12 +124,12 @@ const Submissions: React.FC<Props> = (props) => {
                 </Nav>
                 <hr />
                 {!me || auth ? (
-                    submissions === null ? (
+                    submissions ? (
+                        <SubmissionTable submissions={submissions} />
+                    ) : (
                         <div className="text-center">
                             <Spinner animation="border" />
                         </div>
-                    ) : (
-                        <SubmissionTable submissions={submissions} />
                     )
                 ) : (
                     <Alert variant="danger">{t`signInRequired`}</Alert>
@@ -153,18 +150,16 @@ const GetProblemOverview = gql`
                         screenName
                     }
                 }
+                likes
             }
         }
     }
 `
-interface GetProblemOverviewResponse {
-    user: UserDetail | null
-}
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-    const res = (await invokeQueryWithApiKey(GetProblemOverview, {
+    const res = await invokeQueryWithApiKey(GetProblemOverview, {
         username: params.username || '',
         id: params.problemID || '',
-    })) as GetProblemOverviewResponse
+    })
     if (res.user === null || res.user.problem === null) {
         return {
             notFound: true,

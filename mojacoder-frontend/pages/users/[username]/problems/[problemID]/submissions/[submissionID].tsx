@@ -8,7 +8,6 @@ import join from 'url-join'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
-    UserDetail,
     Problem,
     Submission,
     SubmissionStatus,
@@ -36,6 +35,7 @@ const GetSubmission = gql`
                         screenName
                     }
                 }
+                likes
                 submission(id: $submissionID) {
                     user {
                         detail {
@@ -58,9 +58,6 @@ const GetSubmission = gql`
         }
     }
 `
-interface GetSubmissionsResponse {
-    user: UserDetail | null
-}
 
 interface Props {
     problem?: Problem
@@ -92,7 +89,7 @@ const Submissions: React.FC<Props> = (props) => {
                     authorUsername: query.username || '',
                     problemID: query.problemID || '',
                     submissionID: query.submissionID || '',
-                }).then((data: GetSubmissionsResponse) => {
+                }).then((data) => {
                     const submission = data.user.problem.submission
                     setSubmission(submission)
                     setTimeout(updateSubmissions, 1000)
@@ -200,11 +197,11 @@ const Submissions: React.FC<Props> = (props) => {
 export default Submissions
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-    const { user } = (await invokeQueryWithApiKey(GetSubmission, {
+    const { user } = await invokeQueryWithApiKey(GetSubmission, {
         authorUsername: params.username || '',
         problemID: params.problemID || '',
         submissionID: params.submissionID || '',
-    })) as GetSubmissionsResponse
+    })
     if (
         user === null ||
         user.problem === null ||

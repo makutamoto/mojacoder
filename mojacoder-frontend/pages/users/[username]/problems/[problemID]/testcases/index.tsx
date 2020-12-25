@@ -6,7 +6,7 @@ import { Spinner, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
-import { UserDetail, Problem } from '../../../../../../lib/backend_types'
+import { Problem } from '../../../../../../lib/backend_types'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
 import join from 'url-join'
@@ -72,19 +72,17 @@ const GetTestcaseNames = gql`
                         screenName
                     }
                 }
+                likes
                 testcaseNames
             }
         }
     }
 `
-interface GetTestcaseNamesResponse {
-    user: UserDetail | null
-}
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-    const res = (await invokeQueryWithApiKey(GetTestcaseNames, {
+    const res = await invokeQueryWithApiKey(GetTestcaseNames, {
         username: params.username || '',
         problemID: params.problemID || '',
-    })) as GetTestcaseNamesResponse
+    })
     if (res.user === null || res.user.problem === null) {
         return {
             notFound: true,

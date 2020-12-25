@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Nav } from 'react-bootstrap'
+import { Button, Nav } from 'react-bootstrap'
 import join from 'url-join'
+import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
+import { invokeQuery, invokeMutation } from '../lib/backend'
 import { Problem } from '../lib/backend_types'
+import Auth from '../lib/auth'
 import Top from '../components/Top'
 import IconWithText from '../components/IconWithText'
 import Username from '../components/Username'
@@ -13,16 +16,33 @@ import {
     BeakerIcon,
     ClockIcon,
     HeartIcon,
+    HeartFillIcon,
     SmileyIcon,
 } from '@primer/octicons-react'
 
+const GetIfLiked = gql`
+    query GetIfLiked($authorUsername: String!, $problemID: ID!) {
+        user(username: $authorUsername) {
+            problem(id: $problemID) {
+                likedByMe
+            }
+        }
+    }
+`
+const LikeProblem = gql`
+    mutation LikeProblem($input: LikeProblemInput!) {
+        likeProblem(input: $input)
+    }
+`
+
 export interface ProblemTopProps {
-    activeKey: 'problem' | 'submissions' | 'testcases'
+    activeKey?: 'problem' | 'submissions' | 'testcases'
     problem?: Problem
 }
 
 const ProblemTop: React.FC<ProblemTopProps> = (props) => {
     const { t } = useI18n('problemTab')
+    const { auth } = Auth.useContainer()
     const { query, locale } = useRouter()
     const { activeKey, problem } = props
     const basePath = join(
@@ -31,6 +51,32 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
         'problems',
         (query.problemID || '') as string
     )
+    const [likedByMe, setLikedByMe] = useState(false)
+    const [likes, setLikes] = useState(0)
+    const onLike = useCallback(() => {
+        if (auth) {
+            invokeMutation(LikeProblem, {
+                input: {
+                    problemID: query.problemID || '',
+                    like: !likedByMe,
+                },
+            }).then(() => {
+                setLikes(likes + (likedByMe ? -1 : 1))
+                setLikedByMe(!likedByMe)
+            })
+        }
+    }, [auth, query, likedByMe])
+    useEffect(() => {
+        if (auth) {
+            invokeQuery(GetIfLiked, {
+                authorUsername: query.username || '',
+                problemID: query.problemID || '',
+            }).then((res) => {
+                setLikedByMe(res.user?.problem.likedByMe || false)
+            })
+        }
+    }, [auth, query, setLikedByMe])
+    useEffect(() => setLikes(problem?.likes || 0), [problem])
     return (
         <Top>
             <div className="text-center">
@@ -48,7 +94,26 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                         </IconWithText>
                     </div>
                     <div className="mt-2">
-                        <IconWithText icon={<HeartIcon />}>0</IconWithText>{' '}
+                        <IconWithText
+                            icon={
+                                <Button
+                                    className="px-1 py-0"
+                                    variant="light"
+                                    size="sm"
+                                    onClick={onLike}
+                                >
+                                    {likedByMe ? (
+                                        <HeartFillIcon />
+                                    ) : (
+                                        <HeartIcon />
+                                    )}
+                                </Button>
+                            }
+                        >
+                            <Link href={join(basePath, 'likers')} passHref>
+                                <a>{likes}</a>
+                            </Link>
+                        </IconWithText>{' '}
                         <a
                             href={`https://twitter.com/intent/tweet?hashtags=MojaCoder&url=${encodeURIComponent(
                                 join(process.env.ORIGIN, locale, basePath)

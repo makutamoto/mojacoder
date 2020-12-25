@@ -23,16 +23,13 @@ const GetScreenNameFromUserID = gql`
         }
     }
 `
-interface GetUsernameFromUserIDResponse {
-    user: { screenName: string } | null
-}
 export async function genAuthSession(
     session: CognitoUserSession
 ): Promise<AuthSession> {
     const userID = session.getIdToken().payload.sub
-    const res = (await invokeQueryWithApiKey(GetScreenNameFromUserID, {
+    const res = await invokeQueryWithApiKey(GetScreenNameFromUserID, {
         userID,
-    })) as GetUsernameFromUserIDResponse
+    })
     return {
         userID,
         screenName: res.user.screenName,
