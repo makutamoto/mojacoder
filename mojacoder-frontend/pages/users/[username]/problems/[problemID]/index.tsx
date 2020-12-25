@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
@@ -61,6 +62,13 @@ const ProblemPage: React.FC<Props> = (props) => {
     }, [setStatus, user, code])
     return (
         <>
+            <Head>
+                <meta property="twitter:card" content="summary" />
+                <meta
+                    property="og:title"
+                    content={`${user?.problem.title} | MojaCoder`}
+                />
+            </Head>
             <ProblemTop activeKey="problem" problem={user?.problem} />
             <Layout>
                 <ReactMarkdown
