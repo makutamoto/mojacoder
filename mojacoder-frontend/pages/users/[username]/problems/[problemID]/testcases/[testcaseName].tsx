@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
-import { useRouter } from 'next/router'
-import { Spinner } from 'react-bootstrap'
+import React from 'react'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import gql from 'graphql-tag'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
@@ -10,19 +8,53 @@ import Editor from '../../../../../../components/Editor'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
 
-const GetInTestcase = gql`
-    query GetInTestcase(
+interface Testcase {
+    in: string
+    out: string
+}
+
+interface Props {
+    problem?: Problem
+    testcase?: Testcase
+}
+const Submissions: React.FC<Props> = (props) => {
+    const { problem, testcase } = props
+    return (
+        <>
+            <ProblemTop activeKey="testcases" problem={problem} />
+            <Layout>
+                <h2>入力</h2>
+                <hr />
+                <Editor value={testcase?.in} readOnly />
+                <h2>出力</h2>
+                <hr />
+                <Editor value={testcase?.out} readOnly />
+            </Layout>
+        </>
+    )
+}
+export default Submissions
+
+const GetProblemOverview = gql`
+    query GetProblemOverview(
         $authorUsername: String!
         $problemID: ID!
         $testcaseName: String!
     ) {
-        user(username: $authorUsername) {
+        user(username: $username) {
             problem(id: $problemID) {
+                title
+                user {
+                    detail {
+                        screenName
+                    }
+                }
                 inTestcase(name: $testcaseName)
             }
         }
     }
 `
+
 const GetOutTestcase = gql`
     query GetOutTestcase(
         $authorUsername: String!
@@ -36,101 +68,51 @@ const GetOutTestcase = gql`
         }
     }
 `
-
-interface GetTestcaseResponse {
-    user: UserDetail | null
-}
-
-interface Testcase {
-    in: string
-    out: string
-}
-
-interface Props {
-    problem: Problem
-}
-const Submissions: React.FC<Props> = (props) => {
-    const { query } = useRouter()
-    const { problem } = props
-    const [testcase, setTestcase] = useState<Testcase | null>(null)
-    useEffect(() => {
-        invokeQueryWithApiKey(GetInTestcase, {
-            authorUsername: query.username,
-            problemID: query.problemID,
-            testcaseName: query.testcaseName,
-        }).then((data: GetTestcaseResponse) => {
-            const { inTestcase } = data.user.problem
-            invokeQueryWithApiKey(GetOutTestcase, {
-                authorUsername: query.username,
-                problemID: query.problemID,
-                testcaseName: query.testcaseName,
-            }).then((data: GetTestcaseResponse) => {
-                const { outTestcase } = data.user.problem
-                setTestcase({
-                    in: inTestcase,
-                    out: outTestcase,
-                })
-            })
-        })
-    }, [query])
-    return (
-        <>
-            <ProblemTop activeKey="testcases" problem={problem} />
-            <Layout>
-                {testcase === null ? (
-                    <div className="text-center">
-                        <Spinner animation="border" />
-                    </div>
-                ) : (
-                    <>
-                        <h2>入力</h2>
-                        <hr />
-                        <Editor value={testcase.in} readOnly />
-                        <h2>出力</h2>
-                        <hr />
-                        <Editor value={testcase.out} readOnly />
-                    </>
-                )}
-            </Layout>
-        </>
-    )
-}
-export default Submissions
-
-const GetProblemOverview = gql`
-    query GetProblemOverview($username: String!, $id: ID!) {
-        user(username: $username) {
-            problem(id: $id) {
-                title
-                user {
-                    detail {
-                        screenName
-                    }
-                }
-                testcaseNames
-            }
-        }
-    }
-`
 interface GetProblemOverviewResponse {
     user: UserDetail | null
 }
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-    query,
-}) => {
-    const res = (await invokeQueryWithApiKey(GetProblemOverview, {
-        username: query.username,
-        id: query.problemID,
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+    const resIn = (await invokeQueryWithApiKey(GetProblemOverview, {
+        authorUsername: params.username || '',
+        id: params.problemID || '',
+        testcaseName: params.testcaseName || '',
     })) as GetProblemOverviewResponse
-    const testcaseName = query.testcaseName as string
-    if (res.user.problem.testcaseNames.indexOf(testcaseName) === -1) {
+    if (
+        resIn.user === null ||
+        resIn.user.problem === null ||
+        resIn.user.problem.inTestcase === null
+    ) {
+        return {
+            notFound: true,
+        }
+    }
+    const resOut = (await invokeQueryWithApiKey(GetOutTestcase, {
+        authorUsername: params.username || '',
+        id: params.problemID || '',
+        testcaseName: params.testcaseName || '',
+    })) as GetProblemOverviewResponse
+    if (
+        resOut.user === null ||
+        resOut.user.problem === null ||
+        resOut.user.problem.outTestcase === null
+    ) {
         return {
             notFound: true,
         }
     }
     return {
         props: {
-            problem: res.user.problem,
+            problem: resIn.user.problem,
+            testcase: {
+                in: resIn.user.problem.inTestcase,
+                out: resOut.user.problem.outTestcase,
+            },
         },
+        revalidate: 1,
     }
 }
+
+export const getStaticPaths: GetStaticPaths = async () => ({
+    paths: [],
+    fallback: true,
+})
