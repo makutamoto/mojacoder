@@ -5,6 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "@types/aws-lambda": "^8.10.63",
-    "jszip": "^3.5.0"
+    "@types/url-join": "^4.0.0",
+    "jszip": "^3.5.0",
+    "url-join": "^4.0.1"
   }
 }

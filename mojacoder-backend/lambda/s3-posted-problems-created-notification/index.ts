@@ -1,7 +1,8 @@
 import { S3Handler } from 'aws-lambda'
 import { DynamoDB, S3 } from 'aws-sdk'
 import * as JSZip from 'jszip'
-import { join, parse, ParsedPath } from 'path'
+import join from 'url-join'
+import { posix, ParsedPath } from 'path'
 
 const TABLE_NAME = process.env.TABLE_NAME as string;
 if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
@@ -87,7 +88,7 @@ async function uploadToS3(keyPath: ParsedPath, testcases: Buffer, testcasesDir: 
     const outTestcases = testcasesDir.folder('out')!
     const inTestcaseFiles = inTestcases.filter((_, file) => !file.dir)
     for(let file of inTestcaseFiles) {
-        const { base } = parse(file.name)
+        const { base } = posix.parse(file.name)
         const outTestcaseFile = outTestcases.file(base)
         if(outTestcaseFile === null || outTestcaseFile.dir) continue
         const inTestcaseBuffer = await file.async("nodebuffer")
@@ -109,7 +110,7 @@ function deployProblem(key: string): Promise<void> {
                 return;
             }
             parseZip(data.Body as Buffer).then((problem) => {
-                const keyPath = parse(key);
+                const keyPath = posix.parse(key);
                 dynamodb.updateItem({
                     TableName: TABLE_NAME,
                     Key: {

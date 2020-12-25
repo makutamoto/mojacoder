@@ -1,6 +1,6 @@
 import { AppSyncResolverHandler } from 'aws-lambda'
 import { S3 } from 'aws-sdk'
-import { join } from 'path'
+import join from 'url-join'
 
 const TESTCASES_FOR_VIEW_BUCKET_NAME = process.env.TESTCASES_FOR_VIEW_BUCKET_NAME as string;
 if(TESTCASES_FOR_VIEW_BUCKET_NAME === undefined) throw "TESTCASES_FOR_VIEW_BUCKET_NAME is not defined.";

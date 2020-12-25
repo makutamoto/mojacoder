@@ -5,6 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "@types/aws-lambda": "^8.10.64",
-    "aws-sdk": "^2.780.0"
+    "@types/url-join": "^4.0.0",
+    "aws-sdk": "^2.780.0",
+    "url-join": "^4.0.1"
   }
 }
