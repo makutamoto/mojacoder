@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { GetServerSideProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Alert, Table } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 import { join } from 'path'
 
@@ -63,13 +63,13 @@ interface GetSubmissionsResponse {
 }
 
 interface Props {
-    problem: Problem | null
+    problem?: Problem
 }
 
 const Submissions: React.FC<Props> = (props) => {
     const { query, pathname } = useRouter()
     const [submission, setSubmission] = useState<Submission | null>(
-        props.problem.submission
+        props.problem?.submission || null
     )
     const { problem } = props
     const result = useMemo(() => {
@@ -106,127 +106,120 @@ const Submissions: React.FC<Props> = (props) => {
         <>
             <ProblemTop activeKey="submissions" problem={problem} />
             <Layout>
-                {submission === null ? (
-                    <Alert variant="danger">提出が存在しません。</Alert>
-                ) : (
-                    <>
-                        <Editor
-                            lang={submission.lang}
-                            value={submission.code}
-                            lineNumbers
-                            readOnly
-                        />
-                        <h2>コンパイルエラー</h2>
-                        <Editor
-                            value={submission.stderr}
-                            lineNumbers
-                            readOnly
-                        />
-                        <Table responsive striped bordered hover>
-                            <tbody>
-                                <tr>
-                                    <td>提出日時</td>
-                                    <td>
-                                        <DateTime>
-                                            {submission.datetime}
-                                        </DateTime>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>ユーザー</td>
-                                    <td>
-                                        <Username>
-                                            {submission.user.detail}
-                                        </Username>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>言語</td>
-                                    <td>
-                                        {getProgrammingLanguageNameFromID(
-                                            submission.lang
-                                        )}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>結果</td>
-                                    <td>
-                                        <JudgeStatusBadge
-                                            status={result.wholeStatus}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>実行時間</td>
-                                    <td>{result.time} kb</td>
-                                </tr>
-                                <tr>
-                                    <td>メモリ</td>
-                                    <td>{result.memory} kb</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                        <Table responsive striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>テストケース名</th>
-                                    <th>結果</th>
-                                    <th>実行時間</th>
-                                    <th>メモリ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {submission.testcases.map((testcase) => (
-                                    <tr key={testcase.name}>
-                                        <td>
-                                            <Link
-                                                href={{
-                                                    pathname: join(
-                                                        pathname,
-                                                        '../../testcases/[testcaseName]'
-                                                    ),
-                                                    query: {
-                                                        ...query,
-                                                        testcaseName:
-                                                            testcase.name,
-                                                    },
-                                                }}
-                                            >
-                                                <a>{testcase.name}</a>
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <JudgeStatusBadge
-                                                status={testcase.status}
-                                            />
-                                        </td>
-                                        <td>{testcase.time} ms</td>
-                                        <td>{testcase.memory} kb</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    </>
-                )}
+                <Editor
+                    lang={submission?.lang}
+                    value={submission?.code}
+                    lineNumbers
+                    readOnly
+                />
+                <h2>コンパイルエラー</h2>
+                <Editor value={submission?.stderr} lineNumbers readOnly />
+                <Table responsive striped bordered hover>
+                    <tbody>
+                        <tr>
+                            <td>提出日時</td>
+                            <td>
+                                <DateTime>{submission?.datetime}</DateTime>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ユーザー</td>
+                            <td>
+                                <Username>{submission?.user.detail}</Username>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>言語</td>
+                            <td>
+                                {getProgrammingLanguageNameFromID(
+                                    submission?.lang
+                                )}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>結果</td>
+                            <td>
+                                <JudgeStatusBadge status={result.wholeStatus} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>実行時間</td>
+                            <td>{result.time} kb</td>
+                        </tr>
+                        <tr>
+                            <td>メモリ</td>
+                            <td>{result.memory} kb</td>
+                        </tr>
+                    </tbody>
+                </Table>
+                <Table responsive striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>テストケース名</th>
+                            <th>結果</th>
+                            <th>実行時間</th>
+                            <th>メモリ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {submission?.testcases.map((testcase) => (
+                            <tr key={testcase.name}>
+                                <td>
+                                    <Link
+                                        href={{
+                                            pathname: join(
+                                                pathname,
+                                                '../../testcases/[testcaseName]'
+                                            ),
+                                            query: {
+                                                ...query,
+                                                testcaseName: testcase.name,
+                                            },
+                                        }}
+                                    >
+                                        <a>{testcase.name}</a>
+                                    </Link>
+                                </td>
+                                <td>
+                                    <JudgeStatusBadge
+                                        status={testcase.status}
+                                    />
+                                </td>
+                                <td>{testcase.time} ms</td>
+                                <td>{testcase.memory} kb</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
             </Layout>
         </>
     )
 }
 export default Submissions
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-    query,
-}) => {
-    const {
-        user: { problem },
-    } = (await invokeQueryWithApiKey(GetSubmission, {
-        authorUsername: query.username,
-        problemID: query.problemID,
-        submissionID: query.submissionID,
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+    const { user } = (await invokeQueryWithApiKey(GetSubmission, {
+        authorUsername: params.username || '',
+        problemID: params.problemID || '',
+        submissionID: params.submissionID || '',
     })) as GetSubmissionsResponse
+    if (
+        user === null ||
+        user.problem === null ||
+        user.problem.submission === null
+    ) {
+        return {
+            notFound: true,
+        }
+    }
     return {
         props: {
-            problem,
+            problem: user.problem,
         },
     }
 }
+
+export const getStaticPaths: GetStaticPaths = async () => ({
+    paths: [],
+    fallback: true,
+})
