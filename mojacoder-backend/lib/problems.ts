@@ -145,6 +145,12 @@ export class Problems extends cdk.Construct {
         const likersTableDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
         likersTableDatasource.createResolver({
             typeName: 'Problem',
+            fieldName: 'likedByMe',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likedByMe/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likedByMe/response.vtl')),
+        });
+        likersTableDatasource.createResolver({
+            typeName: 'Problem',
             fieldName: 'likers',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/response.vtl')),

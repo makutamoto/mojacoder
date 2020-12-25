@@ -46,6 +46,7 @@ type Problem {
   datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
   title: String @aws_cognito_user_pools @aws_api_key
+  likedByMe: Boolean! @aws_cognito_user_pools
   likes: Int! @aws_cognito_user_pools @aws_api_key
   likers: LikerConnection! @aws_cognito_user_pools @aws_api_key
   statement: String @aws_cognito_user_pools @aws_api_key
