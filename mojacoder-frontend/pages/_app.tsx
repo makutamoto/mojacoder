@@ -13,6 +13,7 @@ import Appbar from '../containers/Appbar'
 import 'nprogress/nprogress.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'codemirror/lib/codemirror.css'
+import 'katex/dist/katex.min.css'
 
 import '../styles/global.css'
 import '../styles/codemirror.css'

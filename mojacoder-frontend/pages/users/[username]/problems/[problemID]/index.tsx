@@ -21,8 +21,6 @@ import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import Layout from '../../../../../components/Layout'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
-import 'katex/dist/katex.min.css'
-
 const Status = {
     Normal: 'Normal',
     Submitting: 'Submitting',
