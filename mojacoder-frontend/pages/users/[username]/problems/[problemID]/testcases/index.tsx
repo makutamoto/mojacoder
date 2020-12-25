@@ -9,7 +9,7 @@ import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import { UserDetail, Problem } from '../../../../../../lib/backend_types'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
-import { join } from 'path'
+import join from 'url-join'
 
 interface Props {
     problem?: Problem

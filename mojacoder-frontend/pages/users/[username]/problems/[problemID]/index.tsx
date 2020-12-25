@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import Tex from '@matejmazur/react-katex'
 import math from 'remark-math'
 import { Alert, Button, Spinner } from 'react-bootstrap'
-import { join } from 'path'
+import join from 'url-join'
 
 import { useI18n } from '../../../../../lib/i18n'
 import Auth from '../../../../../lib/auth'

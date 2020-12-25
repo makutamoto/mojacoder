@@ -32,6 +32,7 @@
     "@primer/octicons-react": "^11.0.0",
     "@types/nprogress": "^0.2.0",
     "@types/react-select": "^3.0.19",
+    "@types/url-join": "^4.0.0",
     "@types/uuid": "^8.3.0",
     "aws-amplify": "^3.3.3",
     "aws-appsync": "^4.0.1",
@@ -50,6 +51,7 @@
     "react-select": "^3.1.0",
     "remark-math": "^4.0.0",
     "unstated-next": "^1.1.0",
+    "url-join": "^4.0.1",
     "uuid": "^8.3.0"
   },
   "devDependencies": {

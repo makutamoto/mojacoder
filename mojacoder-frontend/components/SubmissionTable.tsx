@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { Table } from 'react-bootstrap'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { join } from 'path'
+import join from 'url-join'
 
 import {
     JudgeStatusDetail,

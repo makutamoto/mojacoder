@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Nav } from 'react-bootstrap'
-import { join } from 'path'
+import join from 'url-join'
 
 import { useI18n } from '../lib/i18n'
 import { Problem } from '../lib/backend_types'
