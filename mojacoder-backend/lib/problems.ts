@@ -127,7 +127,7 @@ export class Problems extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
         });
-        const likeProblemDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
+        const likeProblemDatasource = props.api.addDynamoDbDataSource('likeProblem', likersTable);
         likeProblemDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['dynamodb:UpdateItem'],
             resources: [problemTable.tableArn],
