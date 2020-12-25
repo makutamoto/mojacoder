@@ -64,6 +64,7 @@ const UserPage: React.FC<Props> = (props) => {
                     <thead>
                         <tr>
                             <th>{t`problemName`}</th>
+                            <th>いいね数</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,6 +77,7 @@ const UserPage: React.FC<Props> = (props) => {
                                         <a>{item.title}</a>
                                     </Link>
                                 </td>
+                                <td>{item.likes}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -96,6 +98,7 @@ const GetUser = gql`
                 items {
                     id
                     title
+                    likes
                 }
             }
         }
