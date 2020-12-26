@@ -1,0 +1,8 @@
+#set($items = [])
+#foreach($item in $context.result.items)
+	$util.qr($items.add({ "commentID": $item.commentID, "datetime": $item.datetime, "user": { "userID": $item.userID }, "content": $item.content, "replyCount": $item.replyCount }))
+#end
+{
+    "items": $util.toJson($items),
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.result.nextToken, null))
+}
