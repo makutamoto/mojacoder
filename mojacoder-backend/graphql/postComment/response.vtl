@@ -1,0 +1,1 @@
+$util.toJson({ "commentID": $context.stash.commentID, "datetime": $context.stash.datetime, "user": { "userID": $context.identity.sub }, "content": $context.arguments.input.content, "replyCount": 0, "replies": { "items": [], "nextToken": null } })

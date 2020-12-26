@@ -56,6 +56,35 @@ export class Problems extends cdk.Construct {
                 type: AttributeType.STRING,
             },
         });
+        const commentTable = new Table(this, 'comment-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
+            partitionKey: {
+                name: 'commentID',
+                type: AttributeType.STRING,
+            },
+        });
+        commentTable.addGlobalSecondaryIndex({
+            indexName: 'problem-index',
+            partitionKey: {
+                name: 'problemID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.STRING,
+            },
+        });
+        commentTable.addGlobalSecondaryIndex({
+            indexName: 'replying-index',
+            partitionKey: {
+                name: 'replyingTo',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.STRING,
+            },
+        });
         const postedProblems = new Bucket(this, 'postedProblems');
         this.testcases = new Bucket(this, 'testcases');
         const testcasesForView = new Bucket(this, 'testcases-for-view');
@@ -154,6 +183,21 @@ export class Problems extends cdk.Construct {
             fieldName: 'likers',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/response.vtl')),
+        });
+        const postCommentDatasource = props.api.addDynamoDbDataSource('postComment', commentTable);
+        postCommentDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['dynamodb:UpdateItem'],
+            resources: [problemTable.tableArn],
+        }))
+        postCommentDatasource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'postComment',
+            requestMappingTemplate: MappingTemplate.fromString(
+                MappingTemplate.fromFile(join(__dirname, '../graphql/postComment/request.vtl')).renderTemplate()
+                    .replace(/%COMMENT_TABLE%/g, commentTable.tableName)
+                    .replace(/%PROBLEM_TABLE%/g, problemTable.tableName)
+            ),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postComment/response.vtl')),
         });
     }
 }

@@ -24,8 +24,22 @@ type UserDetail {
   problems(nextToken: String): ProblemConnection! @aws_cognito_user_pools @aws_api_key
 }
 
+type CommentConnection {
+  items: [CommentConnection]! @aws_cognito_user_pools @aws_api_key
+  nextToken: String @aws_cognito_user_pools @aws_api_key
+}
+
+type Comment {
+  commentID: ID! @aws_cognito_user_pools @aws_api_key
+  datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
+  user: User! @aws_cognito_user_pools @aws_api_key
+  content: String! @aws_cognito_user_pools @aws_api_key
+  replyCount: Int! @aws_cognito_user_pools @aws_api_key
+  replies: CommentConnection! @aws_cognito_user_pools @aws_api_key
+}
+
 type LikerConnection {
-  items: [User]
+  items: [User]!
   nextToken: String
 }
 
@@ -49,6 +63,8 @@ type Problem {
   likedByMe: Boolean! @aws_cognito_user_pools
   likes: Int! @aws_cognito_user_pools @aws_api_key
   likers: LikerConnection! @aws_cognito_user_pools @aws_api_key
+  commentCount: Int! @aws_cognito_user_pools @aws_api_key
+  comments: CommentConnection! @aws_cognito_user_pools @aws_api_key
   statement: String @aws_cognito_user_pools @aws_api_key
   inTestcase(name: String!): String @aws_cognito_user_pools @aws_api_key
   outTestcase(name: String!): String @aws_cognito_user_pools @aws_api_key
@@ -112,6 +128,8 @@ type Mutation {
   submitCode(input: SubmitCodeInput!): Submission! @aws_cognito_user_pools
   updateSubmission(input: UpdateSubmissionInput!): UpdateSubmissionOutput! @aws_iam
   likeProblem(input: LikeProblemInput!): Boolean! @aws_cognito_user_pools
+  postComment(input: PostCommentInput!): Comment! @aws_cognito_user_pools
+  replyComment(input: ReplyCommentInput!): Comment! @aws_cognito_user_pools
 }
 
 type ResponsePlayground {
@@ -173,4 +191,14 @@ input UpdateSubmissionInput {
 input LikeProblemInput {
   problemID: ID! @aws_cognito_user_pools
   like: Boolean! @aws_cognito_user_pools
+}
+
+input PostCommentInput {
+  problemID: ID @aws_cognito_user_pools
+  content: String! @aws_cognito_user_pools
+}
+
+input ReplyCommentInput {
+  commentID: ID @aws_cognito_user_pools
+  content: String! @aws_cognito_user_pools
 }
