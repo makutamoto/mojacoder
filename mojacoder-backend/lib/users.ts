@@ -66,7 +66,7 @@ export class Users extends cdk.Construct {
         });
         updateApiKeyLambda.addToRolePolicy(new PolicyStatement({
             actions: ['appsync:UpdateApiKey'],
-            resources: [this.api.arn + '/apikeys/*'],
+            resources: ['*'],
         }));
         const updateApiKeyTarget = new LambdaFunction(updateApiKeyLambda)
         new Rule(this, 'update-api-key-cron', {
