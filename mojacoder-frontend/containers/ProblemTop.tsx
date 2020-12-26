@@ -25,7 +25,7 @@ const GetIfLiked = gql`
         user(username: $authorUsername) {
             problem(id: $problemID) {
                 likedByMe
-                likes
+                likeCount
             }
         }
     }
@@ -53,7 +53,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
         (query.problemID || '') as string
     )
     const [likedByMe, setLikedByMe] = useState(false)
-    const [likes, setLikes] = useState<number | null>(null)
+    const [likeCount, setLikeCount] = useState<number | null>(null)
     const onLike = useCallback(() => {
         if (auth) {
             invokeMutation(LikeProblem, {
@@ -62,7 +62,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                     like: !likedByMe,
                 },
             }).then(() => {
-                setLikes(likes + (likedByMe ? -1 : 1))
+                setLikeCount(likeCount + (likedByMe ? -1 : 1))
                 setLikedByMe(!likedByMe)
             })
         }
@@ -73,7 +73,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                 authorUsername: query.username || '',
                 problemID: query.problemID || '',
             }).then((res) => {
-                setLikes(res.user?.problem.likes || 0)
+                setLikeCount(res.user?.problem.likeCount || 0)
                 setLikedByMe(res.user?.problem.likedByMe || false)
             })
         }
@@ -95,7 +95,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                         </IconWithText>
                     </div>
                     <div className="mt-2">
-                        {likes !== null && (
+                        {likeCount !== null && (
                             <>
                                 <IconWithText
                                     icon={
@@ -117,7 +117,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                                         href={join(basePath, 'likers')}
                                         passHref
                                     >
-                                        <a>{likes}</a>
+                                        <a>{likeCount}</a>
                                     </Link>
                                 </IconWithText>{' '}
                             </>

@@ -37,9 +37,9 @@
                 "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID)
             },
             "update" : {
-                "expression" : "ADD #likes :diff",
+                "expression" : "ADD #likeCount :diff",
                 "expressionNames" : {
-                    "#likes": "likes"
+                    "#likeCount": "likeCount"
                 },
                 "expressionValues" : {
                 	#if($context.arguments.input.like)

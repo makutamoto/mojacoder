@@ -11,7 +11,7 @@ export interface Problem {
     user: User
     statement: string
     likedByMe: boolean
-    likes: number
+    likeCount: number
     likers: Connection<User>
     inTestcase: string
     outTestcase: string

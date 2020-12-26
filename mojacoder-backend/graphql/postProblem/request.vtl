@@ -8,7 +8,7 @@
         "userID": $util.dynamodb.toDynamoDBJson($context.identity.sub),
         "datetime": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601()),
         "status": $util.dynamodb.toDynamoDBJson("PENDING"),
-        "likes": $util.dynamodb.toDynamoDBJson(0),
+        "likeCount": $util.dynamodb.toDynamoDBJson(0),
         "commentCount": $util.dynamodb.toDynamoDBJson(0)
     }
 }

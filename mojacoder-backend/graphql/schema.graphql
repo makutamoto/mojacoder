@@ -73,7 +73,7 @@ type Problem {
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
   title: String @aws_cognito_user_pools @aws_api_key
   likedByMe: Boolean! @aws_cognito_user_pools
-  likes: Int! @aws_cognito_user_pools @aws_api_key
+  likeCount: Int! @aws_cognito_user_pools @aws_api_key
   likers: LikerConnection! @aws_cognito_user_pools @aws_api_key
   commentCount: Int! @aws_cognito_user_pools @aws_api_key
   comments: CommentConnection! @aws_cognito_user_pools @aws_api_key
