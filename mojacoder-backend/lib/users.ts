@@ -5,6 +5,7 @@ import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { AuthorizationType, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
 import { join } from 'path';
+import { Duration } from '@aws-cdk/core';
 
 export class Users extends cdk.Construct {
     public readonly pool: UserPool
@@ -28,7 +29,9 @@ export class Users extends cdk.Construct {
                 emailStyle: VerificationEmailStyle.LINK,
             },
         });
-        this.pool.addClient("frontend");
+        this.pool.addClient("frontend", {
+            refreshTokenValidity: Duration.days(365),
+        });
         this.pool.addDomain('domain', {
             cognitoDomain: {
                 domainPrefix: 'mojacoder',
