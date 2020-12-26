@@ -25,7 +25,7 @@ type UserDetail {
 }
 
 type CommentConnection {
-  items: [CommentConnection]! @aws_cognito_user_pools @aws_api_key
+  items: [Comment]! @aws_cognito_user_pools @aws_api_key
   nextToken: String @aws_cognito_user_pools @aws_api_key
 }
 
