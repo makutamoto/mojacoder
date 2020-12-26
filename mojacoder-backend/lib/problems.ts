@@ -74,10 +74,17 @@ export class Problems extends cdk.Construct {
                 type: AttributeType.STRING,
             },
         });
-        commentTable.addGlobalSecondaryIndex({
-            indexName: 'replying-index',
+        const replyTable = new Table(this, 'reply-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
-                name: 'replyingTo',
+                name: 'replyID',
+                type: AttributeType.STRING,
+            },
+        });
+        replyTable.addGlobalSecondaryIndex({
+            indexName: 'comment-index',
+            partitionKey: {
+                name: 'commentID',
                 type: AttributeType.STRING,
             },
             sortKey: {
@@ -205,6 +212,21 @@ export class Problems extends cdk.Construct {
             fieldName: 'comments',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/comments/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/comments/response.vtl')),
+        });
+        const postReplyDatasource = props.api.addDynamoDbDataSource('postReply', replyTable);
+        postReplyDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['dynamodb:UpdateItem'],
+            resources: [commentTable.tableArn],
+        }))
+        postReplyDatasource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'postReply',
+            requestMappingTemplate: MappingTemplate.fromString(
+                MappingTemplate.fromFile(join(__dirname, '../graphql/postReply/request.vtl')).renderTemplate()
+                    .replace(/%REPLY_TABLE%/g, replyTable.tableName)
+                    .replace(/%COMMENT_TABLE%/g, commentTable.tableName)
+            ),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postReply/response.vtl')),
         });
     }
 }

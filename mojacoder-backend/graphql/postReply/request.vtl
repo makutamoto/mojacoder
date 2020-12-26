@@ -1,0 +1,45 @@
+#set($replyID = $util.autoId())
+#set($datetime = $util.time.nowISO8601())
+$util.qr($context.stash.put("replyID", $replyID))
+$util.qr($context.stash.put("datetime", $datetime))
+{
+    "version" : "2018-05-29",
+    "operation": "TransactWriteItems",
+    "transactItems": [
+        {
+            "table": "%REPLY_TABLE%",
+            "operation" : "PutItem",
+            "key": {
+                "replyID" : $util.dynamodb.toDynamoDBJson($replyID),
+            },
+            "attributeValues" : {
+                "commentID": $util.dynamodb.toDynamoDBJson($context.arguments.input.commentID),
+                "datetime": $util.dynamodb.toDynamoDBJson($datetime),
+                "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
+                "content": $util.dynamodb.toDynamoDBJson($context.arguments.input.content),
+            },
+            "condition" : {
+                "expression": "attribute_not_exists(replyID)"
+            }
+        },
+        {
+            "table": "%COMMENT_TABLE%",
+            "operation" : "UpdateItem",
+            "key" : {
+                "commentID" : $util.dynamodb.toDynamoDBJson($context.arguments.input.commentID)
+            },
+            "update" : {
+                "expression" : "ADD #replyCount :one",
+                "expressionNames" : {
+                    "#replyCount": "replyCount"
+                },
+                "expressionValues" : {
+                	":one": $util.dynamodb.toDynamoDBJson(1)
+                },
+            },
+            "condition" : {
+                "expression": "attribute_exists(commentID)"
+            }
+        }
+    ]
+}

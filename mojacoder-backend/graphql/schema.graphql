@@ -24,6 +24,18 @@ type UserDetail {
   problems(nextToken: String): ProblemConnection! @aws_cognito_user_pools @aws_api_key
 }
 
+type ReplyConnection {
+  items: [Reply]! @aws_cognito_user_pools @aws_api_key
+  nextToken: String @aws_cognito_user_pools @aws_api_key
+}
+
+type Reply {
+  replyID: ID! @aws_cognito_user_pools @aws_api_key
+  datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
+  user: User! @aws_cognito_user_pools @aws_api_key
+  content: String! @aws_cognito_user_pools @aws_api_key
+}
+
 type CommentConnection {
   items: [Comment]! @aws_cognito_user_pools @aws_api_key
   nextToken: String @aws_cognito_user_pools @aws_api_key
@@ -35,7 +47,7 @@ type Comment {
   user: User! @aws_cognito_user_pools @aws_api_key
   content: String! @aws_cognito_user_pools @aws_api_key
   replyCount: Int! @aws_cognito_user_pools @aws_api_key
-  replies: CommentConnection! @aws_cognito_user_pools @aws_api_key
+  replies: ReplyConnection! @aws_cognito_user_pools @aws_api_key
 }
 
 type LikerConnection {
