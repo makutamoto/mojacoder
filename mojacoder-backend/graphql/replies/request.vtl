@@ -1,0 +1,13 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "commentID = :commentID",
+        "expressionValues" : {
+            ":commentID" : $util.dynamodb.toDynamoDBJson($context.source.commentID)
+        }
+    },
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
+    "index" : "comment-index",
+    "scanIndexForward": false
+}

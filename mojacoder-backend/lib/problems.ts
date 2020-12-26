@@ -228,5 +228,12 @@ export class Problems extends cdk.Construct {
             ),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postReply/response.vtl')),
         });
+        const replyTableDatasource = props.api.addDynamoDbDataSource('replyTable', replyTable);
+        replyTableDatasource.createResolver({
+            typeName: 'Comment',
+            fieldName: 'replies',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/replies/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/replies/response.vtl')),
+        });
     }
 }
