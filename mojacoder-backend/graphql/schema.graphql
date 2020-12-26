@@ -141,7 +141,7 @@ type Mutation {
   updateSubmission(input: UpdateSubmissionInput!): UpdateSubmissionOutput! @aws_iam
   likeProblem(input: LikeProblemInput!): Boolean! @aws_cognito_user_pools
   postComment(input: PostCommentInput!): Comment! @aws_cognito_user_pools
-  replyComment(input: ReplyCommentInput!): Comment! @aws_cognito_user_pools
+  postReply(input: PostReplyInput!): Comment! @aws_cognito_user_pools
 }
 
 type ResponsePlayground {
@@ -210,7 +210,7 @@ input PostCommentInput {
   content: String! @aws_cognito_user_pools
 }
 
-input ReplyCommentInput {
+input PostReplyInput {
   commentID: ID @aws_cognito_user_pools
   content: String! @aws_cognito_user_pools
 }
