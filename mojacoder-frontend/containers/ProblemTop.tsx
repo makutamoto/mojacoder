@@ -95,7 +95,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                         </IconWithText>
                     </div>
                     <div className="mt-2">
-                        {likes && (
+                        {likes !== null && (
                             <>
                                 <IconWithText
                                     icon={
