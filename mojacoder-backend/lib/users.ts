@@ -4,6 +4,8 @@ import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { AuthorizationType, GraphqlApi, MappingTemplate, Schema } from '@aws-cdk/aws-appsync';
+import { Rule, Schedule } from '@aws-cdk/aws-events'
+import { LambdaFunction } from '@aws-cdk/aws-events-targets'
 import { join } from 'path';
 import { Duration } from '@aws-cdk/core';
 
@@ -53,6 +55,23 @@ export class Users extends cdk.Construct {
                     }
                 ]
             }
+        });
+        const updateApiKeyLambda = new NodejsFunction(this, 'update-api-key', {
+            entry: join(__dirname, '../lambda/update-api-key/index.ts'),
+            handler: 'handler',
+            environment: {
+                APPSYNC_API_ID: this.api.apiId,
+                APPSYNC_API_KEY: this.api.apiKey!,
+            },
+        });
+        updateApiKeyLambda.addToRolePolicy(new PolicyStatement({
+            actions: ['appsync:UpdateApiKey'],
+            resources: [this.api.arn],
+        }));
+        const updateApiKeyTarget = new LambdaFunction(updateApiKeyLambda)
+        new Rule(this, 'update-api-key-cron', {
+            schedule: Schedule.cron({ weekDay: 'MON', hour: '0', minute: '0' }),
+            targets: [updateApiKeyTarget],
         });
         this.userTable = new Table(this, 'user-table', {
             billingMode: BillingMode.PAY_PER_REQUEST,
