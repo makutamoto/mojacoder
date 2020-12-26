@@ -16,7 +16,8 @@ $util.qr($context.stash.put("datetime", $datetime))
                 "problemID": $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID),
                 "datetime": $util.dynamodb.toDynamoDBJson($datetime),
                 "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
-                "content": $util.dynamodb.toDynamoDBJson($context.arguments.input.content)
+                "content": $util.dynamodb.toDynamoDBJson($context.arguments.input.content),
+                "replyCount": $util.dynamodb.toDynamoDBJson(0)
             },
             "condition" : {
                 "expression": "attribute_not_exists(commentID)"
@@ -29,9 +30,9 @@ $util.qr($context.stash.put("datetime", $datetime))
                 "id" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID)
             },
             "update" : {
-                "expression" : "ADD #replyCount :one",
+                "expression" : "ADD #commentCount :one",
                 "expressionNames" : {
-                    "#replyCount": "replyCount"
+                    "#commentCount": "commentCount"
                 },
                 "expressionValues" : {
                 	":one": $util.dynamodb.toDynamoDBJson(1)
