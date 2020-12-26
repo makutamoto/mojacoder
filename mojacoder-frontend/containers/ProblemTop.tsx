@@ -53,7 +53,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
         (query.problemID || '') as string
     )
     const [likedByMe, setLikedByMe] = useState(false)
-    const [likes, setLikes] = useState(0)
+    const [likes, setLikes] = useState<number | null>(null)
     const onLike = useCallback(() => {
         if (auth) {
             invokeMutation(LikeProblem, {
@@ -95,26 +95,33 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                         </IconWithText>
                     </div>
                     <div className="mt-2">
-                        <IconWithText
-                            icon={
-                                <Button
-                                    className="px-1 py-0"
-                                    variant="light"
-                                    size="sm"
-                                    onClick={onLike}
+                        {likes && (
+                            <>
+                                <IconWithText
+                                    icon={
+                                        <Button
+                                            className="px-1 py-0"
+                                            variant="light"
+                                            size="sm"
+                                            onClick={onLike}
+                                        >
+                                            {likedByMe ? (
+                                                <HeartFillIcon />
+                                            ) : (
+                                                <HeartIcon />
+                                            )}
+                                        </Button>
+                                    }
                                 >
-                                    {likedByMe ? (
-                                        <HeartFillIcon />
-                                    ) : (
-                                        <HeartIcon />
-                                    )}
-                                </Button>
-                            }
-                        >
-                            <Link href={join(basePath, 'likers')} passHref>
-                                <a>{likes}</a>
-                            </Link>
-                        </IconWithText>{' '}
+                                    <Link
+                                        href={join(basePath, 'likers')}
+                                        passHref
+                                    >
+                                        <a>{likes}</a>
+                                    </Link>
+                                </IconWithText>{' '}
+                            </>
+                        )}
                         <a
                             href={`https://twitter.com/intent/tweet?hashtags=MojaCoder&url=${encodeURIComponent(
                                 join(process.env.ORIGIN, locale, basePath)
