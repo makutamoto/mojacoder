@@ -1,4 +1,4 @@
-#set($message = { "type": "PLAYGROUND", "sessionID": $context.stash.sessionID, "lang": $context.arguments.lang, "code": $context.arguments.code, "stdin": $context.arguments.stdin, "userID": $context.identity.sub })
+#set($message = { "type": "PLAYGROUND", "sessionID": $context.arguments.input.sessionID, "lang": $context.arguments.input.lang, "code": $context.arguments.input.code, "stdin": $context.arguments.input.stdin, "userID": $context.identity.sub })
 {
   "version": "2018-05-29",
   "method": "POST",
