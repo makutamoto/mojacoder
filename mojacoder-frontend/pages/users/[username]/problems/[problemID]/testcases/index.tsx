@@ -29,13 +29,13 @@ const Submissions: React.FC<Props> = (props) => {
                     <Table responsive striped bordered hover>
                         <thead>
                             <tr>
-                                <th>テストケース名</th>
+                                <th className="text-nowrap">テストケース名</th>
                             </tr>
                         </thead>
                         <tbody>
                             {problem?.testcaseNames.map((name) => (
                                 <tr key={name}>
-                                    <td>
+                                    <td className="text-nowrap">
                                         <Link
                                             href={{
                                                 pathname: join(

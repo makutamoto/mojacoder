@@ -63,21 +63,23 @@ const UserPage: React.FC<Props> = (props) => {
                 <Table bordered striped hover>
                     <thead>
                         <tr>
-                            <th>{t`problemName`}</th>
-                            <th>いいね数</th>
+                            <th className="text-nowrap">{t`problemName`}</th>
+                            <th className="text-nowrap">いいね数</th>
                         </tr>
                     </thead>
                     <tbody>
                         {user?.problems.items.map((item) => (
                             <tr key={item.id}>
-                                <td>
+                                <td className="text-nowrap">
                                     <Link
                                         href={`/users/${user?.screenName}/problems/${item.id}`}
                                     >
                                         <a>{item.title}</a>
                                     </Link>
                                 </td>
-                                <td>{item.likeCount}</td>
+                                <td className="text-nowrap">
+                                    {item.likeCount}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

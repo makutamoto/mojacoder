@@ -37,19 +37,21 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
     const userDetail = props.submission.user.detail
     return (
         <tr key={props.submission.id}>
-            <td>
+            <td className="text-nowrap">
                 <DateTime>{props.submission.datetime}</DateTime>
             </td>
-            <td>
+            <td className="text-nowrap">
                 <Username>{userDetail}</Username>
             </td>
-            <td>{getProgrammingLanguageNameFromID(lang)}</td>
+            <td className="text-nowrap">
+                {getProgrammingLanguageNameFromID(lang)}
+            </td>
             <td className="text-center">
                 <JudgeStatusBadge status={wholeStatus} progress={progress} />
             </td>
-            <td>{time} ms</td>
-            <td>{memory} kb</td>
-            <td className="text-center">
+            <td className="text-nowrap">{time} ms</td>
+            <td className="text-nowrap">{memory} kb</td>
+            <td className="text-nowrap text-center">
                 <Link
                     href={{
                         pathname: join(router.pathname, '[id]'),
@@ -75,12 +77,12 @@ const SubmissionTable: React.FC<SubmissionTableProps> = (props) => {
         <Table responsive striped bordered hover>
             <thead>
                 <tr>
-                    <th>提出日時</th>
-                    <th>ユーザー</th>
-                    <th>言語</th>
-                    <th>結果</th>
-                    <th>実行時間</th>
-                    <th>メモリ</th>
+                    <th className="text-nowrap">提出日時</th>
+                    <th className="text-nowrap">ユーザー</th>
+                    <th className="text-nowrap">言語</th>
+                    <th className="text-nowrap">結果</th>
+                    <th className="text-nowrap">実行時間</th>
+                    <th className="text-nowrap">メモリ</th>
                     <th></th>
                 </tr>
             </thead>

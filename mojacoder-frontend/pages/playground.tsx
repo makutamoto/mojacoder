@@ -140,16 +140,22 @@ const Playground: React.FC = () => {
                             <Table className="my-4" bordered striped hover>
                                 <tbody>
                                     <tr>
-                                        <td>{t`exitCode`}</td>
-                                        <td>{result.exitCode}</td>
+                                        <td className="text-nowrap">{t`exitCode`}</td>
+                                        <td className="text-nowrap">
+                                            {result.exitCode}
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>{t`time`}</td>
-                                        <td>{result.time} ms</td>
+                                        <td className="text-nowrap">{t`time`}</td>
+                                        <td className="text-nowrap">
+                                            {result.time} ms
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>{t`memory`}</td>
-                                        <td>{result.memory} kb</td>
+                                        <td className="text-nowrap">{t`memory`}</td>
+                                        <td className="text-nowrap">
+                                            {result.memory} kb
+                                        </td>
                                     </tr>
                                 </tbody>
                             </Table>

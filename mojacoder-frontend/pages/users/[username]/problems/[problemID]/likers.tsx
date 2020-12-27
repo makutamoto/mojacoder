@@ -22,13 +22,13 @@ const ProblemPage: React.FC<Props> = (props) => {
                 <Table responsive striped bordered hover>
                     <thead>
                         <tr>
-                            <th>いいねした人</th>
+                            <th className="text-nowrap">いいねした人</th>
                         </tr>
                     </thead>
                     <tbody>
                         {user?.problem.likers.items.map((liker) => (
                             <tr key={liker.userID}>
-                                <td>
+                                <td className="text-nowrap">
                                     <Username>{liker.detail}</Username>
                                 </td>
                             </tr>

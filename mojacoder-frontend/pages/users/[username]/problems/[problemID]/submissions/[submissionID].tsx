@@ -113,56 +113,56 @@ const Submissions: React.FC<Props> = (props) => {
                 <Table responsive striped bordered hover>
                     <tbody>
                         <tr>
-                            <td>提出日時</td>
-                            <td>
+                            <td className="text-nowrap">提出日時</td>
+                            <td className="text-nowrap">
                                 <DateTime>{submission?.datetime}</DateTime>
                             </td>
                         </tr>
                         <tr>
-                            <td>ユーザー</td>
-                            <td>
+                            <td className="text-nowrap">ユーザー</td>
+                            <td className="text-nowrap">
                                 <Username>{submission?.user.detail}</Username>
                             </td>
                         </tr>
                         <tr>
-                            <td>言語</td>
-                            <td>
+                            <td className="text-nowrap">言語</td>
+                            <td className="text-nowrap">
                                 {getProgrammingLanguageNameFromID(
                                     submission?.lang
                                 )}
                             </td>
                         </tr>
                         <tr>
-                            <td>結果</td>
-                            <td>
+                            <td className="text-nowrap">結果</td>
+                            <td className="text-nowrap">
                                 <JudgeStatusBadge
                                     status={result?.wholeStatus}
                                 />
                             </td>
                         </tr>
                         <tr>
-                            <td>実行時間</td>
-                            <td>{result?.time} kb</td>
+                            <td className="text-nowrap">実行時間</td>
+                            <td className="text-nowrap">{result?.time} kb</td>
                         </tr>
                         <tr>
-                            <td>メモリ</td>
-                            <td>{result?.memory} kb</td>
+                            <td className="text-nowrap">メモリ</td>
+                            <td className="text-nowrap">{result?.memory} kb</td>
                         </tr>
                     </tbody>
                 </Table>
                 <Table responsive striped bordered hover>
                     <thead>
                         <tr>
-                            <th>テストケース名</th>
-                            <th>結果</th>
-                            <th>実行時間</th>
-                            <th>メモリ</th>
+                            <th className="text-nowrap">テストケース名</th>
+                            <th className="text-nowrap">結果</th>
+                            <th className="text-nowrap">実行時間</th>
+                            <th className="text-nowrap">メモリ</th>
                         </tr>
                     </thead>
                     <tbody>
                         {submission?.testcases.map((testcase) => (
                             <tr key={testcase.name}>
-                                <td>
+                                <td className="text-nowrap">
                                     <Link
                                         href={{
                                             pathname: join(
@@ -178,13 +178,17 @@ const Submissions: React.FC<Props> = (props) => {
                                         <a>{testcase.name}</a>
                                     </Link>
                                 </td>
-                                <td>
+                                <td className="text-nowrap">
                                     <JudgeStatusBadge
                                         status={testcase.status}
                                     />
                                 </td>
-                                <td>{testcase.time} ms</td>
-                                <td>{testcase.memory} kb</td>
+                                <td className="text-nowrap">
+                                    {testcase.time} ms
+                                </td>
+                                <td className="text-nowrap">
+                                    {testcase.memory} kb
+                                </td>
                             </tr>
                         ))}
                     </tbody>
