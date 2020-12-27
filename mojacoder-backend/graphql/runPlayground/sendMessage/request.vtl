@@ -1,10 +1,11 @@
 #set($message = { "type": "PLAYGROUND", "sessionID": $context.stash.sessionID, "lang": $context.arguments.lang, "code": $context.arguments.code, "stdin": $context.arguments.stdin, "userID": $context.identity.sub })
-#set($query = { "MessageBody": $util.toJson($message) })
 {
   "version": "2018-05-29",
   "method": "GET",
   "resourcePath": "/",
   "params": {
-    "query": $query
+    "query": {
+      "MessageBody": $util.toJson($message)
+    }
   }
 }
