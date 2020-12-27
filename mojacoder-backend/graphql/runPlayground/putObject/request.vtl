@@ -1,11 +1,11 @@
+#if($context.arguments.input.code.length() == 0)
+$util.error("Empty submissions are not allowed.")
+#end
 {
   "version": "2018-05-29",
   "method": "PUT",
   "resourcePath": "/$context.arguments.input.sessionID",
   "params": {
-    "headers": {
-      "Content-Length": $context.arguments.input.code.length()
-    },
     "body": "$util.escapeJavaScript("$context.arguments.input.code")"
   }
 }
