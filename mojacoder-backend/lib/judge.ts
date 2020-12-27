@@ -141,23 +141,41 @@ export class Judge extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'submitCode',
         });
-        const runPlaygroundResolverLambda = new NodejsFunction(this, 'runPlaygroundResolverLambda', {
-            entry: join(__dirname, '../lambda/run-playground-resolver/index.ts'),
-            handler: 'handler',
-            environment: {
-                PLAYGROUND_CODE_BUCKET_NAME: playgroundCodeBucket.bucketName,
-                JUDGEQUEUE_URL: JudgeQueue.queueUrl,
+        const judgeQueueDatasource = props.api.addHttpDataSource('judgeQueue', JudgeQueue.queueUrl, {
+            authorizationConfig: {
+                signingRegion: 'ap-northeast-1',
+                signingServiceName: 'sqs',
             },
-        })
-        runPlaygroundResolverLambda.addToRolePolicy(new PolicyStatement({
-            resources: [playgroundCodeBucket.bucketArn + '/*', JudgeQueue.queueArn],
-            actions: ['s3:PutObject', 'sqs:SendMessage'],
+        });
+        judgeQueueDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['sqs:SendMessage'],
+            resources: [JudgeQueue.queueArn],
         }));
-        const runPlaygroundResolverLambdaDataSource = props.api.addLambdaDataSource('runPlaygroundResolverLambdaDataSource', runPlaygroundResolverLambda)
-        runPlaygroundResolverLambdaDataSource.createResolver({
+        const playgroundCodeBucketDatasource = props.api.addHttpDataSource('playgroundCodeBucket', 'https://' + playgroundCodeBucket.bucketRegionalDomainName, {
+            authorizationConfig: {
+                signingRegion: 'ap-northeast-1',
+                signingServiceName: 's3',
+            },
+        });
+        playgroundCodeBucketDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['s3:PutObject'],
+            resources: [playgroundCodeBucket.bucketArn + '/*'],
+        }));
+        const runPlaygroundPutObjectFunction = playgroundCodeBucketDatasource.createFunction({
+            name: 'runPlaygroundPutObject',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/putObject.vtl')),
+        });
+        const runPlaygroundSendMessageFunction = judgeQueueDatasource.createFunction({
+            name: 'runPlaygroundSendMessage',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/sendMessage.vtl')),
+        });
+        props.api.createResolver({
             typeName: 'Mutation',
             fieldName: 'runPlayground',
-        })
+            pipelineConfig: [runPlaygroundPutObjectFunction, runPlaygroundSendMessageFunction],
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/response.vtl')),
+        });
         const submittedCodeBucketDatasource = props.api.addHttpDataSource('submittedCodeBucket', 'https://' + submittedCodeBucket.bucketRegionalDomainName, {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
