@@ -1,11 +1,12 @@
 #set($message = { "type": "PLAYGROUND", "sessionID": $context.stash.sessionID, "lang": $context.arguments.lang, "code": $context.arguments.code, "stdin": $context.arguments.stdin, "userID": $context.identity.sub })
 {
   "version": "2018-05-29",
-  "method": "GET",
+  "method": "POST",
   "resourcePath": "/",
   "params": {
-    "query": {
-      "MessageBody": "$util.escapeJavaScript($util.toJson($message))"
-    }
+    "header": {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    "body": "Action=SendMessage&MessageBody=$util.escapeJavaScript("$util.toJson($message)")"
   }
 }
