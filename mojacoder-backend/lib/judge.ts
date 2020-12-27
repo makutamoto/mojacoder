@@ -158,7 +158,7 @@ export class Judge extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'runPlayground',
         })
-        const submittedCodeBucketDatasource = props.api.addHttpDataSource('submittedCodeBucket', submittedCodeBucket.bucketWebsiteUrl, {
+        const submittedCodeBucketDatasource = props.api.addHttpDataSource('submittedCodeBucket', 'https://' + submittedCodeBucket.bucketRegionalDomainName, {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
                 signingServiceName: 's3',
