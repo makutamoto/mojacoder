@@ -125,6 +125,8 @@ export class Problems extends cdk.Construct {
         testcasesForViewDatasource.createResolver({
             typeName: 'Problem',
             fieldName: 'inTestcase',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/inTestcase/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/inTestcase/response.vtl')),
         })
         const outTestcaseResolverLambda = new NodejsFunction(this, 'out-testcase-resolver', {
             entry: join(__dirname, '../lambda/out-testcase-resolver/index.ts'),
