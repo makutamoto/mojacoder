@@ -5,7 +5,7 @@
   "resourcePath": "/",
   "params": {
     "query": {
-      "MessageBody": "$util.toJson($message)"
+      "MessageBody": "$util.escapeJavaScript($util.toJson($message))"
     }
   }
 }
