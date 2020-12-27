@@ -3,6 +3,9 @@
   "method": "PUT",
   "resourcePath": "/$context.arguments.input.sessionID",
   "params": {
+    "headers": {
+      "Content-Length": $context.arguments.input.code.length()
+    },
     "body": "$util.escapeJavaScript("$context.arguments.input.code")"
   }
 }

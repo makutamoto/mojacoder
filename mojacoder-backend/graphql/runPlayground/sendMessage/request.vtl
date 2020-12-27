@@ -1,4 +1,4 @@
-#set($message = { "type": "PLAYGROUND", "sessionID": $context.arguments.input.sessionID, "lang": $context.arguments.input.lang, "code": $context.arguments.input.code, "stdin": $context.arguments.input.stdin, "userID": $context.identity.sub })
+#set($message = { "type": "PLAYGROUND", "sessionID": $context.arguments.input.sessionID, "lang": $context.arguments.input.lang, "stdin": $context.arguments.input.stdin, "userID": $context.identity.sub })
 {
   "version": "2018-05-29",
   "method": "POST",
@@ -7,6 +7,6 @@
     "headers": {
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    "body": "QueueUrl=%QUEUE_URL%&Action=SendMessage&MessageBody=$util.urlEncode("$util.escapeJavaScript("$util.toJson($message)")")"
+    "body": "QueueUrl=%QUEUE_URL%&Action=SendMessage&MessageBody=$util.urlEncode("$util.toJson($message)")"
   }
 }
