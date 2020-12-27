@@ -128,21 +128,11 @@ export class Problems extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/inTestcase/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/inTestcase/response.vtl')),
         })
-        const outTestcaseResolverLambda = new NodejsFunction(this, 'out-testcase-resolver', {
-            entry: join(__dirname, '../lambda/out-testcase-resolver/index.ts'),
-            handler: 'handler',
-            environment: {
-                TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
-            },
-        });
-        outTestcaseResolverLambda.addToRolePolicy(new PolicyStatement({
-            actions: ['s3:GetObject'],
-            resources: [testcasesForView.bucketArn + '/*'],
-        }))
-        const outTestcaseResolverLambdaDatasource = props.api.addLambdaDataSource('outTestcaseResolver', outTestcaseResolverLambda)
-        outTestcaseResolverLambdaDatasource.createResolver({
+        testcasesForViewDatasource.createResolver({
             typeName: 'Problem',
             fieldName: 'outTestcase',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/outTestcase/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/outTestcase/response.vtl')),
         })
         const problemTableDataSource = props.api.addDynamoDbDataSource('problem_table', problemTable);
         problemTableDataSource.createResolver({
