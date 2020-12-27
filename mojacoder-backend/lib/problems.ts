@@ -112,19 +112,17 @@ export class Problems extends cdk.Construct {
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'
         });
-        const inTestcaseResolverLambda = new NodejsFunction(this, 'in-testcase-resolver', {
-            entry: join(__dirname, '../lambda/in-testcase-resolver/index.ts'),
-            handler: 'handler',
-            environment: {
-                TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
+        const testcasesForViewDatasource = props.api.addHttpDataSource('testcasesForView', 'https://' + testcasesForView.bucketRegionalDomainName, {
+            authorizationConfig: {
+                signingRegion: 'ap-northeast-1',
+                signingServiceName: 's3',
             },
         });
-        inTestcaseResolverLambda.addToRolePolicy(new PolicyStatement({
+        testcasesForViewDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['s3:GetObject'],
             resources: [testcasesForView.bucketArn + '/*'],
-        }))
-        const inTestcaseResolverLambdaDatasource = props.api.addLambdaDataSource('inTestcaseResolver', inTestcaseResolverLambda)
-        inTestcaseResolverLambdaDatasource.createResolver({
+        }));
+        testcasesForViewDatasource.createResolver({
             typeName: 'Problem',
             fieldName: 'inTestcase',
         })
