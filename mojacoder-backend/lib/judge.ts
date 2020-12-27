@@ -158,21 +158,21 @@ export class Judge extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'runPlayground',
         })
-        const submissionCodeResolverLambda = new NodejsFunction(this, 'submissionCodeResolverLambda', {
-            entry: join(__dirname, '../lambda/submission-code-resolver/index.ts'),
-            handler: 'handler',
-            environment: {
-                SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
+        const submittedCodeBucketDatasource = props.api.addHttpDataSource('submittedCodeBucket', submittedCodeBucket.bucketWebsiteUrl, {
+            authorizationConfig: {
+                signingRegion: 'ap-northeast-1',
+                signingServiceName: 's3',
             },
-        })
-        submissionCodeResolverLambda.addToRolePolicy(new PolicyStatement({
-            resources: [submittedCodeBucket.bucketArn + '/*'],
+        });
+        submittedCodeBucketDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['s3:GetObject'],
-        }));
-        const submissionCodeResolverLambdaDataSource = props.api.addLambdaDataSource('submissionCodeResolverLambdaDataSource', submissionCodeResolverLambda)
-        submissionCodeResolverLambdaDataSource.createResolver({
+            resources: [submittedCodeBucket.bucketArn + '/*'],
+        }))
+        submittedCodeBucketDatasource.createResolver({
             typeName: 'Submission',
             fieldName: 'code',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/response.vtl')),
         })
         const PlaygroundDataSource = props.api.addNoneDataSource('Playground');
         PlaygroundDataSource.createResolver({
