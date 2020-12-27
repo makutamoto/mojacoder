@@ -163,11 +163,13 @@ export class Judge extends cdk.Construct {
         }));
         const runPlaygroundPutObjectFunction = playgroundCodeBucketDatasource.createFunction({
             name: 'runPlaygroundPutObject',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/putObject.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/putObject/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/putObject/response.vtl')),
         });
         const runPlaygroundSendMessageFunction = judgeQueueDatasource.createFunction({
             name: 'runPlaygroundSendMessage',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/sendMessage.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/sendMessage/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/sendMessage/response.vtl')),
         });
         props.api.createResolver({
             typeName: 'Mutation',
