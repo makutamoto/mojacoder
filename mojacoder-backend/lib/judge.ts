@@ -141,7 +141,7 @@ export class Judge extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'submitCode',
         });
-        const judgeQueueDatasource = props.api.addHttpDataSource('judgeQueue', JudgeQueue.queueUrl, {
+        const judgeQueueDatasource = props.api.addHttpDataSource('judgeQueue', 'https://ap-northeast-1.queue.amazonaws.com', {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
                 signingServiceName: 'sqs',
@@ -168,7 +168,10 @@ export class Judge extends cdk.Construct {
         });
         const runPlaygroundSendMessageFunction = judgeQueueDatasource.createFunction({
             name: 'runPlaygroundSendMessage',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/sendMessage/request.vtl')),
+            requestMappingTemplate: MappingTemplate.fromString(
+                MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/sendMessage/request.vtl')).renderTemplate()
+                    .replace(/%QUEUE_URL%/g, JudgeQueue.queueUrl)
+            ),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/sendMessage/response.vtl')),
         });
         props.api.createResolver({
