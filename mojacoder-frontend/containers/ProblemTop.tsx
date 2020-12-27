@@ -6,7 +6,11 @@ import join from 'url-join'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
-import { invokeQuery, invokeMutation } from '../lib/backend'
+import {
+    invokeQuery,
+    invokeQueryWithApiKey,
+    invokeMutation,
+} from '../lib/backend'
 import { Problem } from '../lib/backend_types'
 import Auth from '../lib/auth'
 import Top from '../components/Top'
@@ -25,6 +29,15 @@ const GetIfLiked = gql`
         user(username: $authorUsername) {
             problem(id: $problemID) {
                 likedByMe
+                likeCount
+            }
+        }
+    }
+`
+const GetLikeCount = gql`
+    query GetLikeCount($authorUsername: String!, $problemID: ID!) {
+        user(username: $authorUsername) {
+            problem(id: $problemID) {
                 likeCount
             }
         }
@@ -75,6 +88,14 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
             }).then((res) => {
                 setLikeCount(res.user?.problem.likeCount || 0)
                 setLikedByMe(res.user?.problem.likedByMe || false)
+            })
+        } else {
+            invokeQueryWithApiKey(GetLikeCount, {
+                authorUsername: query.username || '',
+                problemID: query.problemID || '',
+            }).then((res) => {
+                setLikeCount(res.user?.problem.likeCount || 0)
+                setLikedByMe(false)
             })
         }
     }, [auth, query, setLikedByMe])
