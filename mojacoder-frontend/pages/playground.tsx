@@ -17,6 +17,7 @@ const Status = {
     Normal: 'Normal',
     Waiting: 'Waiting',
     Received: 'Received',
+    EmptySubmission: 'EmptySubmission',
 } as const
 type Status = typeof Status[keyof typeof Status]
 
@@ -67,6 +68,10 @@ const Playground: React.FC = () => {
     })
     const [status, setStatus] = useState<Status>(Status.Normal)
     const onRun = useCallback(() => {
+        if (code.code.length === 0) {
+            setStatus(Status.EmptySubmission)
+            return
+        }
         setStatus(Status.Waiting)
         invokeMutation(MUTATION_DOCUMENT, {
             input: {
@@ -107,6 +112,9 @@ const Playground: React.FC = () => {
                 <Alert variant="primary">{t`description`}</Alert>
                 {auth ? (
                     <>
+                        {status === Status.EmptySubmission && (
+                            <Alert variant="danger">コードが空です。</Alert>
+                        )}
                         <div className="mb-2">
                             <CodeEditor
                                 id="playground-code-editor"
