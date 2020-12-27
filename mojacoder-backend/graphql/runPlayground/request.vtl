@@ -1,2 +1,3 @@
 #set($sessionID = $util.autoId())
-#util.qr($context.stash.put("sessionID", $sessionID))
+$util.qr($context.stash.put("sessionID", $sessionID))
+$util.toJson(null)
