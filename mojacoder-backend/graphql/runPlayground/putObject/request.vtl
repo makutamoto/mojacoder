@@ -3,6 +3,6 @@
   "method": "PUT",
   "resourcePath": "/$context.arguments.input.sessionID",
   "params": {
-    "body": "$context.arguments.input.code"
+    "body": "$util.escapeJavaScript("$context.arguments.input.code")"
   }
 }
