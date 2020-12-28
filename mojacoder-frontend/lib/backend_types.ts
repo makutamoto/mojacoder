@@ -5,6 +5,22 @@ export interface Connection<T> {
     nextToken: string
 }
 
+export interface Reply {
+    replyID: string
+    user: User
+    datetime: string
+    content: string
+}
+
+export interface Comment {
+    commentID: string
+    user: User
+    datetime: string
+    content: string
+    replyCount: number
+    replies: Connection<Reply>
+}
+
 export interface Problem {
     id: string
     title: string
@@ -13,6 +29,8 @@ export interface Problem {
     likedByMe: boolean
     likeCount: number
     likers: Connection<User>
+    commentCount: number
+    comments: Connection<Comment>
     inTestcase: string
     outTestcase: string
     testcaseNames: string[]

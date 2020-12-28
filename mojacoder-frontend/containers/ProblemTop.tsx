@@ -19,9 +19,9 @@ import Username from '../components/Username'
 import {
     BeakerIcon,
     ClockIcon,
+    CommentDiscussionIcon,
     HeartIcon,
     HeartFillIcon,
-    SmileyIcon,
 } from '@primer/octicons-react'
 
 const GetIfLiked = gql`
@@ -30,6 +30,7 @@ const GetIfLiked = gql`
             problem(id: $problemID) {
                 likedByMe
                 likeCount
+                commentCount
             }
         }
     }
@@ -39,6 +40,7 @@ const GetLikeCount = gql`
         user(username: $authorUsername) {
             problem(id: $problemID) {
                 likeCount
+                commentCount
             }
         }
     }
@@ -67,6 +69,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
     )
     const [likedByMe, setLikedByMe] = useState(false)
     const [likeCount, setLikeCount] = useState<number | null>(null)
+    const [commentCount, setCommentCount] = useState<number | null>(null)
     const onLike = useCallback(() => {
         if (auth) {
             invokeMutation(LikeProblem, {
@@ -88,6 +91,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
             }).then((res) => {
                 setLikeCount(res.user?.problem.likeCount || 0)
                 setLikedByMe(res.user?.problem.likedByMe || false)
+                setCommentCount(res.user?.problem.commentCount || 0)
             })
         } else {
             invokeQueryWithApiKey(GetLikeCount, {
@@ -96,6 +100,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
             }).then((res) => {
                 setLikeCount(res.user?.problem.likeCount || 0)
                 setLikedByMe(false)
+                setCommentCount(res.user?.problem.commentCount || 0)
             })
         }
     }, [auth, query, setLikedByMe])
@@ -111,9 +116,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                         </IconWithText>
                     </div>
                     <div>
-                        <IconWithText icon={<SmileyIcon />}>
-                            <Username>{problem?.user.detail}</Username>
-                        </IconWithText>
+                        <Username>{problem?.user.detail}</Username>
                     </div>
                     <div className="mt-2">
                         {likeCount !== null && (
@@ -139,6 +142,18 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                                         passHref
                                     >
                                         <a>{likeCount}</a>
+                                    </Link>
+                                </IconWithText>{' '}
+                            </>
+                        )}
+                        {commentCount !== null && (
+                            <>
+                                <IconWithText icon={<CommentDiscussionIcon />}>
+                                    <Link
+                                        href={join(basePath, 'comments')}
+                                        passHref
+                                    >
+                                        <a>{commentCount}</a>
                                     </Link>
                                 </IconWithText>{' '}
                             </>

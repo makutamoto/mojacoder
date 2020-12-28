@@ -1,0 +1,10 @@
+.reply {
+    margin-left: 11px;
+    border-left: 2px solid #dee2e6;
+    padding-left: 8px;
+}
+
+.bar {
+    margin-left: -16px;
+    margin-right: -16px;
+}
