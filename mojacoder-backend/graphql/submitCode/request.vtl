@@ -1,0 +1,6 @@
+#if($context.arguments.input.code.length() == 0)
+$util.error("Empty submissions are not allowed.")
+#end
+#set($submissionID = $util.autoId())
+$util.qr($context.stash.put("submissionID", $submissionID))
+$util.toJson(null)

@@ -1,0 +1,12 @@
+#set($message = { "type": "SUBMISSION", "submissionID": $context.stash.submissionID, "lang": $context.arguments.input.lang, "problemID": $context.arguments.input.problemID, "userID": $context.identity.sub })
+{
+  "version": "2018-05-29",
+  "method": "POST",
+  "resourcePath": "/",
+  "params": {
+    "headers": {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    "body": "QueueUrl=%QUEUE_URL%&Action=SendMessage&MessageBody=$util.urlEncode("$util.toJson($message)")"
+  }
+}

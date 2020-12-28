@@ -123,24 +123,6 @@ export class Judge extends cdk.Construct {
                 },
             ],
         });
-        const submitCodeResolverLambda = new NodejsFunction(this, 'submitCodeResolverLambda', {
-            entry: join(__dirname, '../lambda/submit-code-resolver/index.ts'),
-            handler: 'handler',
-            environment: {
-                SUBMISSION_TABLE_NAME: submissionTable.tableName,
-                SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
-                JUDGEQUEUE_URL: JudgeQueue.queueUrl,
-            },
-        });
-        submitCodeResolverLambda.addToRolePolicy(new PolicyStatement({
-            resources: [submissionTable.tableArn, submittedCodeBucket.bucketArn + '/*', JudgeQueue.queueArn],
-            actions: ['dynamodb:PutItem', 's3:PutObject', 'sqs:SendMessage'],
-        }));
-        const submitCodeResolverLambdaDatasource = props.api.addLambdaDataSource('submitCodeResolverLambda', submitCodeResolverLambda);
-        submitCodeResolverLambdaDatasource.createResolver({
-            typeName: 'Mutation',
-            fieldName: 'submitCode',
-        });
         const judgeQueueDatasource = props.api.addHttpDataSource('judgeQueue', 'https://ap-northeast-1.queue.amazonaws.com', {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
@@ -151,6 +133,48 @@ export class Judge extends cdk.Construct {
             actions: ['sqs:SendMessage'],
             resources: [JudgeQueue.queueArn],
         }));
+        const submittedCodeBucketDatasource = props.api.addHttpDataSource('submittedCodeBucket', 'https://' + submittedCodeBucket.bucketRegionalDomainName, {
+            authorizationConfig: {
+                signingRegion: 'ap-northeast-1',
+                signingServiceName: 's3',
+            },
+        });
+        submittedCodeBucketDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['s3:GetObject', 's3:PutObject'],
+            resources: [submittedCodeBucket.bucketArn + '/*'],
+        }))
+        submittedCodeBucketDatasource.createResolver({
+            typeName: 'Submission',
+            fieldName: 'code',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/response.vtl')),
+        })
+        const submissionTableDataSource = props.api.addDynamoDbDataSource('submission_table', submissionTable);
+        const submitCodePutItemFunction = submissionTableDataSource.createFunction({
+            name: 'submitCodePutItem',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/putItem/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/putItem/response.vtl')),
+        });
+        const submitCodePutObjectFunction = submittedCodeBucketDatasource.createFunction({
+            name: 'submitCodePutObject',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/putObject/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/putObject/response.vtl')),
+        });
+        const submitCodeSendMessageFunction = judgeQueueDatasource.createFunction({
+            name: 'submitCodeSendMessage',
+            requestMappingTemplate: MappingTemplate.fromString(
+                MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/sendMessage/request.vtl')).renderTemplate()
+                    .replace(/%QUEUE_URL%/g, JudgeQueue.queueUrl)
+            ),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/sendMessage/response.vtl')),
+        });
+        props.api.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'submitCode',
+            pipelineConfig: [submitCodePutItemFunction, submitCodePutObjectFunction, submitCodeSendMessageFunction],
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/response.vtl')),
+        });
         const playgroundCodeBucketDatasource = props.api.addHttpDataSource('playgroundCodeBucket', 'https://' + playgroundCodeBucket.bucketRegionalDomainName, {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
@@ -181,22 +205,6 @@ export class Judge extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/response.vtl')),
         });
-        const submittedCodeBucketDatasource = props.api.addHttpDataSource('submittedCodeBucket', 'https://' + submittedCodeBucket.bucketRegionalDomainName, {
-            authorizationConfig: {
-                signingRegion: 'ap-northeast-1',
-                signingServiceName: 's3',
-            },
-        });
-        submittedCodeBucketDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
-            actions: ['s3:GetObject'],
-            resources: [submittedCodeBucket.bucketArn + '/*'],
-        }))
-        submittedCodeBucketDatasource.createResolver({
-            typeName: 'Submission',
-            fieldName: 'code',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/response.vtl')),
-        })
         const PlaygroundDataSource = props.api.addNoneDataSource('Playground');
         PlaygroundDataSource.createResolver({
             typeName: 'Mutation',
@@ -210,7 +218,6 @@ export class Judge extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/response.vtl')),
         });
-        const submissionTableDataSource = props.api.addDynamoDbDataSource('submission_table', submissionTable);
         submissionTableDataSource.createResolver({
             typeName: 'Problem',
             fieldName: 'submission',
