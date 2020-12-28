@@ -24,6 +24,7 @@ import ProblemTop from '../../../../../containers/ProblemTop'
 const Status = {
     Normal: 'Normal',
     Submitting: 'Submitting',
+    EmptySubmission: 'EmptySubmission',
 } as const
 type Status = typeof Status[keyof typeof Status]
 
@@ -47,6 +48,10 @@ const ProblemPage: React.FC<Props> = (props) => {
     const [status, setStatus] = useState<Status>(Status.Normal)
     const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
     const onSubmit = useCallback(() => {
+        if (code.code.length === 0) {
+            setStatus(Status.EmptySubmission)
+            return
+        }
         setStatus(Status.Submitting)
         invokeMutation(SubmitCode, {
             input: {
@@ -97,6 +102,9 @@ const ProblemPage: React.FC<Props> = (props) => {
                     <hr />
                     {auth ? (
                         <>
+                            {status === Status.EmptySubmission && (
+                                <Alert variant="danger">コードが空です。</Alert>
+                            )}
                             <CodeEditor
                                 id="problem-code-editor"
                                 value={code}
