@@ -130,7 +130,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                                             onClick={onLike}
                                         >
                                             {likedByMe ? (
-                                                <HeartFillIcon />
+                                                <HeartFillIcon className="text-danger" />
                                             ) : (
                                                 <HeartIcon />
                                             )}
