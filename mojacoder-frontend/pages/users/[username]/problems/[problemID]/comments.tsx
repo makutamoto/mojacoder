@@ -179,7 +179,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                         </Media>
                     ))
                 ) : (
-                    <div className="text-center">
+                    <div className="text-center mb-3">
                         <Spinner animation="border" />
                     </div>
                 )}
