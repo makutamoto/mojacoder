@@ -140,6 +140,8 @@ const ProblemPage: React.FC<Props> = (props) => {
                     }
                 }
                 setComments(commentsClone)
+                setContent('')
+                setReplyTargetID(null)
                 setStatus(Status.Normal)
             })
         } else {
@@ -154,6 +156,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                 ) as typeof comments
                 commentsClone.items.push(res.postComment)
                 setComments(commentsClone)
+                setContent('')
                 setStatus(Status.Normal)
             })
         }
