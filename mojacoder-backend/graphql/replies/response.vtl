@@ -1,6 +1,6 @@
 #set($items = [])
 #foreach($item in $context.result.items)
-	$util.qr($items.add({ "replyID": $item.commentID, "datetime": $item.datetime, "user": { "userID": $item.userID }, "content": $item.content }))
+	$util.qr($items.add({ "replyID": $item.replyID, "datetime": $item.datetime, "user": { "userID": $item.userID }, "content": $item.content }))
 #end
 {
     "items": $util.toJson($items),
