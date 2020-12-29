@@ -4,7 +4,7 @@ import AWSAppSyncClient from 'aws-appsync'
 import { DocumentNode } from 'graphql'
 
 import Auth from './auth'
-import { Query } from './backend_types'
+import { Mutation, Query } from './backend_types'
 
 export interface SubscriptionPayload<T> {
     data: T
@@ -50,11 +50,8 @@ export function useSubscription<D, V>(
     }, [client, query, variables, callback])
 }
 
-export async function invokeMutation<D, V>(
-    mutation: DocumentNode,
-    variables: V
-) {
-    return (await client.mutate<D>({ mutation, variables })).data
+export async function invokeMutation<V>(mutation: DocumentNode, variables: V) {
+    return (await client.mutate<Mutation>({ mutation, variables })).data
 }
 
 export async function invokeQuery<V>(query: DocumentNode, variables: V) {

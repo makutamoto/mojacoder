@@ -1,12 +1,13 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Auth as Cognito } from 'aws-amplify'
-import { Alert, Button, Form, Spinner } from 'react-bootstrap'
+import { Alert, Form } from 'react-bootstrap'
 
 import { useI18n } from '../lib/i18n'
 import Title from '../components/Title'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
+import ButtonWithSpinner from '../components/ButtonWithSpinner'
 
 const Status = {
     Normal: 'Normal',
@@ -148,19 +149,12 @@ const SignUp: React.FC = () => {
                         {t`passwordNotMatch`}
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Button
+                <ButtonWithSpinner
                     onClick={onSubmit}
-                    disabled={status === Status.SigningUp}
+                    loading={status === Status.SigningUp}
                 >
-                    {status === Status.SigningUp && (
-                        <Spinner
-                            className="mr-2"
-                            animation="border"
-                            size="sm"
-                        />
-                    )}
                     {t`signUp`}
-                </Button>
+                </ButtonWithSpinner>
             </Layout>
         </>
     )

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Alert, Button, Form, Spinner } from 'react-bootstrap'
+import { Alert, Form } from 'react-bootstrap'
 import { Auth as Cognito } from 'aws-amplify'
 
 import { useI18n } from '../lib/i18n'
@@ -8,6 +8,7 @@ import Auth, { genAuthSession } from '../lib/auth'
 import Title from '../components/Title'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
+import ButtonWithSpinner from '../components/ButtonWithSpinner'
 
 const Status = {
     Normal: 'Normal',
@@ -112,20 +113,13 @@ const SignIn: React.FC = () => {
                             {t`enterPassword`}
                         </Form.Control.Feedback>
                     </Form.Group>
-                    <Button
+                    <ButtonWithSpinner
                         type="submit"
                         onClick={onSubmit}
-                        disabled={status === Status.SigningIn}
+                        loading={status === Status.SigningIn}
                     >
-                        {status === Status.SigningIn && (
-                            <Spinner
-                                className="mr-2"
-                                animation="border"
-                                size="sm"
-                            />
-                        )}
                         {t`signIn`}
-                    </Button>
+                    </ButtonWithSpinner>
                 </Form>
             </Layout>
         </>

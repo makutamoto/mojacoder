@@ -6,7 +6,7 @@ import gql from 'graphql-tag'
 import ReactMarkdown from 'react-markdown'
 import Tex from '@matejmazur/react-katex'
 import math from 'remark-math'
-import { Alert, Button, Spinner } from 'react-bootstrap'
+import { Alert } from 'react-bootstrap'
 import join from 'url-join'
 
 import { useI18n } from '../../../../../lib/i18n'
@@ -19,6 +19,7 @@ import { UserDetail } from '../../../../../lib/backend_types'
 import Sample from '../../../../../components/Sample'
 import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import Layout from '../../../../../components/Layout'
+import ButtonWithSpinner from '../../../../../components/ButtonWithSpinner'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
 const Status = {
@@ -110,20 +111,10 @@ const ProblemPage: React.FC<Props> = (props) => {
                                 value={code}
                                 onChange={setCode}
                             />
-                            <Button
-                                variant="primary"
-                                disabled={status === Status.Submitting}
+                            <ButtonWithSpinner
+                                loading={status === Status.Submitting}
                                 onClick={onSubmit}
-                            >
-                                {status === Status.Submitting && (
-                                    <Spinner
-                                        className="mr-3"
-                                        size="sm"
-                                        animation="border"
-                                    />
-                                )}
-                                {t`submit`}
-                            </Button>
+                            >{t`submit`}</ButtonWithSpinner>
                         </>
                     ) : (
                         <Alert variant="danger">{t`signInRequired`}</Alert>

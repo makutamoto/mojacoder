@@ -72,3 +72,7 @@ export interface UserDetail {
 export interface Query {
     user: UserDetail | null
 }
+
+export interface Mutation {
+    postComment: Comment
+}
