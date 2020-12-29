@@ -8,3 +8,8 @@
     margin-left: -16px;
     margin-right: -16px;
 }
+
+.sticky-bottom {
+    position: sticky;
+    bottom: 0;
+}

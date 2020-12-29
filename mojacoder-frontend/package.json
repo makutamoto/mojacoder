@@ -37,6 +37,7 @@
     "aws-amplify": "^3.3.3",
     "aws-appsync": "^4.0.1",
     "bootstrap": "^4.5.2",
+    "clsx": "^1.1.1",
     "codemirror": "^5.57.0",
     "copy-text-to-clipboard": "^2.2.0",
     "graphql": "^15.3.0",

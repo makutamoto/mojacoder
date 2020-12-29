@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import { Alert, Button, Media, Spinner } from 'react-bootstrap'
 import { ReplyIcon } from '@primer/octicons-react'
+import clsx from 'clsx'
 
 import Auth from '../../../../../lib/auth'
 import {
@@ -93,6 +94,21 @@ const PostComment = gql`
     }
 `
 
+const PostReply = gql`
+    mutation PostReply($input: PostReplyInput!) {
+        postReply(input: $input) {
+            replyID
+            datetime
+            user {
+                detail {
+                    screenName
+                }
+            }
+            content
+        }
+    }
+`
+
 interface Props {
     user?: UserDetail
 }
@@ -103,23 +119,45 @@ const ProblemPage: React.FC<Props> = (props) => {
     const { query } = useRouter()
     const [status, setStatus] = useState<Status>(Status.Normal)
     const [comments, setComments] = useState<Connection<Comment> | null>(null)
-    const [commentContent, setCommentContent] = useState('')
+    const [content, setContent] = useState('')
+    const [replyTargetID, setReplyTargetID] = useState<string | null>(null)
     const onPostComment = useCallback(() => {
         setStatus(Status.Posting)
-        invokeMutation(PostComment, {
-            input: {
-                problemID: query.problemID || '',
-                content: commentContent,
-            },
-        }).then((res) => {
-            const commentsClone = JSON.parse(
-                JSON.stringify(comments)
-            ) as typeof comments
-            commentsClone.items.push(res.postComment)
-            setComments(commentsClone)
-            setStatus(Status.Normal)
-        })
-    }, [query, commentContent, comments, setComments, setStatus])
+        if (replyTargetID) {
+            invokeMutation(PostReply, {
+                input: {
+                    commentID: replyTargetID,
+                    content: content,
+                },
+            }).then((res) => {
+                const commentsClone = JSON.parse(
+                    JSON.stringify(comments)
+                ) as typeof comments
+                for (const comment of commentsClone.items) {
+                    if (comment.commentID === replyTargetID) {
+                        comment.replies.items.push(res.postReply)
+                        break
+                    }
+                }
+                setComments(commentsClone)
+                setStatus(Status.Normal)
+            })
+        } else {
+            invokeMutation(PostComment, {
+                input: {
+                    problemID: query.problemID,
+                    content: content,
+                },
+            }).then((res) => {
+                const commentsClone = JSON.parse(
+                    JSON.stringify(comments)
+                ) as typeof comments
+                commentsClone.items.push(res.postComment)
+                setComments(commentsClone)
+                setStatus(Status.Normal)
+            })
+        }
+    }, [query, content, comments, setComments, setStatus, replyTargetID])
     useEffect(() => {
         invokeQueryWithApiKey(GetComments, {
             authorUsername: query.username || '',
@@ -139,7 +177,11 @@ const ProblemPage: React.FC<Props> = (props) => {
                     comments.items.map((comment) => (
                         <Media
                             key={comment.commentID}
-                            className="mb-2 p-3 rounded border"
+                            className={clsx(
+                                'mb-2 p-3 rounded border',
+                                replyTargetID === comment.commentID &&
+                                    'border-primary'
+                            )}
                         >
                             <Media.Body>
                                 <Username>{comment.user.detail}</Username>
@@ -172,7 +214,12 @@ const ProblemPage: React.FC<Props> = (props) => {
                                         </Media.Body>
                                     </Media>
                                 ))}
-                                <Button variant="outline-secondary">
+                                <Button
+                                    variant="outline-secondary"
+                                    onClick={() =>
+                                        setReplyTargetID(comment.commentID)
+                                    }
+                                >
                                     返信を追加
                                 </Button>
                             </Media.Body>
@@ -183,27 +230,43 @@ const ProblemPage: React.FC<Props> = (props) => {
                         <Spinner animation="border" />
                     </div>
                 )}
-                {auth ? (
-                    <div className="rounded border p-3">
-                        <Username>{auth}</Username>
-                        <hr className={style.bar} />
-                        <Editor
-                            value={commentContent}
-                            onChange={setCommentContent}
-                            lineNumbers
-                        />
-                        <ButtonWithSpinner
-                            loading={status === Status.Posting}
-                            onClick={onPostComment}
-                        >
-                            投稿
-                        </ButtonWithSpinner>
-                    </div>
-                ) : (
-                    <Alert variant="danger">
-                        コメントを投稿するにはサインインして下さい。
-                    </Alert>
-                )}
+                <div className={replyTargetID && style['sticky-bottom']}>
+                    {auth ? (
+                        <div className="bg-white rounded border p-3">
+                            {replyTargetID && (
+                                <div className="d-flex">
+                                    <span className="flex-grow-1">
+                                        返信を追加
+                                    </span>
+                                    <Button
+                                        variant="danger"
+                                        size="sm"
+                                        onClick={() => setReplyTargetID(null)}
+                                    >
+                                        キャンセル
+                                    </Button>
+                                </div>
+                            )}
+                            <Username>{auth}</Username>
+                            <hr className={style.bar} />
+                            <Editor
+                                value={content}
+                                onChange={setContent}
+                                lineNumbers
+                            />
+                            <ButtonWithSpinner
+                                loading={status === Status.Posting}
+                                onClick={onPostComment}
+                            >
+                                投稿
+                            </ButtonWithSpinner>
+                        </div>
+                    ) : (
+                        <Alert variant="danger">
+                            コメントを投稿するにはサインインして下さい。
+                        </Alert>
+                    )}
+                </div>
             </Layout>
         </>
     )
