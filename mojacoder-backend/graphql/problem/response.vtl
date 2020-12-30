@@ -1,4 +1,4 @@
-#if($util.isNull($context.arguments.input.slug))
+#if($util.isNull($context.arguments.slug))
     #if($context.source.userID == $context.result.userID)
         $util.toJson({"id": $context.result.id, "slug": $context.result.slug, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "likeCount": $context.result.likeCount, "commentCount": $context.result.commentCount, "statement": $context.result.statement, "testcaseNames": $context.result.testcaseNames, "submission": $context.result.submission, "submissions": $context.result.submissions})
     #else
