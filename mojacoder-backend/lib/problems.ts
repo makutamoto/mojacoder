@@ -34,6 +34,28 @@ export class Problems extends cdk.Construct {
                 type: AttributeType.STRING,
             },
         });
+        problemTable.addGlobalSecondaryIndex({
+            indexName: 'slug-index',
+            partitionKey: {
+                name: 'userID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'slug',
+                type: AttributeType.STRING,
+            },
+        });
+        const slugTable = new Table(this, 'slug-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
+            partitionKey: {
+                name: 'userID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'slug',
+                type: AttributeType.STRING,
+            },
+        });
         const likersTable = new Table(this, 'likers-table', {
             billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
@@ -99,15 +121,16 @@ export class Problems extends cdk.Construct {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
             environment: {
-                TABLE_NAME: problemTable.tableName,
+                PROBLEM_TABLE_NAME: problemTable.tableName,
+                SLUG_TABLE_NAME: slugTable.tableName,
                 POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
                 TESTCASES_BUCKET_NAME: this.testcases.bucketName,
                 TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
             },
         });
         postedProblemsCreatedNotification.addToRolePolicy(new PolicyStatement({
-            actions: ['s3:GetObject', 's3:PutObject', 'dynamodb:UpdateItem'],
-            resources: [postedProblems.bucketArn + '/*', this.testcases.bucketArn + '/*', testcasesForView.bucketArn + '/*', problemTable.tableArn],
+            actions: ['s3:GetObject', 's3:PutObject', 'dynamodb:PutItem', 'dynamodb:UpdateItem'],
+            resources: [postedProblems.bucketArn + '/*', this.testcases.bucketArn + '/*', testcasesForView.bucketArn + '/*', problemTable.tableArn, slugTable.tableArn],
         }))
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'
@@ -135,12 +158,6 @@ export class Problems extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/outTestcase/response.vtl')),
         })
         const problemTableDataSource = props.api.addDynamoDbDataSource('problem_table', problemTable);
-        problemTableDataSource.createResolver({
-            typeName: 'Mutation',
-            fieldName: 'postProblem',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/postProblem/response.vtl')),
-        });
         problemTableDataSource.createResolver({
             typeName: 'UserDetail',
             fieldName: 'problem',

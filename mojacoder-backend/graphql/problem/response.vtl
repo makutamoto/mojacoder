@@ -1,5 +1,14 @@
-#if($context.source.userID == $context.result.userID)
-    $util.toJson({"id": $context.result.id, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "likeCount": $context.result.likeCount, "commentCount": $context.result.commentCount, "statement": $context.result.statement, "testcaseNames": $context.result.testcaseNames, "submission": $context.result.submission, "submissions": $context.result.submissions})
+#if($util.isNull($context.arguments.input.slug)
+    #if($context.source.userID == $context.result.userID)
+        $util.toJson({"id": $context.result.id, "slug": $context.result.slug, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "likeCount": $context.result.likeCount, "commentCount": $context.result.commentCount, "statement": $context.result.statement, "testcaseNames": $context.result.testcaseNames, "submission": $context.result.submission, "submissions": $context.result.submissions})
+    #else
+        null
+    #end
 #else
-    null
+    #if($util.isNull($context.result) || $context.result.scannedCount == 0)
+        null
+    #else
+        #set($item = $context.result.items[0])
+        $util.toJson({"id": $item.id, "slug": $item.slug, "user": { "userID": $item.userID }, "datetime": $item.datetime, "status": $item.status, "title": $item.title, "likeCount": $item.likeCount, "commentCount": $item.commentCount, "statement": $item.statement, "testcaseNames": $item.testcaseNames, "submission": $item.submission, "submissions": $item.submissions})
+    #end
 #end

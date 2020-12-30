@@ -2,7 +2,10 @@
     "version" : "2018-05-29",
     "operation" : "Query",
     "query" : {
-        "expression" : "userID = :userID",
+        "expression" : "#userID = :userID",
+        "expressionNames" : {
+            "#userID" : 'userID'
+        },
         "expressionValues" : {
             ":userID" : $util.dynamodb.toDynamoDBJson($context.source.userID)
         }

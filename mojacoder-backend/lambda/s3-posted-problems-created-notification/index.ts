@@ -2,10 +2,13 @@ import { S3Handler } from 'aws-lambda'
 import { DynamoDB, S3 } from 'aws-sdk'
 import * as JSZip from 'jszip'
 import join from 'url-join'
-import { posix, ParsedPath } from 'path'
+import { posix } from 'path'
+import { v4 as uuid } from 'uuid'
 
-const TABLE_NAME = process.env.TABLE_NAME as string;
-if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
+const PROBLEM_TABLE_NAME = process.env.PROBLEM_TABLE_NAME as string;
+if(PROBLEM_TABLE_NAME === undefined) throw "PROBLEM_TABLE_NAME is not defined.";
+const SLUG_TABLE_NAME = process.env.SLUG_TABLE_NAME as string;
+if(SLUG_TABLE_NAME === undefined) throw "SLUG_TABLE_NAME is not defined.";
 const POSTED_PROBLEMS_BUCKET_NAME = process.env.POSTED_PROBLEMS_BUCKET_NAME as string;
 if(POSTED_PROBLEMS_BUCKET_NAME === undefined) throw "POSTED_PROBLEMS_BUCKET_NAME is not defined.";
 const TESTCASES_BUCKET_NAME = process.env.TESTCASES_BUCKET_NAME as string;
@@ -65,25 +68,8 @@ async function parseZip(data: Buffer): Promise<Problem> {
     }
 }
 
-function putObject(bucket: string, key: string, body: Buffer) {
-    return new Promise((resolve, reject) => {
-        s3.putObject({
-            Bucket: bucket,
-            Key: key,
-            Body: body,
-        }, (err) => {
-            if(err) {
-                console.error(err);
-                reject("Failed to update testcases.");
-                return;
-            }
-            resolve();
-        });
-    })
-}
-
-async function uploadToS3(keyPath: ParsedPath, testcases: Buffer, testcasesDir: JSZip) {
-    await putObject(TESTCASES_BUCKET_NAME, keyPath.base, testcases)
+async function uploadToS3(problemID: string, testcases: Buffer, testcasesDir: JSZip) {
+    await s3.putObject({ Bucket: TESTCASES_BUCKET_NAME, Key: problemID + '.zip', Body: testcases }).promise()
     const inTestcases = testcasesDir.folder('in')!
     const outTestcases = testcasesDir.folder('out')!
     const inTestcaseFiles = inTestcases.filter((_, file) => !file.dir)
@@ -92,57 +78,124 @@ async function uploadToS3(keyPath: ParsedPath, testcases: Buffer, testcasesDir: 
         const outTestcaseFile = outTestcases.file(base)
         if(outTestcaseFile === null || outTestcaseFile.dir) continue
         const inTestcaseBuffer = await file.async("nodebuffer")
-        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'in', base), inTestcaseBuffer)
+        await s3.putObject({ Bucket: TESTCASES_FOR_VIEW_BUCKET_NAME, Key: join(problemID, 'in', base), Body: inTestcaseBuffer }).promise()
         const outTestcaseBuffer = await outTestcaseFile.async("nodebuffer")
-        await putObject(TESTCASES_FOR_VIEW_BUCKET_NAME, join(keyPath.name, 'out', base), outTestcaseBuffer)
+        await s3.putObject({ Bucket: TESTCASES_FOR_VIEW_BUCKET_NAME, Key: join(problemID, 'out', base), Body: outTestcaseBuffer }).promise()
     }
 }
 
-function deployProblem(key: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-        s3.getObject({
-            Bucket: POSTED_PROBLEMS_BUCKET_NAME,
-            Key: key,
-        }, (err, data) => {
-            if(err) {
-                console.error(err);
-                reject("Internal Error Occurred.");
-                return;
-            }
-            parseZip(data.Body as Buffer).then((problem) => {
-                const keyPath = posix.parse(key);
-                dynamodb.updateItem({
-                    TableName: TABLE_NAME,
-                    Key: {
-                        id: {
-                            S: keyPath.name,
+async function deployProblem(key: string): Promise<void> {
+    const data = await s3.getObject({
+        Bucket: POSTED_PROBLEMS_BUCKET_NAME,
+        Key: key,
+    }).promise();
+    const problem = await parseZip(data.Body as Buffer);
+    const keyPath = posix.parse(key);
+    const userID = keyPath.base;
+    const slug = keyPath.name;
+    const slugRecord = await dynamodb.getItem({
+        TableName: SLUG_TABLE_NAME,
+        Key: {
+            userID: {
+                S: userID,
+            },
+            slug: {
+                S: slug,
+            },
+        },
+    }).promise();
+    let problemID: string
+    if(slugRecord.Item) {
+        problemID = slugRecord.Item.problemID.S!;
+        await dynamodb.updateItem({
+            TableName: PROBLEM_TABLE_NAME,
+            Key: {
+                id: {
+                    S: problemID,
+                },
+            },
+            ExpressionAttributeValues: {
+                ":title": {
+                    S: problem.title,
+                },
+                ":statement": {
+                    S: problem.statement,
+                },
+                ":testcaseNames": {
+                    L: problem.testcaseNames.map((name) => ({ S: name })),
+                },
+            },
+            UpdateExpression: "SET title = :title, statement = :statement, testcaseNames = :testcaseNames",
+        }).promise();
+    } else {
+        problemID = uuid();
+        await dynamodb.transactWriteItems({
+            TransactItems: [
+                {
+                    Put: {
+                        TableName: SLUG_TABLE_NAME,
+                        Item: {
+                            userID: {
+                                S: userID,
+                            },
+                            slug: {
+                                S: slug,
+                            },
+                            problemID: {
+                                S: problemID,
+                            },
+                        },
+                        ConditionExpression: 'attribute_not_exists(#problemID)',
+                        ExpressionAttributeNames: {
+                            '#problemID': 'problemID',
                         },
                     },
-                    ExpressionAttributeValues: {
-                        ":title": {
-                            S: problem.title,
+                },
+                {
+                    Put: {
+                        TableName: PROBLEM_TABLE_NAME,
+                        Item: {
+                            id: {
+                                S: problemID,
+                            },
+                            slug: {
+                                S: slug,
+                            },
+                            userID: {
+                                S: userID,
+                            },
+                            datetime: {
+                                S: (new Date()).toISOString(),
+                            },
+                            status: {
+                                S: 'PENDING',
+                            },
+                            likeCount: {
+                                N: '0',
+                            },
+                            commentCount: {
+                                N: '0',
+                            },
+                            title: {
+                                S: problem.title,
+                            },
+                            statement: {
+                                S: problem.statement,
+                            },
+                            testcaseNames: {
+                                L: problem.testcaseNames.map((name) => ({ S: name })),
+                            },
                         },
-                        ":statement": {
-                            S: problem.statement,
-                        },
-                        ":testcaseNames": {
-                            L: problem.testcaseNames.map((name) => ({ S: name })),
+                        ConditionExpression: 'attribute_not_exists(#id)',
+                        ExpressionAttributeNames: {
+                            '#id': 'id',
                         },
                     },
-                    UpdateExpression: "SET title = :title, statement = :statement, testcaseNames = :testcaseNames",
-                }, (err) => {
-                    if(err) {
-                        console.error(err);
-                        reject("Failed to update Database.");
-                        return;
-                    }
-                    uploadToS3(keyPath, problem.testcases, problem.testcasesDir).then(() => {
-                        resolve()
-                    }).catch((err) => reject(err))
-                });
-            }).catch((err) => reject(err));
-        });
-    });
+                },
+            ],
+        }).promise();
+    }
+    await uploadToS3(problemID, problem.testcases, problem.testcasesDir);
 }
 
 export const handler: S3Handler = async (event) => {

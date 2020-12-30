@@ -20,7 +20,7 @@ type User {
 type UserDetail {
   userID: ID! @aws_cognito_user_pools @aws_api_key
   screenName: String! @aws_cognito_user_pools @aws_api_key
-  problem(id: ID!): Problem @aws_cognito_user_pools @aws_api_key
+  problem(id: ID, slug: String): Problem @aws_cognito_user_pools @aws_api_key
   problems(nextToken: String): ProblemConnection! @aws_cognito_user_pools @aws_api_key
 }
 
@@ -68,6 +68,7 @@ type ProblemConnection {
 
 type Problem {
   id: ID! @aws_cognito_user_pools @aws_api_key
+  slug: String! @aws_cognito_user_pools @aws_api_key
   user: User! @aws_cognito_user_pools @aws_api_key
   datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
   status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
@@ -136,7 +137,6 @@ type UpdateSubmissionOutput {
 type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
-  postProblem: Problem! @aws_cognito_user_pools
   submitCode(input: SubmitCodeInput!): Submission! @aws_cognito_user_pools
   updateSubmission(input: UpdateSubmissionInput!): UpdateSubmissionOutput! @aws_iam
   likeProblem(input: LikeProblemInput!): Boolean! @aws_cognito_user_pools

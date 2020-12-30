@@ -1,3 +1,4 @@
+#if($util.isNull($context.arguments.slug))
 {
     "version" : "2018-05-29",
     "operation" : "GetItem",
@@ -5,3 +6,22 @@
         "id" : $util.dynamodb.toDynamoDBJson($context.arguments.id),
     },
 }
+#else
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "#slug = :slug AND #userID = :userID",
+        "expressionNames" : {
+            "#userID": "userID",
+            "#slug" : 'slug'
+        },
+        "expressionValues" : {
+            ":userID": $util.dynamodb.toDynamoDBJson($context.source.userID),
+            ":slug" : $util.dynamodb.toDynamoDBJson($context.input.arguments.slug)
+        }
+    },
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
+    "index" : "slug-index"
+}
+#end
