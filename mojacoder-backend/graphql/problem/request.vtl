@@ -18,7 +18,7 @@
         },
         "expressionValues" : {
             ":userID": $util.dynamodb.toDynamoDBJson($context.source.userID),
-            ":slug" : $util.dynamodb.toDynamoDBJson($context.input.arguments.slug)
+            ":slug" : $util.dynamodb.toDynamoDBJson($context.arguments.slug)
         }
     },
     "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),

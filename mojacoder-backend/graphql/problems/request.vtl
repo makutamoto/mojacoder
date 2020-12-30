@@ -4,7 +4,7 @@
     "query" : {
         "expression" : "#userID = :userID",
         "expressionNames" : {
-            "#userID" : 'userID'
+            "#userID" : "userID"
         },
         "expressionValues" : {
             ":userID" : $util.dynamodb.toDynamoDBJson($context.source.userID)
