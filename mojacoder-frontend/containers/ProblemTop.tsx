@@ -167,7 +167,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                                 )
                             )}`}
                         >
-                            Tweet
+                            Tweet ({defaultLocale})
                         </a>
                     </div>
                 </div>
