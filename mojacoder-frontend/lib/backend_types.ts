@@ -23,6 +23,7 @@ export interface Comment {
 
 export interface Problem {
     id: string
+    slug: string
     title: string
     user: User
     statement: string

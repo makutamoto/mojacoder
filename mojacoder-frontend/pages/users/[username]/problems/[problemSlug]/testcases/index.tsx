@@ -63,9 +63,10 @@ const Submissions: React.FC<Props> = (props) => {
 export default Submissions
 
 const GetTestcaseNames = gql`
-    query GetTestcaseNames($username: String!, $problemID: ID!) {
+    query GetTestcaseNames($username: String!, $problemSlug: String!) {
         user(username: $username) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
+                id
                 title
                 user {
                     detail {
@@ -80,7 +81,7 @@ const GetTestcaseNames = gql`
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetTestcaseNames, {
         username: params.username || '',
-        problemID: params.problemID || '',
+        problemSlug: params.problemSlug || '',
     })
     if (res.user === null || res.user.problem === null) {
         return {

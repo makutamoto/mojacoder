@@ -58,7 +58,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             input: {
                 lang: code.lang,
                 code: code.code,
-                problemID: router.query.problemID || '',
+                problemID: user.problem?.id || '',
             },
         }).then(() => {
             router.push(join(router.asPath, 'submissions'))
@@ -131,9 +131,10 @@ const ProblemPage: React.FC<Props> = (props) => {
 export default ProblemPage
 
 const GetProblem = gql`
-    query GetProblem($username: String!, $id: ID!) {
+    query GetProblem($username: String!, $problemSlug: String!) {
         user(username: $username) {
-            problem(id: $id) {
+            problem(slug: $problemSlug) {
+                id
                 title
                 statement
                 user {
@@ -148,7 +149,7 @@ const GetProblem = gql`
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblem, {
         username: params.username || '',
-        id: params.problemID || '',
+        problemSlug: params.problemSlug || '',
     })
     if (res.user === null || res.user.problem === null) {
         return {

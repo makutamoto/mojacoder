@@ -81,10 +81,10 @@ const UserPage: React.FC<Props> = (props) => {
                     </thead>
                     <tbody>
                         {user?.problems.items.map((item) => (
-                            <tr key={item.id}>
+                            <tr key={item.slug}>
                                 <td className="text-nowrap">
                                     <Link
-                                        href={`/users/${user?.screenName}/problems/${item.id}`}
+                                        href={`/users/${user?.screenName}/problems/${item.slug}`}
                                     >
                                         <a>{item.title}</a>
                                     </Link>
@@ -110,7 +110,7 @@ const GetUser = gql`
             screenName
             problems {
                 items {
-                    id
+                    slug
                     title
                     likeCount
                 }

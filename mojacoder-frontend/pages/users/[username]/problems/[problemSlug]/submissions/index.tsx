@@ -20,11 +20,11 @@ import ProblemTop from '../../../../../../containers/ProblemTop'
 const GetSubmissions = gql`
     query GetSubmissions(
         $authorUsername: String!
-        $problemID: ID!
+        $problemSlug: String!
         $userID: ID
     ) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
                 submissions(userID: $userID) {
                     items {
                         id
@@ -68,7 +68,7 @@ const Submissions: React.FC<Props> = (props) => {
                 if (!me || auth) {
                     invokeQueryWithApiKey(GetSubmissions, {
                         authorUsername: query.username || '',
-                        problemID: query.problemID || '',
+                        problemSlug: query.problemSlug || '',
                         userID: me ? auth.userID : null,
                     }).then((data) => {
                         const items = data.user?.problem.submissions.items
@@ -141,9 +141,10 @@ const Submissions: React.FC<Props> = (props) => {
 export default Submissions
 
 const GetProblemOverview = gql`
-    query GetProblemOverview($username: String!, $id: ID!) {
+    query GetProblemOverview($username: String!, $problemSlug: String!) {
         user(username: $username) {
-            problem(id: $id) {
+            problem(slug: $problemSlug) {
+                id
                 title
                 user {
                     detail {
@@ -157,7 +158,7 @@ const GetProblemOverview = gql`
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblemOverview, {
         username: params.username || '',
-        id: params.problemID || '',
+        problemSlug: params.problemSlug || '',
     })
     if (res.user === null || res.user.problem === null) {
         return {

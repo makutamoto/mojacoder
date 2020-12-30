@@ -38,12 +38,13 @@ export default Submissions
 const GetProblemOverview = gql`
     query GetProblemOverview(
         $authorUsername: String!
-        $problemID: ID!
+        $problemSlug: String!
         $testcaseName: String!
     ) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
                 title
+                id
                 user {
                     detail {
                         screenName
@@ -58,11 +59,12 @@ const GetProblemOverview = gql`
 const GetOutTestcase = gql`
     query GetOutTestcase(
         $authorUsername: String!
-        $problemID: ID!
+        $problemSlug: String!
         $testcaseName: String!
     ) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
+                id
                 outTestcase(name: $testcaseName)
             }
         }
@@ -71,7 +73,7 @@ const GetOutTestcase = gql`
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const resIn = await invokeQueryWithApiKey(GetProblemOverview, {
         authorUsername: params.username || '',
-        problemID: params.problemID || '',
+        problemSlug: params.problemSlug || '',
         testcaseName: params.testcaseName || '',
     })
     if (
@@ -85,7 +87,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     }
     const resOut = await invokeQueryWithApiKey(GetOutTestcase, {
         authorUsername: params.username || '',
-        problemID: params.problemID || '',
+        problemSlug: params.problemSlug || '',
         testcaseName: params.testcaseName || '',
     })
     if (

@@ -42,9 +42,10 @@ const ProblemPage: React.FC<Props> = (props) => {
 export default ProblemPage
 
 const GetProblem = gql`
-    query GetProblem($username: String!, $id: ID!) {
+    query GetProblem($username: String!, $problemSlug: String!) {
         user(username: $username) {
-            problem(id: $id) {
+            problem(slug: $problemSlug) {
+                id
                 title
                 likers {
                     items {
@@ -66,7 +67,7 @@ const GetProblem = gql`
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblem, {
         username: params.username || '',
-        id: params.problemID || '',
+        problemSlug: params.problemSlug || '',
     })
     if (res.user === null || res.user.problem === null) {
         return {

@@ -25,9 +25,9 @@ import {
 } from '@primer/octicons-react'
 
 const GetIfLiked = gql`
-    query GetIfLiked($authorUsername: String!, $problemID: ID!) {
+    query GetIfLiked($authorUsername: String!, $problemSlug: String!) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
                 likedByMe
                 likeCount
                 commentCount
@@ -36,9 +36,9 @@ const GetIfLiked = gql`
     }
 `
 const GetLikeCount = gql`
-    query GetLikeCount($authorUsername: String!, $problemID: ID!) {
+    query GetLikeCount($authorUsername: String!, $problemSlug: String!) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
                 likeCount
                 commentCount
             }
@@ -65,7 +65,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
         '/users',
         (query.username || '') as string,
         'problems',
-        (query.problemID || '') as string
+        (query.problemSlug || '') as string
     )
     const [likedByMe, setLikedByMe] = useState(false)
     const [likeCount, setLikeCount] = useState<number | null>(null)
@@ -74,7 +74,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
         if (auth) {
             invokeMutation(LikeProblem, {
                 input: {
-                    problemID: query.problemID || '',
+                    problemID: problem?.id || '',
                     like: !likedByMe,
                 },
             }).then(() => {
@@ -82,12 +82,12 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                 setLikedByMe(!likedByMe)
             })
         }
-    }, [auth, query, likedByMe])
+    }, [auth, query, likedByMe, problem])
     useEffect(() => {
         if (auth) {
             invokeQuery(GetIfLiked, {
                 authorUsername: query.username || '',
-                problemID: query.problemID || '',
+                problemSlug: query.problemSlug || '',
             }).then((res) => {
                 setLikeCount(res.user?.problem.likeCount || 0)
                 setLikedByMe(res.user?.problem.likedByMe || false)
@@ -96,7 +96,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
         } else {
             invokeQueryWithApiKey(GetLikeCount, {
                 authorUsername: query.username || '',
-                problemID: query.problemID || '',
+                problemSlug: query.problemSlug || '',
             }).then((res) => {
                 setLikeCount(res.user?.problem.likeCount || 0)
                 setLikedByMe(false)

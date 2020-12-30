@@ -24,11 +24,12 @@ import ProblemTop from '../../../../../../containers/ProblemTop'
 const GetSubmission = gql`
     query GetSubmission(
         $authorUsername: String!
-        $problemID: ID!
+        $problemSlug: String!
         $submissionID: ID!
     ) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
+                id
                 title
                 user {
                     detail {
@@ -86,7 +87,7 @@ const Submissions: React.FC<Props> = (props) => {
             ) {
                 invokeQueryWithApiKey(GetSubmission, {
                     authorUsername: query.username || '',
-                    problemID: query.problemID || '',
+                    problemSlug: query.problemSlug || '',
                     submissionID: query.submissionID || '',
                 }).then((data) => {
                     const submission = data.user.problem.submission
@@ -202,7 +203,7 @@ export default Submissions
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const { user } = await invokeQueryWithApiKey(GetSubmission, {
         authorUsername: params.username || '',
-        problemID: params.problemID || '',
+        problemSlug: params.problemSlug || '',
         submissionID: params.submissionID || '',
     })
     if (

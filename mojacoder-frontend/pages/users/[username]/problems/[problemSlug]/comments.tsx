@@ -33,9 +33,9 @@ const Status = {
 type Status = typeof Status[keyof typeof Status]
 
 const GetComments = gql`
-    query GetComments($authorUsername: String!, $problemID: ID!) {
+    query GetComments($authorUsername: String!, $problemSlug: String!) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
                 comments {
                     items {
                         commentID
@@ -147,7 +147,7 @@ const ProblemPage: React.FC<Props> = (props) => {
         } else {
             invokeMutation(PostComment, {
                 input: {
-                    problemID: query.problemID,
+                    problemID: user.problem?.id || '',
                     content: content,
                 },
             }).then((res) => {
@@ -164,7 +164,7 @@ const ProblemPage: React.FC<Props> = (props) => {
     useEffect(() => {
         invokeQueryWithApiKey(GetComments, {
             authorUsername: query.username || '',
-            problemID: query.problemID || '',
+            problemSlug: query.problemSlug || '',
         }).then((res) => {
             const comments = res.user?.problem.comments || null
             setComments(comments)
@@ -277,9 +277,10 @@ const ProblemPage: React.FC<Props> = (props) => {
 export default ProblemPage
 
 const GetProblem = gql`
-    query GetProblem($authorUsername: String!, $problemID: ID!) {
+    query GetProblem($authorUsername: String!, $problemSlug: String!) {
         user(username: $authorUsername) {
-            problem(id: $problemID) {
+            problem(slug: $problemSlug) {
+                id
                 title
                 user {
                     detail {
@@ -293,7 +294,7 @@ const GetProblem = gql`
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblem, {
         authorUsername: params.username || '',
-        problemID: params.problemID || '',
+        problemSlug: params.problemSlug || '',
     })
     if (res.user === null || res.user.problem === null) {
         return {
