@@ -129,7 +129,7 @@ export class Problems extends cdk.Construct {
             },
         });
         postedProblemsCreatedNotification.addToRolePolicy(new PolicyStatement({
-            actions: ['s3:GetObject', 's3:PutObject', 'dynamodb:PutItem', 'dynamodb:UpdateItem'],
+            actions: ['s3:GetObject', 's3:PutObject', 'dynamodb:PutItem', 'dynamodb:UpdateItem', 'dynamodb:GetItem'],
             resources: [postedProblems.bucketArn + '/*', this.testcases.bucketArn + '/*', testcasesForView.bucketArn + '/*', problemTable.tableArn, slugTable.tableArn],
         }))
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
