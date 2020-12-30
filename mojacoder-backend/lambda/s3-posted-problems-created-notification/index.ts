@@ -91,7 +91,7 @@ async function deployProblem(key: string): Promise<void> {
     }).promise();
     const problem = await parseZip(data.Body as Buffer);
     const keyPath = posix.parse(key);
-    const userID = keyPath.base;
+    const userID = keyPath.dir;
     const slug = keyPath.name;
     const slugRecord = await dynamodb.getItem({
         TableName: SLUG_TABLE_NAME,
