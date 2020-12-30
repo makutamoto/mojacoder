@@ -8,7 +8,7 @@
     "python3.8": {
         "name": "Python 3.8",
         "filename": "main.py",
-        "runCommand": "python3 ./main.py"
+        "runCommand": "python3.8 ./main.py"
     },
     "gcc": {
         "filename": "main.c",
