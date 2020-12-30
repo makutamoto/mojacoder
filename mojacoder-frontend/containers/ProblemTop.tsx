@@ -59,7 +59,7 @@ export interface ProblemTopProps {
 const ProblemTop: React.FC<ProblemTopProps> = (props) => {
     const { t } = useI18n('problemTab')
     const { auth } = Auth.useContainer()
-    const { query, locale } = useRouter()
+    const { query, defaultLocale, locale } = useRouter()
     const { activeKey, problem } = props
     const basePath = join(
         '/users',
@@ -160,7 +160,11 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                         )}
                         <a
                             href={`https://twitter.com/intent/tweet?hashtags=MojaCoder&url=${encodeURIComponent(
-                                join(process.env.ORIGIN, locale, basePath)
+                                join(
+                                    process.env.ORIGIN,
+                                    locale === defaultLocale ? '' : locale,
+                                    basePath
+                                )
                             )}`}
                         >
                             Tweet

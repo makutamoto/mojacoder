@@ -67,11 +67,15 @@ const ProblemPage: React.FC<Props> = (props) => {
     return (
         <>
             <Head>
-                <meta property="twitter:card" content="summary" />
-                <meta
-                    property="og:title"
-                    content={`${user?.problem.title} | MojaCoder`}
-                />
+                {user && (
+                    <>
+                        <meta property="twitter:card" content="summary" />
+                        <meta
+                            property="og:title"
+                            content={`${user.problem.title} | MojaCoder`}
+                        />
+                    </>
+                )}
             </Head>
             <ProblemTop activeKey="problem" problem={user?.problem} />
             <Layout>
