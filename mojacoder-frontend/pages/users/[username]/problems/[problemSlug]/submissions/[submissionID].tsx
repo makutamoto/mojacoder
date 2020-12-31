@@ -37,6 +37,7 @@ const GetSubmission = gql`
                     }
                 }
                 submission(id: $submissionID) {
+                    id
                     user {
                         detail {
                             screenName
