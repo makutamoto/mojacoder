@@ -4,7 +4,7 @@ import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
-import { Bucket } from '@aws-cdk/aws-s3'
+import { Bucket, HttpMethods } from '@aws-cdk/aws-s3'
 import { LambdaDestination } from '@aws-cdk/aws-s3-notifications'
 
 export interface ProblemsProps {
@@ -114,7 +114,14 @@ export class Problems extends cdk.Construct {
                 type: AttributeType.STRING,
             },
         });
-        const postedProblems = new Bucket(this, 'postedProblems');
+        const postedProblems = new Bucket(this, 'postedProblems', {
+            cors: [
+                {
+                    allowedMethods: [HttpMethods.PUT],
+                    allowedOrigins: ['mojacoder.vercel.app', 'localhost:3000'],
+                }
+            ]
+        });
         this.testcases = new Bucket(this, 'testcases');
         const testcasesForView = new Bucket(this, 'testcases-for-view');
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
