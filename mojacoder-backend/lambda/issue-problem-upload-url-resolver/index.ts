@@ -14,6 +14,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
         Bucket: POSTED_PROBLEMS_BUCKET_NAME,
         Key: `${userID}/${problemName}.zip`,
         Expires: 60,
+        ContentType: 'application/zip',
     })
     return signedUrl
 };
