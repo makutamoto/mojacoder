@@ -6,9 +6,10 @@ if(POSTED_PROBLEMS_BUCKET_NAME === undefined) throw "POSTED_PROBLEMS_BUCKET_NAME
 
 const s3 = new S3({apiVersion: '2006-03-01'});
 
-export const handler: AppSyncResolverHandler<{ problemName: string }, string> = async (event) => {
+export const handler: AppSyncResolverHandler<{ input: { problemName: string } }, string> = async (event) => {
     const userID = (event.identity as AppSyncIdentityCognito).sub
-    const problemName = event.arguments.problemName.replace(/\//g, '')
+    const problemName = event.arguments.input.problemName.replace(/\//g, '')
+    if(problemName.length === 0) throw "Empty problem slugs are not allowed."
     const signedUrl = await s3.getSignedUrlPromise('putObject', {
         Bucket: POSTED_PROBLEMS_BUCKET_NAME,
         Key: `${userID}/${problemName}.zip`,
