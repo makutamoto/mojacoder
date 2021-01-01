@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Alert, Button, Spinner, Table } from 'react-bootstrap'
+import { Alert, Button, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
@@ -10,6 +10,7 @@ import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
+import AlertWithSpinner from '../components/AlertWithSpinner'
 
 import Session from '../lib/session'
 
@@ -132,18 +133,13 @@ const Playground: React.FC = () => {
                                 {t`run`}
                             </Button>
                         </div>
-                        <Alert
+                        <AlertWithSpinner
                             show={status === Status.Waiting}
                             className="my-4"
                             variant="primary"
                         >
-                            <Spinner
-                                className="mr-3"
-                                size="sm"
-                                animation="border"
-                            />
                             {t`runningCode`}
-                        </Alert>
+                        </AlertWithSpinner>
                         {status === Status.Received && (
                             <Table className="my-4" bordered striped hover>
                                 <tbody>

@@ -7,7 +7,7 @@ import IconWithText from '../components/IconWithText'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
 
-import styles from './index.module.css'
+import styles from '../css/image.module.css'
 
 const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'

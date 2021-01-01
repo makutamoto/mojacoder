@@ -77,4 +77,5 @@ export interface Query {
 export interface Mutation {
     postComment: Comment
     postReply: Reply
+    issueProblemUploadUrl: string
 }
