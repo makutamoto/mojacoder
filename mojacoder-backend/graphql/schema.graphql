@@ -4,50 +4,50 @@
   subscription: Subscription
 }
 
-type Playground {
-  code: String! @aws_cognito_user_pools
-  lang: String! @aws_cognito_user_pools
-  sessionID: ID! @aws_cognito_user_pools
-  stdin: String! @aws_cognito_user_pools
-  userID: ID! @aws_cognito_user_pools
+type Playground @aws_cognito_user_pools {
+  code: String!
+  lang: String!
+  sessionID: ID!
+  stdin: String!
+  userID: ID!
 }
 
-type User {
-  userID: ID! @aws_cognito_user_pools @aws_api_key
-  detail: UserDetail @aws_cognito_user_pools @aws_api_key
+type User @aws_cognito_user_pools @aws_api_key {
+  userID: ID!
+  detail: UserDetail
 }
 
-type UserDetail {
-  userID: ID! @aws_cognito_user_pools @aws_api_key
-  screenName: String! @aws_cognito_user_pools @aws_api_key
-  problem(id: ID, slug: String): Problem @aws_cognito_user_pools @aws_api_key
-  problems(nextToken: String): ProblemConnection! @aws_cognito_user_pools @aws_api_key
+type UserDetail @aws_cognito_user_pools @aws_api_key {
+  userID: ID!
+  screenName: String!
+  problem(id: ID, slug: String): Problem
+  problems(nextToken: String): ProblemConnection!
 }
 
-type ReplyConnection {
-  items: [Reply]! @aws_cognito_user_pools @aws_api_key
-  nextToken: String @aws_cognito_user_pools @aws_api_key
+type ReplyConnection @aws_cognito_user_pools @aws_api_key {
+  items: [Reply]!
+  nextToken: String
 }
 
-type Reply {
-  replyID: ID! @aws_cognito_user_pools @aws_api_key
-  datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
-  user: User! @aws_cognito_user_pools @aws_api_key
-  content: String! @aws_cognito_user_pools @aws_api_key
+type Reply @aws_cognito_user_pools @aws_api_key {
+  replyID: ID!
+  datetime: AWSDateTime!
+  user: User!
+  content: String!
 }
 
-type CommentConnection {
-  items: [Comment]! @aws_cognito_user_pools @aws_api_key
-  nextToken: String @aws_cognito_user_pools @aws_api_key
+type CommentConnection @aws_cognito_user_pools @aws_api_key {
+  items: [Comment]!
+  nextToken: String
 }
 
-type Comment {
-  commentID: ID! @aws_cognito_user_pools @aws_api_key
-  datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
-  user: User! @aws_cognito_user_pools @aws_api_key
-  content: String! @aws_cognito_user_pools @aws_api_key
-  replyCount: Int! @aws_cognito_user_pools @aws_api_key
-  replies: ReplyConnection! @aws_cognito_user_pools @aws_api_key
+type Comment @aws_cognito_user_pools @aws_api_key {
+  commentID: ID!
+  datetime: AWSDateTime!
+  user: User!
+  content: String!
+  replyCount: Int!
+  replies: ReplyConnection!
 }
 
 type LikerConnection {
@@ -66,24 +66,24 @@ type ProblemConnection {
 	nextToken: String
 }
 
-type Problem {
-  id: ID! @aws_cognito_user_pools @aws_api_key
-  slug: String! @aws_cognito_user_pools @aws_api_key
-  user: User! @aws_cognito_user_pools @aws_api_key
-  datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
-  status: ProblemStatus! @aws_cognito_user_pools @aws_api_key
-  title: String @aws_cognito_user_pools @aws_api_key
+type Problem @aws_cognito_user_pools @aws_api_key {
+  id: ID!
+  slug: String!
+  user: User!
+  datetime: AWSDateTime!
+  status: ProblemStatus!
+  title: String
   likedByMe: Boolean! @aws_cognito_user_pools
-  likeCount: Int! @aws_cognito_user_pools @aws_api_key
-  likers: LikerConnection! @aws_cognito_user_pools @aws_api_key
-  commentCount: Int! @aws_cognito_user_pools @aws_api_key
-  comments: CommentConnection! @aws_cognito_user_pools @aws_api_key
-  statement: String @aws_cognito_user_pools @aws_api_key
-  inTestcase(name: String!): String @aws_cognito_user_pools @aws_api_key
-  outTestcase(name: String!): String @aws_cognito_user_pools @aws_api_key
-  testcaseNames: [String]! @aws_cognito_user_pools @aws_api_key
-  submission(id: ID!): Submission @aws_cognito_user_pools @aws_api_key
-  submissions(nextToken: String, userID: ID): SubmissionConnection! @aws_cognito_user_pools @aws_api_key
+  likeCount: Int!
+  likers: LikerConnection!
+  commentCount: Int!
+  comments: CommentConnection!
+  statement: String
+  inTestcase(name: String!): String
+  outTestcase(name: String!): String
+  testcaseNames: [String]!
+  submission(id: ID!): Submission
+  submissions(nextToken: String, userID: ID): SubmissionConnection!
 }
 
 type SubmissionConnection {
@@ -101,11 +101,11 @@ enum TestcaseResultStatus {
   IE
 }
 
-type TestcaseResult {
-  name: String! @aws_api_key @aws_iam
-  status: TestcaseResultStatus! @aws_api_key @aws_iam
-  time: Int!  @aws_api_key @aws_iam
-  memory: Int!  @aws_api_key @aws_iam
+type TestcaseResult @aws_api_key @aws_iam {
+  name: String!
+  status: TestcaseResultStatus!
+  time: Int!
+  memory: Int!
 }
 
 enum SubmissionStatus {
@@ -114,24 +114,24 @@ enum SubmissionStatus {
   JUDGED
 }
 
-type Submission {
-  id: ID! @aws_cognito_user_pools @aws_api_key
-  problemID: ID! @aws_cognito_user_pools @aws_api_key
-  user: User! @aws_cognito_user_pools @aws_api_key
-  datetime: AWSDateTime! @aws_cognito_user_pools @aws_api_key
-  lang: String! @aws_cognito_user_pools @aws_api_key
-  status: SubmissionStatus! @aws_cognito_user_pools @aws_api_key
-  code: String! @aws_cognito_user_pools @aws_api_key
-  stderr: String! @aws_cognito_user_pools @aws_api_key
-  testcases: [TestcaseResult]! @aws_cognito_user_pools @aws_api_key
+type Submission @aws_cognito_user_pools @aws_api_key {
+  id: ID!
+  problemID: ID!
+  user: User!
+  datetime: AWSDateTime!
+  lang: String!
+  status: SubmissionStatus!
+  code: String!
+  stderr: String!
+  testcases: [TestcaseResult]!
 }
 
-type UpdateSubmissionOutput {
-  id: ID! @aws_iam @aws_api_key
-  userID: ID! @aws_iam @aws_api_key
-  status: SubmissionStatus! @aws_iam @aws_api_key
-  stderr: String @aws_iam @aws_api_key
-  testcases: [TestcaseResult] @aws_iam @aws_api_key
+type UpdateSubmissionOutput @aws_iam @aws_api_key {
+  id: ID!
+  userID: ID!
+  status: SubmissionStatus!
+  stderr: String
+  testcases: [TestcaseResult]
 }
 
 type Mutation {
@@ -145,22 +145,22 @@ type Mutation {
   issueProblemUploadUrl(input: IssueProblemUploadUrlInput!): String! @aws_cognito_user_pools
 }
 
-type ResponsePlayground {
-  exitCode: Int! @aws_cognito_user_pools @aws_iam
-  memory: Int! @aws_cognito_user_pools @aws_iam
-  sessionID: ID! @aws_cognito_user_pools @aws_iam
-  stderr: String! @aws_cognito_user_pools @aws_iam
-  stdout: String! @aws_cognito_user_pools @aws_iam
-  time: Int! @aws_cognito_user_pools @aws_iam
-  userID: ID! @aws_cognito_user_pools @aws_iam
+type ResponsePlayground @aws_cognito_user_pools @aws_iam {
+  exitCode: Int!
+  memory: Int!
+  sessionID: ID!
+  stderr: String!
+  stdout: String!
+  time: Int!
+  userID: ID! 
 }
 
-type Query {
-  user(userID: ID, username: String): UserDetail @aws_cognito_user_pools @aws_api_key
+type Query @aws_cognito_user_pools @aws_api_key {
+  user(userID: ID, username: String): UserDetail
 }
 
-type Subscription {
-  onResponsePlayground(sessionID: ID!, userID: ID!): ResponsePlayground @aws_cognito_user_pools @aws_subscribe(mutations : ["responsePlayground"])
+type Subscription @aws_cognito_user_pools {
+  onResponsePlayground(sessionID: ID!, userID: ID!): ResponsePlayground  @aws_subscribe(mutations : ["responsePlayground"])
 }
 
 input ResponsePlaygroundInput {
@@ -186,11 +186,11 @@ input SubmitCodeInput {
   code: String!
 }
 
-input TestcaseResultInput {
-  name: String! @aws_cognito_user_pools @aws_api_key
-  status: TestcaseResultStatus! @aws_cognito_user_pools @aws_api_key
-  time: Int!  @aws_cognito_user_pools @aws_api_key
-  memory: Int!  @aws_cognito_user_pools @aws_api_key
+input TestcaseResultInput @aws_cognito_user_pools @aws_api_key {
+  name: String!
+  status: TestcaseResultStatus!
+  time: Int!
+  memory: Int!  
 }
 
 input UpdateSubmissionInput {
@@ -201,19 +201,19 @@ input UpdateSubmissionInput {
   testcases: [TestcaseResultInput]
 }
 
-input LikeProblemInput {
-  problemID: ID! @aws_cognito_user_pools
-  like: Boolean! @aws_cognito_user_pools
+input LikeProblemInput @aws_cognito_user_pools {
+  problemID: ID!
+  like: Boolean! 
 }
 
-input PostCommentInput {
-  problemID: ID @aws_cognito_user_pools
-  content: String! @aws_cognito_user_pools
+input PostCommentInput @aws_cognito_user_pools {
+  problemID: ID
+  content: String! 
 }
 
-input PostReplyInput {
-  commentID: ID @aws_cognito_user_pools
-  content: String! @aws_cognito_user_pools
+input PostReplyInput @aws_cognito_user_pools {
+  commentID: ID
+  content: String! 
 }
 
 input IssueProblemUploadUrlInput @aws_cognito_user_pools {
