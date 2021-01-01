@@ -118,7 +118,7 @@ export class Problems extends cdk.Construct {
             cors: [
                 {
                     allowedMethods: [HttpMethods.PUT],
-                    allowedOrigins: ['mojacoder.vercel.app', 'localhost:3000'],
+                    allowedOrigins: ['https://mojacoder.vercel.app', 'http://localhost:3000'],
                 }
             ]
         });
