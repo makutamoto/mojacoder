@@ -135,6 +135,22 @@ export class Problems extends cdk.Construct {
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'
         });
+        const issueProblemUploadUrlLambda = new NodejsFunction(this, 'issueProblemUploadUrl', {
+            entry: join(__dirname, '../lambda/issue-problem-upload-url-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
+            },
+        });
+        issueProblemUploadUrlLambda.addToRolePolicy(new PolicyStatement({
+            actions: ['s3:PutObject'],
+            resources: [postedProblems.bucketArn + '/*'],
+        }));
+        const issueProblemUploadUrlLambdaDatasource = props.api.addLambdaDataSource('issueProblemUploadUrlLambda', issueProblemUploadUrlLambda);
+        issueProblemUploadUrlLambdaDatasource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'issueProblemUploadUrl',
+        });
         const testcasesForViewDatasource = props.api.addHttpDataSource('testcasesForView', 'https://' + testcasesForView.bucketRegionalDomainName, {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',

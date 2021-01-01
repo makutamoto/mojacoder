@@ -142,6 +142,7 @@ type Mutation {
   likeProblem(input: LikeProblemInput!): Boolean! @aws_cognito_user_pools
   postComment(input: PostCommentInput!): Comment! @aws_cognito_user_pools
   postReply(input: PostReplyInput!): Reply! @aws_cognito_user_pools
+  issueProblemUploadUrl(input: IssueProblemUploadUrlInput!): String! @aws_cognito_user_pools
 }
 
 type ResponsePlayground {
@@ -213,4 +214,8 @@ input PostCommentInput {
 input PostReplyInput {
   commentID: ID @aws_cognito_user_pools
   content: String! @aws_cognito_user_pools
+}
+
+input IssueProblemUploadUrlInput @aws_cognito_user_pools {
+  problemName: String!
 }
