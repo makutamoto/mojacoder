@@ -119,6 +119,7 @@ export class Problems extends cdk.Construct {
                 {
                     allowedMethods: [HttpMethods.PUT],
                     allowedOrigins: ['https://mojacoder.vercel.app', 'http://localhost:3000'],
+                    allowedHeaders: ['content-type'],
                 }
             ]
         });
