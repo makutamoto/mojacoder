@@ -193,6 +193,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                     <Head>
                         <title>MojaCoder</title>
                         <link rel="manifest" href="/manifest.json" />
+                        <link
+                            rel="icon"
+                            href="/images/logo.svg"
+                            type="image/svg+xml"
+                        />
                     </Head>
                     <Appbar />
                     <Component {...pageProps} />

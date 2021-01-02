@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Nav, Navbar } from 'react-bootstrap'
+import { Nav, Navbar, Image } from 'react-bootstrap'
 
 import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
@@ -20,7 +20,14 @@ const Appbar: React.FC = () => {
                 expand="sm"
             >
                 <Link href="/" passHref>
-                    <Navbar.Brand>{t`mojacoder`}</Navbar.Brand>
+                    <Navbar.Brand>
+                        <Image
+                            className="align-top"
+                            src="/images/logo.svg"
+                            width={30}
+                        />{' '}
+                        <span>{t`mojacoder`}</span>
+                    </Navbar.Brand>
                 </Link>
                 <Navbar.Toggle />
                 <Navbar.Collapse>
