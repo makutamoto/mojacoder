@@ -21,6 +21,7 @@ export const handler: AppSyncResolverHandler<{ input: { icon: string } }, string
         await s3.putObject({
             Bucket: USER_ICON_BUCKET_NAME,
             Key: key,
+            ContentType: Jimp.MIME_PNG,
             Body: buffer,
         }).promise()
         return key
