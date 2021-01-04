@@ -25,6 +25,7 @@ const GetSubmissions = gql`
     ) {
         user(username: $authorUsername) {
             problem(slug: $problemSlug) {
+                id
                 submissions(userID: $userID) {
                     items {
                         id

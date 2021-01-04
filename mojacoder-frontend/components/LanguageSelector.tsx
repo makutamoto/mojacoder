@@ -10,6 +10,8 @@ export interface LanguageSelectorProps {
 const OPTIONS = [
     { value: 'go-1.14', label: 'Go (1.14)' },
     { value: 'python3.8', label: 'Python 3.8' },
+    { value: 'gcc-9.3.0', label: 'C (GCC 9.3.0)' },
+    { value: 'g++-9.3.0', label: 'C++ (GCC 9.3.0)' },
 ]
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = (props) => {

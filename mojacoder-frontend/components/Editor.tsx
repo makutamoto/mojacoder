@@ -5,12 +5,13 @@ if (process.browser) {
     require('codemirror/mode/clike/clike')
     require('codemirror/mode/go/go')
     require('codemirror/mode/python/python')
-    require('codemirror/mode/markdown/markdown')
 }
 
 const LANGUAGE_TO_MODE: { [index: string]: string } = {
     'python3.8': 'python',
     'go-1.14': 'text/x-go',
+    'gcc-9.3.0': 'text/x-csrc',
+    'g++-9.3.0': 'text/x-c++src',
 }
 
 export interface EditorProps {
