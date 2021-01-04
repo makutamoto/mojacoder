@@ -45,12 +45,19 @@ const UserPage: React.FC<Props> = (props) => {
                     <UserIcon height={256}>{user}</UserIcon>
                     <h2>{user?.screenName}</h2>
                     {auth && auth.userID === user?.userID && (
-                        <Button
-                            variant="danger"
-                            onClick={OnClickSignOutCallback}
-                        >
-                            {t`signOut`}
-                        </Button>
+                        <>
+                            <Button
+                                variant="danger"
+                                onClick={OnClickSignOutCallback}
+                            >
+                                {t`signOut`}
+                            </Button>{' '}
+                            <Link href="/settings" passHref>
+                                <Button variant="secondary">
+                                    {t`settings`}
+                                </Button>
+                            </Link>
+                        </>
                     )}
                 </div>
             </Top>

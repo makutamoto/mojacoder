@@ -16,6 +16,7 @@ const GetScreenNameFromUserID = gql`
     query GetScreenNameFromUserID($userID: ID!) {
         user(userID: $userID) {
             userID
+            icon
             screenName
         }
     }

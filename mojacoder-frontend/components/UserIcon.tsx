@@ -9,14 +9,16 @@ export interface UserIconProps extends ImageProps {
 }
 
 const UserIcon: React.FC<UserIconProps> = (props) => {
-    const { children, ...imageProps } = props
+    const { children, src, ...imageProps } = props
     return (
         <Image
             {...imageProps}
             className="border"
             roundedCircle
             src={
-                children && children.icon
+                src
+                    ? src
+                    : children && children.icon
                     ? join(process.env.ICON_STORAGE, `${children.userID}.png`)
                     : '/images/avatar.png'
             }

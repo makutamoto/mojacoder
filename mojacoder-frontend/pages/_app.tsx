@@ -66,6 +66,7 @@ const languages = {
             signOut: 'サインアウト',
             problem: '問題',
             problemName: '問題名',
+            settings: '設定',
         },
         problem: {
             submit: '提出',
@@ -106,6 +107,18 @@ const languages = {
             passwordNotMatch: 'パスワードが一致しません。',
             signUp: '登録',
         },
+        settings: {
+            title: '設定',
+            signInRequired: '設定を行うにはサインインしてください。',
+            icon: 'アイコン',
+            update: '更新',
+            clearIcon: 'アイコンを解除',
+            dropHereOrSelect:
+                'ここにファイルをドロップするか、クリックして選択してください。',
+            regulationOfIcon:
+                '正方形で幅が512ピクセル以下かつサイズが1MB以下であるPNGファイルを設定できます。',
+            updatedMessage: '更新が完了しました。',
+        },
     },
     en: {
         appbar: {
@@ -142,6 +155,7 @@ const languages = {
             signOut: 'Sign out',
             problem: 'Problems',
             problemName: 'Problem Name',
+            settings: 'Settings',
         },
         problem: {
             submit: 'Submit',
@@ -180,10 +194,21 @@ const languages = {
             passwordNotMatch: 'Passswords does not match.',
             signUp: 'Sign up',
         },
+        settings: {
+            title: 'Settings',
+            signInRequired: 'Signning in is required to perform settings.',
+            icon: 'Icon',
+            update: 'Update',
+            clearIcon: 'Clear',
+            dropHereOrSelect: 'Drop a .png file here, or click to select it.',
+            regulationOfIcon:
+                'The .png file must be square and its width and file size must NOT exceed 512 px and 1MB.',
+            updatedMessage: 'Done.',
+        },
     },
 }
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
     const { locale } = useRouter()
     return (
         <I18nProvider defaultLanguage="ja" lang={locale} languages={languages}>
@@ -206,6 +231,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         </I18nProvider>
     )
 }
+export default App
 
 NProgress.configure({ showSpinner: false })
 Router.events.on('routeChangeStart', () => NProgress.start())

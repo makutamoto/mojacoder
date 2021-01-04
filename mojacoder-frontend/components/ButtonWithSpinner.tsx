@@ -1,23 +1,16 @@
 import React from 'react'
-import { Button, Spinner } from 'react-bootstrap'
+import { Button, ButtonProps, Spinner } from 'react-bootstrap'
 
-export interface ButtonWithSpinnerProps {
+export interface ButtonWithSpinnerProps extends ButtonProps {
     children?: string
     loading?: boolean
-    onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-    type?: string
-    variant?: string
+    disabled?: boolean
 }
 
 const ButtonWithSpinner: React.FC<ButtonWithSpinnerProps> = (props) => {
-    const { children, loading, onClick, type, variant } = props
+    const { children, loading, disabled, ...buttonProps } = props
     return (
-        <Button
-            type={type}
-            variant={variant}
-            disabled={loading}
-            onClick={onClick}
-        >
+        <Button {...buttonProps} disabled={loading || disabled}>
             {loading && (
                 <Spinner className="mr-3" size="sm" animation="border" />
             )}
