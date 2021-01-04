@@ -1,9 +1,13 @@
-#if(!$util.isNull($context.arguments.username))
+#if($util.isNull($context.arguments.username))
 {
 	"version": "2018-05-29",
 	"operation": "GetItem",
 	"key": {
-		"username": $util.dynamodb.toDynamoDBJson($context.arguments.username.toUpperCase())
+		#if($util.isNull($context.arguments.userID))
+		"id": $util.dynamodb.toDynamoDBJson($context.source.userID)
+		#else
+		"id": $util.dynamodb.toDynamoDBJson($context.arguments.userID)
+		#end
 	}
 }
 #else
@@ -11,19 +15,15 @@
 	"version": "2018-05-29",
 	"operation": "Query",
 	"query": {
-		"expression": "#id = :userID",
+		"expression": "#username = :username",
 		"expressionNames": {
-			"#id": "id"
+			"#username": "username"
 		},
 		"expressionValues": {
-			#if(!$util.isNull($context.arguments.userID))
-			":userID": $util.dynamodb.toDynamoDBJson($context.arguments.userID)
-			#else
-			":userID": $util.dynamodb.toDynamoDBJson($context.source.userID)
-			#end
+			":username": $util.dynamodb.toDynamoDBJson($context.arguments.username.toUpperCase())
 		}
 	},
-	"index": "idIndex",
+	"index": "usernameIndex",
 	"limit": 1,
 }
 #end

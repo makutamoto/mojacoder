@@ -3,14 +3,14 @@ import { DynamoDB } from 'aws-sdk';
 
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
 
-const TABLE_NAME = process.env.TABLE_NAME;
-if(TABLE_NAME === undefined) throw "TABLE_NAME is not defined.";
+const USERNAME_TABLE_NAME = process.env.USERNAME_TABLE_NAME;
+if(USERNAME_TABLE_NAME === undefined) throw "USERNAME_TABLE_NAME is not defined.";
 
-export const handler: PreSignUpTriggerHandler = (event) => {
-    return new Promise((resolve, reject) => {
-        const preferred_username = event.request.userAttributes.preferred_username;
-        dynamodb.putItem({
-            TableName: TABLE_NAME,
+export const handler: PreSignUpTriggerHandler = async (event) => {
+    const preferred_username = event.request.userAttributes.preferred_username;
+    try {
+        await dynamodb.putItem({
+            TableName: USERNAME_TABLE_NAME,
             Item: {
                 username: {
                     S: preferred_username.toUpperCase(),
@@ -20,13 +20,10 @@ export const handler: PreSignUpTriggerHandler = (event) => {
             ExpressionAttributeNames: {
                 '#username': 'username',
             },
-        }, (err) => {
-            if(err) {
-                console.error(err);
-                reject("UsernameAlreadyExists");
-                return;
-            }
-            resolve(event);
-        });
-    });
+        }).promise()
+    } catch(err) {
+        console.error(err);
+        throw "UsernameAlreadyExists";
+    }
+    return event;
 };

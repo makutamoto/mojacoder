@@ -11,24 +11,11 @@ const s3 = new S3({apiVersion: '2006-03-01'});
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
 
 async function setUserIconAttribute(userID: string, value: boolean) {
-    const user = await dynamodb.query({
-        TableName: USER_TABLE_NAME,
-        IndexName: 'idIndex',
-        ExpressionAttributeNames: {
-            '#id': 'id',
-        },
-        ExpressionAttributeValues: {
-            ':id': {
-                S: userID,
-            },
-        },
-        KeyConditionExpression: '#id = :id',
-    }).promise()
     await dynamodb.updateItem({
         TableName: USER_TABLE_NAME,
         Key: {
-            username: {
-                S: user.Items?.[0].username.S,
+            id: {
+                S: userID,
             },
         },
         ExpressionAttributeNames: {

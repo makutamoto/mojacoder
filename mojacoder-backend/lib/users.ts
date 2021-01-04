@@ -77,14 +77,21 @@ export class Users extends cdk.Construct {
         this.userTable = new Table(this, 'user-table', {
             billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
-                name: 'username',
+                name: 'id',
                 type: AttributeType.STRING,
             }
         });
         this.userTable.addGlobalSecondaryIndex({
-            indexName: 'idIndex',
+            indexName: 'usernameIndex',
             partitionKey: {
-                name: 'id',
+                name: 'username',
+                type: AttributeType.STRING,
+            }
+        });
+        const usernameTable = new Table(this, 'username-table', {
+            billingMode: BillingMode.PAY_PER_REQUEST,
+            partitionKey: {
+                name: 'username',
                 type: AttributeType.STRING,
             }
         });
@@ -92,12 +99,12 @@ export class Users extends cdk.Construct {
             entry: join(__dirname, '../lambda/cognito-pre-signup-trigger/index.ts'),
             handler: 'handler',
             environment: {
-                TABLE_NAME: this.userTable.tableName,
+                USERNAME_TABLE_NAME: usernameTable.tableName,
             },
         });
         this.pool.addTrigger(UserPoolOperation.PRE_SIGN_UP, signupTrigger);
         signupTrigger.addToRolePolicy(new PolicyStatement({
-            resources: [this.userTable.tableArn],
+            resources: [usernameTable.tableArn],
             actions: ['dynamodb:PutItem'],
         }));
         const postConfirmationTrigger = new NodejsFunction(this, 'post-confirmation-trigger', {
