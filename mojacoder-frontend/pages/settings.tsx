@@ -58,7 +58,7 @@ const Settings: React.FC = () => {
             },
         })
         setStatus(Status.DoneIcon)
-    }, [setStatus])
+    }, [setStatus, icon])
     return (
         <>
             <Top>
