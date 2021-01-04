@@ -14,5 +14,10 @@
         "filename": "main.c",
         "compileCommand": "gcc main.c",
         "runCommand": "./a.out"
+    },
+    "g++": {
+        "filename": "main.cpp",
+        "compileCommand": "g++ main.cpp",
+        "runCommand": "./a.out"
     }
 }
