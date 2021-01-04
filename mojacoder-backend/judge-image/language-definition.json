@@ -10,12 +10,12 @@
         "filename": "main.py",
         "runCommand": "python3.8 ./main.py"
     },
-    "gcc": {
+    "gcc-9.3.0": {
         "filename": "main.c",
         "compileCommand": "gcc main.c",
         "runCommand": "./a.out"
     },
-    "g++": {
+    "g++-9.3.0": {
         "filename": "main.cpp",
         "compileCommand": "g++ main.cpp",
         "runCommand": "./a.out"
