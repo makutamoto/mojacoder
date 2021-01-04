@@ -1,6 +1,14 @@
 import React from 'react'
+import clsx from 'clsx'
 
-const Top: React.FC = (props) => {
-    return <div className="my-4 py-4">{props.children}</div>
+export interface TopProps {
+    className?: string
+}
+const Top: React.FC<TopProps> = (props) => {
+    return (
+        <div className={clsx('my-4 py-4', props.className)}>
+            {props.children}
+        </div>
+    )
 }
 export default Top
