@@ -47,13 +47,13 @@ export const handler: AppSyncResolverHandler<{ input: { icon: string } }, string
             ContentType: Jimp.MIME_PNG,
             Body: buffer,
         }).promise()
-        setUserIconAttribute(userID, true)
+        await setUserIconAttribute(userID, true)
         return key
     }
     await s3.deleteObject({
         Bucket: USER_ICON_BUCKET_NAME,
         Key: key,
     }).promise()
-    setUserIconAttribute(userID, false)
+    await setUserIconAttribute(userID, false)
     return null
 };
