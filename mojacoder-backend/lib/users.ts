@@ -125,7 +125,9 @@ export class Users extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/response.vtl')),
         });
-        const userIconBucket = new Bucket(this, 'userIconBucket');
+        const userIconBucket = new Bucket(this, 'userIconBucket', {
+            publicReadAccess: true,
+        });
         const setUserIconLambda = new NodejsFunction(this, 'setUserIcon', {
             entry: join(__dirname, '../lambda/set-user-icon/index.ts'),
             handler: 'handler',
