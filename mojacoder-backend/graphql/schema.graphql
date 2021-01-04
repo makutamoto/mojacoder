@@ -143,6 +143,7 @@ type Mutation {
   postComment(input: PostCommentInput!): Comment! @aws_cognito_user_pools
   postReply(input: PostReplyInput!): Reply! @aws_cognito_user_pools
   issueProblemUploadUrl(input: IssueProblemUploadUrlInput!): String! @aws_cognito_user_pools
+  setUserIcon(input: SetUserIconInput): SetUserIconResponse @aws_cognito_user_pools
 }
 
 type ResponsePlayground @aws_cognito_user_pools @aws_iam {
@@ -218,4 +219,12 @@ input PostReplyInput @aws_cognito_user_pools {
 
 input IssueProblemUploadUrlInput @aws_cognito_user_pools {
   problemName: String!
+}
+
+input SetUserIconInput @aws_cognito_user_pools {
+  icon: String!
+}
+
+type SetUserIconResponse @aws_cognito_user_pools {
+  width: Int!
 }

@@ -8,6 +8,7 @@ import { Rule, Schedule } from '@aws-cdk/aws-events'
 import { LambdaFunction } from '@aws-cdk/aws-events-targets'
 import { join } from 'path';
 import { Duration } from '@aws-cdk/core';
+import { Bucket } from '@aws-cdk/aws-s3';
 
 export class Users extends cdk.Construct {
     public readonly pool: UserPool
@@ -124,5 +125,22 @@ export class Users extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/response.vtl')),
         });
+        const userIconBucket = new Bucket(this, 'userIconBucket');
+        const setUserIconLambda = new NodejsFunction(this, 'setUserIcon', {
+            entry: join(__dirname, '../lambda/set-user-icon/index.ts'),
+            handler: 'handler',
+            environment: {
+                USER_ICON_BUCKET_NAME: userIconBucket.bucketName,
+            },
+        });
+        setUserIconLambda.addToRolePolicy(new PolicyStatement({
+            actions: ['s3:PutObject', 's3:DeleteObject'],
+            resources: [userIconBucket.bucketArn + '/*'],
+        }));
+        const setUserIconLambdaDatasource = this.api.addLambdaDataSource('setUserIconLambda', setUserIconLambda);
+        setUserIconLambdaDatasource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'setUserIcon',
+        })
     }
 }

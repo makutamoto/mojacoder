@@ -1,0 +1,11 @@
+{
+  "name": "set-user-icon",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.64",
+    "aws-sdk": "^2.780.0",
+    "jimp": "^0.16.1"
+  }
+}
