@@ -47,6 +47,8 @@ const GetProblemOverview = gql`
                 id
                 user {
                     detail {
+                        userID
+                        icon
                         screenName
                     }
                 }

@@ -70,6 +70,8 @@ const GetTestcaseNames = gql`
                 title
                 user {
                     detail {
+                        userID
+                        icon
                         screenName
                     }
                 }

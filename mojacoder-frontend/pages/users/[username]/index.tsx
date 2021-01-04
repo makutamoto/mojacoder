@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
 import Head from 'next/head'
 import { Auth as Cognito } from 'aws-amplify'
-import { Button, Image, Table } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../../../lib/i18n'
@@ -12,6 +12,7 @@ import { invokeQueryWithApiKey } from '../../../lib/backend'
 import { UserDetail } from '../../../lib/backend_types'
 import Layout from '../../../components/Layout'
 import Top from '../../../components/Top'
+import UserIcon from '../../../components/UserIcon'
 
 interface Props {
     user?: UserDetail
@@ -21,14 +22,11 @@ const UserPage: React.FC<Props> = (props) => {
     const { t } = useI18n('user')
     const { user } = props
     const { auth, setAuth } = Auth.useContainer()
-    const [browser, setBroser] = useState(false)
-    const [iconNotFound, setIconNotFound] = useState(false)
     const OnClickSignOutCallback = useCallback(() => {
         Cognito.signOut()
             .then(() => setAuth(null))
             .catch((err) => console.error(err))
     }, [])
-    useEffect(() => setBroser(true), [])
     return (
         <>
             <Head>
@@ -44,20 +42,7 @@ const UserPage: React.FC<Props> = (props) => {
             </Head>
             <Top>
                 <div className="text-center">
-                    {browser && (
-                        <Image
-                            roundedCircle
-                            height={256}
-                            src={
-                                iconNotFound
-                                    ? '/images/avatar.png'
-                                    : '/images/avatar.png'
-                            }
-                            onError={() =>
-                                iconNotFound || setIconNotFound(true)
-                            }
-                        />
-                    )}
+                    <UserIcon height={256}>{user}</UserIcon>
                     <h2>{user?.screenName}</h2>
                     {auth && auth.userID === user?.userID && (
                         <Button
@@ -108,6 +93,7 @@ const GetUser = gql`
         user(username: $username) {
             userID
             screenName
+            icon
             problems {
                 items {
                     slug

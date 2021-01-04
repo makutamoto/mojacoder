@@ -33,6 +33,8 @@ const GetSubmission = gql`
                 title
                 user {
                     detail {
+                        userID
+                        icon
                         screenName
                     }
                 }
@@ -40,6 +42,8 @@ const GetSubmission = gql`
                     id
                     user {
                         detail {
+                            userID
+                            icon
                             screenName
                         }
                     }

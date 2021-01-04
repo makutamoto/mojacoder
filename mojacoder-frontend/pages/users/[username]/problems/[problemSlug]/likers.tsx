@@ -27,7 +27,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                     </thead>
                     <tbody>
                         {user?.problem.likers.items.map((liker) => (
-                            <tr key={liker.userID}>
+                            <tr key={liker.detail.userID}>
                                 <td className="text-nowrap">
                                     <Username>{liker.detail}</Username>
                                 </td>
@@ -49,14 +49,17 @@ const GetProblem = gql`
                 title
                 likers {
                     items {
-                        userID
                         detail {
+                            userID
+                            icon
                             screenName
                         }
                     }
                 }
                 user {
                     detail {
+                        userID
+                        icon
                         screenName
                     }
                 }

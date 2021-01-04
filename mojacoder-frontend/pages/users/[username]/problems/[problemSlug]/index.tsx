@@ -139,6 +139,8 @@ const GetProblem = gql`
                 statement
                 user {
                     detail {
+                        userID
+                        icon
                         screenName
                     }
                 }

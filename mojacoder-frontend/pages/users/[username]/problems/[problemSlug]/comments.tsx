@@ -42,6 +42,8 @@ const GetComments = gql`
                         datetime
                         user {
                             detail {
+                                userID
+                                icon
                                 screenName
                             }
                         }
@@ -53,6 +55,8 @@ const GetComments = gql`
                                 datetime
                                 user {
                                     detail {
+                                        userID
+                                        icon
                                         screenName
                                     }
                                 }
@@ -73,6 +77,8 @@ const PostComment = gql`
             datetime
             user {
                 detail {
+                    userID
+                    icon
                     screenName
                 }
             }
@@ -84,6 +90,8 @@ const PostComment = gql`
                     datetime
                     user {
                         detail {
+                            userID
+                            icon
                             screenName
                         }
                     }
@@ -101,6 +109,8 @@ const PostReply = gql`
             datetime
             user {
                 detail {
+                    userID
+                    icon
                     screenName
                 }
             }
@@ -284,6 +294,8 @@ const GetProblem = gql`
                 title
                 user {
                     detail {
+                        userID
+                        icon
                         screenName
                     }
                 }

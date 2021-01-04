@@ -16,6 +16,7 @@ module.exports = (phase) => {
                     APPSYNC_ENDPOINT:
                         'https://zbw5rgbp6nbplmvbddkkwm7m3a.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-eyze5l444jd45o2oooqjcjrkaa',
+                    ICON_STORAGE: 'https://mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
                     COOKIE_DOMAIN: 'localhost',
                     ORIGIN: 'http://localhost:3000',
                 },
@@ -30,6 +31,7 @@ module.exports = (phase) => {
                     APPSYNC_ENDPOINT:
                         'https://zbw5rgbp6nbplmvbddkkwm7m3a.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-eyze5l444jd45o2oooqjcjrkaa',
+                    ICON_STORAGE: 'https://mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
                     COOKIE_DOMAIN: 'mojacoder.vercel.app',
                     ORIGIN: 'https://mojacoder.vercel.app',
                 },

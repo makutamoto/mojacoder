@@ -31,6 +31,8 @@ const GetSubmissions = gql`
                         problemID
                         user {
                             detail {
+                                userID
+                                icon
                                 screenName
                             }
                         }
@@ -148,6 +150,8 @@ const GetProblemOverview = gql`
                 title
                 user {
                     detail {
+                        userID
+                        icon
                         screenName
                     }
                 }
