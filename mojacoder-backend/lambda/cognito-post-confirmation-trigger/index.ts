@@ -22,6 +22,9 @@ export const handler: PostConfirmationTriggerHandler = (event) => {
                 screenName: {
                     S: preferred_username,
                 },
+                icon: {
+                    BOOL: false,
+                }
             },
         }, (err) => {
             if(err) {

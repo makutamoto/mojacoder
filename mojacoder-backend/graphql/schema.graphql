@@ -20,6 +20,7 @@ type User @aws_cognito_user_pools @aws_api_key {
 type UserDetail @aws_cognito_user_pools @aws_api_key {
   userID: ID!
   screenName: String!
+  icon: Boolean!
   problem(id: ID, slug: String): Problem
   problems(nextToken: String): ProblemConnection!
 }

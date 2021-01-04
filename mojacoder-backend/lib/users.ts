@@ -133,11 +133,12 @@ export class Users extends cdk.Construct {
             handler: 'handler',
             environment: {
                 USER_ICON_BUCKET_NAME: userIconBucket.bucketName,
+                USER_TABLE_NAME: this.userTable.tableName,
             },
         });
         setUserIconLambda.addToRolePolicy(new PolicyStatement({
-            actions: ['s3:PutObject', 's3:DeleteObject'],
-            resources: [userIconBucket.bucketArn + '/*'],
+            actions: ['s3:PutObject', 's3:DeleteObject', 'dynamodb:UpdateItem', 'dynamodb:Query'],
+            resources: [userIconBucket.bucketArn + '/*', this.userTable.tableArn],
         }));
         const setUserIconLambdaDatasource = this.api.addLambdaDataSource('setUserIconLambda', setUserIconLambda);
         setUserIconLambdaDatasource.createResolver({
