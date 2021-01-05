@@ -17,6 +17,9 @@ RUN wget https://github.com/atcoder/ac-library/archive/master.zip
 RUN unzip ./master.zip
 RUN mv ./ac-library-master/atcoder /usr/local/include/
 
+RUN apt install python3-pip
+RUN pip3 install numpy
+
 RUN groupadd -r -g 400 code && useradd -r -u 400 -g 400 code
 
 WORKDIR /usr/src/app
