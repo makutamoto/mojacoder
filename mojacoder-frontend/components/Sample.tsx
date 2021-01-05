@@ -35,7 +35,7 @@ const Sample: React.FC<Props> = (props) => {
                 </Button>
                 <pre
                     {...({ readonly: 'true' } as any)}
-                    className="form-control mt-1 mb-0"
+                    className="form-control mt-1 mb-0 h-100"
                 >
                     {props.value}
                 </pre>
