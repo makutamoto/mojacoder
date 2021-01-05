@@ -3,6 +3,6 @@
   "method": "PUT",
   "resourcePath": "/$context.stash.submissionID",
   "params": {
-    "body": "$util.escapeJavaScript("$context.arguments.input.code")"
+    "body": $util.toJson($context.arguments.input.code)
   }
 }
