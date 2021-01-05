@@ -6,6 +6,7 @@ import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { Bucket, HttpMethods } from '@aws-cdk/aws-s3'
 import { LambdaDestination } from '@aws-cdk/aws-s3-notifications'
+import { Duration } from '@aws-cdk/core';
 
 export interface ProblemsProps {
     api: GraphqlApi
@@ -128,6 +129,7 @@ export class Problems extends cdk.Construct {
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
+            timeout: Duration.seconds(10),
             environment: {
                 PROBLEM_TABLE_NAME: problemTable.tableName,
                 SLUG_TABLE_NAME: slugTable.tableName,
