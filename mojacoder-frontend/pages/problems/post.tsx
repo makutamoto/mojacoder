@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import { Alert, Image } from 'react-bootstrap'
+import Image from 'next/image'
+import { Alert } from 'react-bootstrap'
 import { useDropzone } from 'react-dropzone'
 import gql from 'graphql-tag'
 import parse from 'path-parse'
@@ -10,8 +11,6 @@ import { invokeMutation } from '../../lib/backend'
 import Layout from '../../components/Layout'
 import Top from '../../components/Top'
 import AlertWithSpinner from '../../components/AlertWithSpinner'
-
-import styles from '../../css/image.module.css'
 
 const Status = {
     Normal: 'Normal',
@@ -66,7 +65,8 @@ export const Post: React.FC = () => {
                             <input {...getInputProps()} />
                             <div className="text-center">
                                 <Image
-                                    className={styles['top-image']}
+                                    width={256}
+                                    height={256}
                                     src="/illustrations/undraw_Add_files_re_v09g.svg"
                                 />
                                 <p className="pt-4">

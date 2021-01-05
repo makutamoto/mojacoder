@@ -1,13 +1,11 @@
 import React from 'react'
-import { Image } from 'react-bootstrap'
+import Image from 'next/image'
 import { MarkGithubIcon, SmileyIcon } from '@primer/octicons-react'
 
 import { useI18n } from '../lib/i18n'
 import IconWithText from '../components/IconWithText'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
-
-import styles from '../css/image.module.css'
 
 const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'
@@ -19,7 +17,8 @@ export const Index: React.FC = () => {
             <Top>
                 <div className="text-center">
                     <Image
-                        className={styles['top-image']}
+                        width={512}
+                        height={256}
                         src="/illustrations/undraw_programming_2svr.svg"
                     />
                     <h2 className="mt-4">{t`description`}</h2>

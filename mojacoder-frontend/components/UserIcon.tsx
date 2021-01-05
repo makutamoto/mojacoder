@@ -1,12 +1,13 @@
 import React from 'react'
-import Image from 'next/image'
-import { ImageProps } from 'react-bootstrap'
+import Image, { ImageProps } from 'next/image'
 import join from 'url-join'
 
 import { UserDetail } from '../lib/backend_types'
 
-export interface UserIconProps extends Omit<ImageProps, 'width' | 'height'> {
+export interface UserIconProps
+    extends Omit<ImageProps, 'width' | 'height' | 'src'> {
     size: number
+    src?: string
     children?: UserDetail
 }
 
@@ -18,6 +19,7 @@ const UserIcon: React.FC<UserIconProps> = (props) => {
             className="border rounded-circle"
             width={size}
             height={size}
+            layout="fixed"
             src={
                 src
                     ? src
