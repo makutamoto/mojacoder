@@ -16,6 +16,7 @@ import {
     invokeMutation,
 } from '../../../../../lib/backend'
 import { UserDetail } from '../../../../../lib/backend_types'
+import { useLocalStorage } from '../../../../../lib/localstorage'
 import Sample from '../../../../../components/Sample'
 import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import Layout from '../../../../../components/Layout'
@@ -47,23 +48,31 @@ const ProblemPage: React.FC<Props> = (props) => {
     const router = useRouter()
     const { auth } = Auth.useContainer()
     const [status, setStatus] = useState<Status>(Status.Normal)
-    const [code, setCode] = useState<Code>({ lang: 'go-1.14', code: '' })
+    const [lang, setLang] = useLocalStorage('code-lang', 'go-1.14')
+    const [code, setCode] = useState('')
+    const onCodeEditorChange = useCallback(
+        (value: Code) => {
+            setLang(value.lang)
+            setCode(value.code)
+        },
+        [setLang, setCode]
+    )
     const onSubmit = useCallback(() => {
-        if (code.code.length === 0) {
+        if (code.length === 0) {
             setStatus(Status.EmptySubmission)
             return
         }
         setStatus(Status.Submitting)
         invokeMutation(SubmitCode, {
             input: {
-                lang: code.lang,
-                code: code.code,
+                lang,
+                code,
                 problemID: user.problem?.id || '',
             },
         }).then(() => {
             router.push(join(router.asPath, 'submissions'))
         })
-    }, [setStatus, user, code])
+    }, [setStatus, user, lang, code])
     return (
         <>
             <Head>
@@ -112,8 +121,8 @@ const ProblemPage: React.FC<Props> = (props) => {
                             )}
                             <CodeEditor
                                 id="problem-code-editor"
-                                value={code}
-                                onChange={setCode}
+                                value={{ code, lang }}
+                                onChange={onCodeEditorChange}
                             />
                             <ButtonWithSpinner
                                 loading={status === Status.Submitting}
