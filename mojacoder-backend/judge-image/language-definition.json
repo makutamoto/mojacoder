@@ -19,5 +19,15 @@
         "filename": "main.cpp",
         "compileCommand": "g++ main.cpp",
         "runCommand": "./a.out"
+    },
+    "csharp-mono-csc-3.6.0": {
+        "filename": "main.cs",
+        "compileCommand": "csc main.cs",
+        "runCommand": "mono main.exe"
+    },
+    "csharp-mono-mcs-6.12.0.107": {
+        "filename": "main.cs",
+        "compileCommand": "mcs main.cs",
+        "runCommand": "mono main.exe"
     }
 }
