@@ -36,6 +36,7 @@ const GetComments = gql`
     query GetComments($authorUsername: String!, $problemSlug: String!) {
         user(username: $authorUsername) {
             problem(slug: $problemSlug) {
+                id
                 comments {
                     items {
                         commentID
