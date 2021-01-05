@@ -6,7 +6,9 @@ const common = {
         defaultLocale: 'ja',
     },
     images: {
-        domains: ['mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com'],
+        domains: [
+            'mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
+        ],
     },
 }
 

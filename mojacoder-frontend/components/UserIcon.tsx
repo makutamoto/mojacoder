@@ -18,7 +18,6 @@ const UserIcon: React.FC<UserIconProps> = (props) => {
             className="border rounded-circle"
             width={size}
             height={size}
-            objectPosition="center center"
             src={
                 src
                     ? src
