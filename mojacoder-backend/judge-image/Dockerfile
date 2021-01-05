@@ -11,6 +11,12 @@ RUN apt install -y golang-1.14
 ENV PATH $PATH:/usr/lib/go-1.14/bin/
 RUN apt install -y python3.8 build-essential mono-devel
 
+WORKDIR /tmp
+RUN apt install wget zip
+RUN wget https://github.com/atcoder/ac-library/archive/master.zip
+RUN unzip ./master.zip
+RUN mv ./ac-library-master/atcoder /usr/local/include/
+
 RUN groupadd -r -g 400 code && useradd -r -u 400 -g 400 code
 
 WORKDIR /usr/src/app
