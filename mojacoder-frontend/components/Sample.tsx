@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Button, Form, Overlay, Tooltip } from 'react-bootstrap'
+import { Button, Overlay, Tooltip } from 'react-bootstrap'
 import { CopyIcon } from '@primer/octicons-react'
 import copy from 'copy-text-to-clipboard'
 
@@ -33,12 +33,12 @@ const Sample: React.FC<Props> = (props) => {
                 >
                     <CopyIcon size={16} />
                 </Button>
-                <Form.Control
-                    type="text"
-                    className="mt-1"
-                    readOnly
-                    value={props.value}
-                />
+                <pre
+                    {...({ readonly: 'true' } as any)}
+                    className="form-control mt-1 mb-0"
+                >
+                    {props.value}
+                </pre>
             </div>
             <Overlay target={copyButton.current} show={tooltipVisible}>
                 <Tooltip id="sample-copied-tooltip">Copied!</Tooltip>
