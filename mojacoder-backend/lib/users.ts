@@ -138,6 +138,7 @@ export class Users extends cdk.Construct {
         const setUserIconLambda = new NodejsFunction(this, 'setUserIcon', {
             entry: join(__dirname, '../lambda/set-user-icon/index.ts'),
             handler: 'handler',
+            timeout: Duration.seconds(10),
             environment: {
                 USER_ICON_BUCKET_NAME: userIconBucket.bucketName,
                 USER_TABLE_NAME: this.userTable.tableName,

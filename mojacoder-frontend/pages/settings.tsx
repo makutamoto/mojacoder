@@ -16,6 +16,7 @@ const Status = {
     UpdatingIcon: 'UpdatingIcon',
     ClearingIcon: 'ClearingIcon',
     DoneIcon: 'DoneIcon',
+    ErrorIcon: 'ErrorIcon',
 } as const
 type Status = typeof Status[keyof typeof Status]
 
@@ -32,6 +33,7 @@ const Settings: React.FC = () => {
     const [icon, setIcon] = useState<string | null>(null)
     const onIconDrop = useCallback(
         (files: File[]) => {
+            if (files.length === 0) return
             const reader = new FileReader()
             reader.onload = () => {
                 setIcon(reader.result as string)
@@ -47,16 +49,28 @@ const Settings: React.FC = () => {
     })
     const onClearIcon = useCallback(async () => {
         setStatus(Status.ClearingIcon)
-        await invokeMutation(SetUserIcon, { input: null })
+        try {
+            await invokeMutation(SetUserIcon, { input: null })
+        } catch (err) {
+            console.error(err)
+            setStatus(Status.ErrorIcon)
+            return
+        }
         setStatus(Status.DoneIcon)
     }, [setStatus])
     const onUpdateIcon = useCallback(async () => {
         setStatus(Status.UpdatingIcon)
-        await invokeMutation(SetUserIcon, {
-            input: {
-                icon: icon.replace(/data:[^,]+?,/, ''),
-            },
-        })
+        try {
+            await invokeMutation(SetUserIcon, {
+                input: {
+                    icon: icon.replace(/data:[^,]+?,/, ''),
+                },
+            })
+        } catch (err) {
+            console.error(err)
+            setStatus(Status.ErrorIcon)
+            return
+        }
         setStatus(Status.DoneIcon)
     }, [setStatus, icon])
     return (
@@ -73,6 +87,10 @@ const Settings: React.FC = () => {
                             show={status === Status.DoneIcon}
                             variant="success"
                         >{t`updatedMessage`}</Alert>
+                        <Alert
+                            show={status === Status.ErrorIcon}
+                            variant="danger"
+                        >{t`errorMessage`}</Alert>
                         <div className="text-center">
                             <UserIcon width={256} src={icon}>
                                 {auth}

@@ -118,6 +118,7 @@ const languages = {
             regulationOfIcon:
                 '正方形で幅が512ピクセル以下かつサイズが1MB以下であるPNGファイルを設定できます。',
             updatedMessage: '更新が完了しました。',
+            errorMessage: 'エラーが発生しました。',
         },
     },
     en: {
@@ -204,6 +205,7 @@ const languages = {
             regulationOfIcon:
                 'The .png file must be square and its width and file size must NOT exceed 512 px and 1MB.',
             updatedMessage: 'Done.',
+            errorMessage: 'Error.',
         },
     },
 }
