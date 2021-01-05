@@ -42,7 +42,7 @@ const UserPage: React.FC<Props> = (props) => {
             </Head>
             <Top>
                 <div className="text-center">
-                    <UserIcon height={256}>{user}</UserIcon>
+                    <UserIcon size={256}>{user}</UserIcon>
                     <h2>{user?.screenName}</h2>
                     {auth && auth.userID === user?.userID && (
                         <>

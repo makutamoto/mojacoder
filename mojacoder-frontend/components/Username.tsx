@@ -11,7 +11,7 @@ export interface UsernameProps {
 const Username: React.FC<UsernameProps> = (props) => {
     return (
         <>
-            <UserIcon width={24}>{props.children}</UserIcon>{' '}
+            <UserIcon size={24}>{props.children}</UserIcon>{' '}
             <Link href={`/users/${props.children?.screenName}`} passHref>
                 <a className="align-middle">{props.children?.screenName}</a>
             </Link>

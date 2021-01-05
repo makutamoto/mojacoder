@@ -1,8 +1,13 @@
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
 
-const i18n = {
-    locales: ['en', 'ja'],
-    defaultLocale: 'ja',
+const common = {
+    i18n: {
+        locales: ['en', 'ja'],
+        defaultLocale: 'ja',
+    },
+    images: {
+        domains: ['mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com'],
+    },
 }
 
 module.exports = (phase) => {
@@ -21,7 +26,7 @@ module.exports = (phase) => {
                     COOKIE_DOMAIN: 'localhost',
                     ORIGIN: 'http://localhost:3000',
                 },
-                i18n,
+                ...common,
             }
         default:
             return {
@@ -37,7 +42,7 @@ module.exports = (phase) => {
                     COOKIE_DOMAIN: 'mojacoder.vercel.app',
                     ORIGIN: 'https://mojacoder.vercel.app',
                 },
-                i18n,
+                ...common,
             }
     }
 }

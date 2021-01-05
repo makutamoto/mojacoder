@@ -92,10 +92,10 @@ const Settings: React.FC = () => {
                             variant="danger"
                         >{t`errorMessage`}</Alert>
                         <div className="text-center">
-                            <UserIcon width={256} src={icon}>
+                            <UserIcon size={256} src={icon}>
                                 {auth}
                             </UserIcon>
-                            <UserIcon width={24} src={icon}>
+                            <UserIcon size={24} src={icon}>
                                 {auth}
                             </UserIcon>
                         </div>
