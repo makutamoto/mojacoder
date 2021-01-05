@@ -28,6 +28,14 @@ const LANGUAGE_DEFINITION_FILE = "./language-definition.json"
 func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData) error {
 	const errorMessage = "Failed to process a code: %v"
 	var err error
+	err = os.RemoveAll(TEMP_DIR)
+	if err != nil {
+		return fmt.Errorf(errorMessage, err)
+	}
+	err = os.MkdirAll(TEMP_DIR, 755)
+	if err != nil {
+		return fmt.Errorf(errorMessage, err)
+	}
 	definition, exist := definitions[data.Lang]
 	if !exist {
 		return fmt.Errorf("Language not found: %s", data.Lang)

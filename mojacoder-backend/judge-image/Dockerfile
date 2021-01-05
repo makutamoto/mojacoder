@@ -10,7 +10,6 @@ RUN apt install -y python3.8
 RUN apt install -y build-essential
 
 RUN groupadd -r -g 400 code && useradd -r -u 400 -g 400 code
-RUN mkdir /tmp/mojacoder-judge/
 
 WORKDIR /usr/src/app
 COPY . .
