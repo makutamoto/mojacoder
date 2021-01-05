@@ -12,6 +12,8 @@ const OPTIONS = [
     { value: 'python3.8', label: 'Python 3.8' },
     { value: 'gcc-9.3.0', label: 'C (GCC 9.3.0)' },
     { value: 'g++-9.3.0', label: 'C++ (GCC 9.3.0)' },
+    { value: 'csharp-mono-csc-3.6.0', label: 'C# (Mono-csc 3.6.0)' },
+    { value: 'csharp-mono-mcs-6.12.0.107', label: 'C# (Mono-mcs 6.12.0.107)' },
 ]
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = (props) => {

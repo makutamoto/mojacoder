@@ -12,6 +12,8 @@ const LANGUAGE_TO_MODE: { [index: string]: string } = {
     'go-1.14': 'text/x-go',
     'gcc-9.3.0': 'text/x-csrc',
     'g++-9.3.0': 'text/x-c++src',
+    'csharp-mono-csc-3.6.0': 'text/x-csharp',
+    'csharp-mono-mcs-6.12.0.107': 'text/x-csharp',
 }
 
 export interface EditorProps {
