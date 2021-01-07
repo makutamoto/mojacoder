@@ -87,6 +87,9 @@ export class Judge extends cdk.Construct {
             logging: new AwsLogDriver({
                 streamPrefix: 'judge-container',
             }),
+            healthCheck: {
+                command: ['CMD-SHELL', 'curl -f http://localhost:3000/health || exit 1'],
+            },
             environment: {
                 AWS_ACCESS_KEY_ID: accessKey.ref,
                 AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,

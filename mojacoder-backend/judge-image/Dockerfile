@@ -27,6 +27,5 @@ COPY . .
 RUN go build .
 
 RUN apt install -y curl
-HEALTHCHECK CMD curl -f http://localhost:3000/health || exit 1
 
 ENTRYPOINT ./judge
