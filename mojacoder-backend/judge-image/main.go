@@ -85,6 +85,7 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 }
 
 func main() {
+	health()
 	session := session.New()
 	config := &aws.Config{Region: aws.String(AWS_REGION)}
 	judgeQueue = sqs.New(session, config)
