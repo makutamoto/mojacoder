@@ -16,6 +16,7 @@ const Status = {
     Normal: 'Normal',
     Posting: 'Posting',
     Done: 'Done',
+    FileTypeError: 'FileTypeError',
 } as const
 type Status = typeof Status[keyof typeof Status]
 
@@ -30,6 +31,10 @@ export const Post: React.FC = () => {
     const [status, setStatus] = useState<Status>(Status.Normal)
     const onPost = useCallback(async (files: File[]) => {
         setStatus(Status.Posting)
+        if (files.length === 0) {
+            setStatus(Status.FileTypeError)
+            return
+        }
         for (const file of files) {
             const { name } = parse(file.name)
             const { issueProblemUploadUrl } = await invokeMutation(IssueUrl, {
@@ -86,6 +91,12 @@ export const Post: React.FC = () => {
                                 variant="success"
                             >
                                 完了しました。
+                            </Alert>
+                            <Alert
+                                show={status === Status.FileTypeError}
+                                variant="danger"
+                            >
+                                ファイルタイプが異なります。
                             </Alert>
                         </div>
                     </>
