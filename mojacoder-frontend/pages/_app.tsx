@@ -36,6 +36,7 @@ const languages = {
         appbar: {
             mojacoder: 'MojaCoder',
             playground: 'Playground',
+            problems: '問題',
             postProblem: '問題を投稿',
             signUp: '登録',
             signIn: 'サインイン',
@@ -125,6 +126,7 @@ const languages = {
         appbar: {
             mojacoder: 'MojaCoder',
             playground: 'Playground',
+            problems: 'Problems',
             postProblem: 'Post Problem',
             signUp: 'Sign up',
             signIn: 'Sign in',
