@@ -25,6 +25,7 @@ export interface Problem {
     id: string
     slug: string
     title: string
+    datetime: string
     user: User
     statement: string
     likedByMe: boolean
@@ -73,6 +74,7 @@ export interface UserDetail {
 
 export interface Query {
     user: UserDetail | null
+    newProblems: Problem[]
 }
 
 export interface Mutation {

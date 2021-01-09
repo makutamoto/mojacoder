@@ -66,7 +66,7 @@ export async function invokeQuery<V>(query: DocumentNode, variables: V) {
 
 export async function invokeQueryWithApiKey<V>(
     query: DocumentNode,
-    variables: V
+    variables?: V
 ) {
     return (
         await clientWithApiKey.query<Query>({
