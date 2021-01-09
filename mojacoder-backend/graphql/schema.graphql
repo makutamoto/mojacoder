@@ -159,7 +159,7 @@ type ResponsePlayground @aws_cognito_user_pools @aws_iam {
 
 type Query @aws_cognito_user_pools @aws_api_key {
   user(userID: ID, username: String): UserDetail
-  newProblems: ProblemConnection!
+  newProblems: [Problem]!
 }
 
 type Subscription @aws_cognito_user_pools {
