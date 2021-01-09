@@ -26,4 +26,6 @@ WORKDIR /usr/src/app
 COPY . .
 RUN go build .
 
+RUN apt install -y curl
+
 ENTRYPOINT ./judge
