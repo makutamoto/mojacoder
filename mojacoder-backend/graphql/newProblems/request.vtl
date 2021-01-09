@@ -1,0 +1,15 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "#dummy = :dummy",
+        "expressionNames" : {
+            "#dummy" : "dummy"
+        },
+        "expressionValues" : {
+            ":dummy" : $util.dynamodb.toDynamoDBJson("A")
+        }
+    },
+    "index" : "datetime-index",
+    "scanIndexForward": false
+}

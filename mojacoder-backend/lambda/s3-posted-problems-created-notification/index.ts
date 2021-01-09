@@ -170,6 +170,9 @@ async function deployProblem(key: string): Promise<void> {
                             status: {
                                 S: 'PENDING',
                             },
+                            dummy: {
+                                S: 'dummy',
+                            },
                             likeCount: {
                                 N: '0',
                             },

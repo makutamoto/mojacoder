@@ -36,6 +36,17 @@ export class Problems extends cdk.Construct {
             },
         });
         problemTable.addGlobalSecondaryIndex({
+            indexName: 'datetime-index',
+            partitionKey: {
+                name: 'dummy',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.STRING,
+            },
+        });
+        problemTable.addGlobalSecondaryIndex({
             indexName: 'slug-index',
             partitionKey: {
                 name: 'userID',
@@ -195,6 +206,12 @@ export class Problems extends cdk.Construct {
             fieldName: 'problems',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problems/response.vtl')),
+        });
+        problemTableDataSource.createResolver({
+            typeName: 'Query',
+            fieldName: 'newProblems',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/newProblems/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/newProblems/response.vtl')),
         });
         const likeProblemDatasource = props.api.addDynamoDbDataSource('likeProblem', likersTable);
         likeProblemDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
