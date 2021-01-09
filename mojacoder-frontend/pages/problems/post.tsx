@@ -51,7 +51,7 @@ export const Post: React.FC = () => {
         setStatus(Status.Done)
     }, [])
     const { getRootProps, getInputProps } = useDropzone({
-        accept: 'application/zip',
+        accept: ['application/zip', 'application/x-zip-compressed'],
         onDrop: onPost,
     })
     return (
