@@ -1,5 +1,5 @@
 import React from 'react'
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import { Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
@@ -88,8 +88,3 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
         revalidate: 1,
     }
 }
-
-export const getStaticPaths: GetStaticPaths = async () => ({
-    paths: [],
-    fallback: true,
-})
