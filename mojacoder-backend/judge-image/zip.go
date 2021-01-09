@@ -25,9 +25,9 @@ func unzip(src, dest string) error {
 		defer fileReader.Close()
 
 		path := filepath.Join(dest, file.Name)
-		if file.FileInfo().IsDir() {
-			os.MkdirAll(path, file.Mode())
-		} else {
+		if !file.FileInfo().IsDir() {
+			dirname, _ := filepath.Split(path)
+			os.MkdirAll(dirname, file.Mode())
 			file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, file.Mode())
 			if err != nil {
 				return fmt.Errorf(errorMessage, err)
