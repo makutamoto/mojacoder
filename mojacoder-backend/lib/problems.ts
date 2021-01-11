@@ -129,7 +129,7 @@ export class Problems extends cdk.Construct {
         const postedProblems = new Bucket(this, 'postedProblems', {
             cors: [
                 {
-                    allowedMethods: [HttpMethods.PUT],
+                    allowedMethods: [HttpMethods.GET, HttpMethods.PUT],
                     allowedOrigins: ['https://mojacoder.vercel.app', 'http://localhost:3000'],
                     allowedHeaders: ['content-type'],
                 }
