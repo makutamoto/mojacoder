@@ -3,9 +3,6 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
-import ReactMarkdown from 'react-markdown'
-import Tex from '@matejmazur/react-katex'
-import math from 'remark-math'
 import { Alert } from 'react-bootstrap'
 import join from 'url-join'
 
@@ -17,10 +14,10 @@ import {
 } from '../../../../../lib/backend'
 import { UserDetail } from '../../../../../lib/backend_types'
 import { useLocalStorage } from '../../../../../lib/localstorage'
-import Sample from '../../../../../components/Sample'
 import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import Layout from '../../../../../components/Layout'
 import ButtonWithSpinner from '../../../../../components/ButtonWithSpinner'
+import Markdown from '../../../../../components/Markdown'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
 const Status = {
@@ -88,29 +85,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             </Head>
             <ProblemTop activeKey="problem" problem={user?.problem} />
             <Layout>
-                <ReactMarkdown
-                    source={user?.problem.statement}
-                    plugins={[math]}
-                    renderers={{
-                        code: ({ language, value }) => (
-                            <Sample title={language} value={value} />
-                        ),
-                        heading: (props) => {
-                            const H = `h${Math.min(
-                                6,
-                                props.level + 1
-                            )}` as React.ElementType
-                            return (
-                                <div>
-                                    <H>{props.children}</H>
-                                    <hr />
-                                </div>
-                            )
-                        },
-                        inlineMath: ({ value }) => <Tex math={value} />,
-                        math: ({ value }) => <Tex block math={value} />,
-                    }}
-                />
+                <Markdown source={user?.problem.statement} />
                 <div>
                     <h2>{t`submit`}</h2>
                     <hr />

@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 import { Alert } from 'react-bootstrap'
-import { useDropzone } from 'react-dropzone'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
@@ -10,6 +9,7 @@ import Layout from '../components/Layout'
 import Top from '../components/Top'
 import UserIcon from '../components/UserIcon'
 import ButtonWithSpinner from '../components/ButtonWithSpinner'
+import Dropzone from '../components/Dropzone'
 
 const Status = {
     Normal: 'Normal',
@@ -42,11 +42,6 @@ const Settings: React.FC = () => {
         },
         [setIcon]
     )
-    const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/png',
-        onDrop: onIconDrop,
-        multiple: false,
-    })
     const onClearIcon = useCallback(async () => {
         setStatus(Status.ClearingIcon)
         try {
@@ -99,15 +94,13 @@ const Settings: React.FC = () => {
                                 {auth}
                             </UserIcon>
                         </div>
-                        <div
-                            {...getRootProps({
-                                className: 'my-3 border rounded p-3 bg-light',
-                            })}
-                        >
-                            <input {...getInputProps()} />
-                            {t`dropHereOrSelect`}
-                            <div className="text-muted">{t`regulationOfIcon`}</div>
-                        </div>
+                        <Dropzone
+                            accept="image/png"
+                            onDrop={onIconDrop}
+                            multiple={false}
+                            message={t`dropHereOrSelect`}
+                            description={t`regulationOfIcon`}
+                        />
                         <div className="text-right">
                             <ButtonWithSpinner
                                 variant="danger"
