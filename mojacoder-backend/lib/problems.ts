@@ -172,6 +172,22 @@ export class Problems extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'issueProblemUploadUrl',
         });
+        const issueProblemDownloadUrlLambda = new NodejsFunction(this, 'issueProblemDownloadUrl', {
+            entry: join(__dirname, '../lambda/issue-problem-download-url-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
+            },
+        });
+        issueProblemDownloadUrlLambda.addToRolePolicy(new PolicyStatement({
+            actions: ['s3:GetObject'],
+            resources: [postedProblems.bucketArn + '/*'],
+        }));
+        const issueProblemDownloadUrlLambdaDatasource = props.api.addLambdaDataSource('issueProblemDownloadUrlLambda', issueProblemDownloadUrlLambda);
+        issueProblemDownloadUrlLambdaDatasource.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'issueProblemDownloadUrl',
+        });
         const testcasesForViewDatasource = props.api.addHttpDataSource('testcasesForView', 'https://' + testcasesForView.bucketRegionalDomainName, {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
