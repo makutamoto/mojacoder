@@ -257,6 +257,15 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         ]
     )
     const onPost = useCallback(async () => {
+        const testcase = testcases.get(currentTestcase)
+        if (
+            testcase &&
+            (testcase.input !== testcaseInput ||
+                testcase.output !== testcaseOutput)
+        ) {
+            window.alert('テストケースが更新されていません。')
+            return
+        }
         if (problemSlug.length === 0) {
             setStatus(WebEditorStatus.SlugNotSpecified)
             return
@@ -278,7 +287,16 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         setZip(data)
         await uploadProblem(problemSlug, data)
         setStatus(WebEditorStatus.Done)
-    }, [problemSlug, setStatus, problemTitle, problemStatement, testcases])
+    }, [
+        problemSlug,
+        setStatus,
+        problemTitle,
+        problemStatement,
+        testcases,
+        currentTestcase,
+        testcaseInput,
+        testcaseOutput,
+    ])
     return (
         <>
             <Tabs
