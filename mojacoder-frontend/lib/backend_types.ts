@@ -81,4 +81,5 @@ export interface Mutation {
     postComment: Comment
     postReply: Reply
     issueProblemUploadUrl: string
+    issueProblemDownloadUrl: string
 }
