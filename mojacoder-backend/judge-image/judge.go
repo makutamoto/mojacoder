@@ -60,6 +60,7 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 	}
 	inPath := filepath.Join(testcasesPath, "in")
 	outPath := filepath.Join(testcasesPath, "out")
+	os.MkdirAll(inPath, 775)
 	inTestcases, err := ioutil.ReadDir(inPath)
 	if err != nil {
 		return fmt.Errorf(errorMessage, err)
