@@ -17,7 +17,7 @@
     },
     "g++-9.3.0": {
         "filename": "main.cpp",
-        "compileCommand": "g++ main.cpp",
+        "compileCommand": "g++ -std=gnu++17 -Wall -Wextra -O2 main.cpp",
         "runCommand": "./a.out"
     },
     "csharp-mono-csc-3.6.0": {
