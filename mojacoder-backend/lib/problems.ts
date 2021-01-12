@@ -36,9 +36,9 @@ export class Problems extends cdk.Construct {
             },
         });
         problemTable.addGlobalSecondaryIndex({
-            indexName: 'datetime-index',
+            indexName: 'status-index',
             partitionKey: {
-                name: 'dummy',
+                name: 'status',
                 type: AttributeType.STRING,
             },
             sortKey: {
@@ -300,6 +300,32 @@ export class Problems extends cdk.Construct {
             fieldName: 'replies',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/replies/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/replies/response.vtl')),
+        });
+        const deleteProblemGetItemFunction = problemTableDataSource.createFunction({
+            name: 'deleteProblemGetItem',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/getItem/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/getItem/response.vtl')),
+        });
+        const deleteProblemDeleteItemsDatasource = props.api.addDynamoDbDataSource('deleteProblemDeleteItems', slugTable)
+        deleteProblemDeleteItemsDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['dynamodb:DeleteItem'],
+            resources: [problemTable.tableArn],
+        }));
+        const deleteProblemDeleteItemsFunction = deleteProblemDeleteItemsDatasource.createFunction({
+            name: 'deleteProblemDeleteItems',
+            requestMappingTemplate: MappingTemplate.fromString(
+                MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/deleteItems/request.vtl')).renderTemplate()
+                    .replace(/%SLUG_TABLE%/g, slugTable.tableName)
+                    .replace(/%PROBLEM_TABLE%/g, problemTable.tableName)
+            ),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/deleteItems/response.vtl')),
+        });
+        props.api.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'deleteProblem',
+            pipelineConfig: [deleteProblemGetItemFunction, deleteProblemDeleteItemsFunction],
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/response.vtl')),
         });
     }
 }

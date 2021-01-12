@@ -168,10 +168,7 @@ async function deployProblem(key: string): Promise<void> {
                                 S: (new Date()).toISOString(),
                             },
                             status: {
-                                S: 'PENDING',
-                            },
-                            dummy: {
-                                S: 'A',
+                                S: 'CREATED',
                             },
                             likeCount: {
                                 N: '0',

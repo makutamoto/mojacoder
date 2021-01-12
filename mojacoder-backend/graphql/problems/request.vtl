@@ -10,6 +10,15 @@
             ":userID" : $util.dynamodb.toDynamoDBJson($context.source.userID)
         }
     },
+    "filter" : {
+        "expression" : "#status = :status",
+        "expressionNames" : {
+            "#status" : "status"
+        },
+        "expressionValues" : {
+            ":status" : $util.dynamodb.toDynamoDBJson("CREATED")
+        },
+    },
     "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
     "index" : "userID-index"
 }

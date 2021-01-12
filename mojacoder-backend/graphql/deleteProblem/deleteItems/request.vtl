@@ -1,0 +1,23 @@
+{
+    "version" : "2018-05-29",
+    "operation": "TransactWriteItems",
+    "transactItems": [
+        #if(!$util.isNull($context.prev.result))
+        {
+            "table": "%SLUG_TABLE%",
+            "operation" : "DeleteItem",
+            "key" : {
+                "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
+                "slug" : $util.dynamodb.toDynamoDBJson($context.arguments.input.slug)
+            }
+        },
+        {
+            "table": "%PROBLEM_TABLE%",
+            "operation" : "DeleteItem",
+            "key" : {
+                "id" : $util.dynamodb.toDynamoDBJson($context.prev.result.id),
+            }
+        }
+        #end
+    ]
+}

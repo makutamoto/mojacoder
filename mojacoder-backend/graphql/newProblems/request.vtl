@@ -2,14 +2,14 @@
     "version" : "2018-05-29",
     "operation" : "Query",
     "query" : {
-        "expression" : "#dummy = :dummy",
+        "expression" : "#status = :status",
         "expressionNames" : {
-            "#dummy" : "dummy"
+            "#status" : "status"
         },
         "expressionValues" : {
-            ":dummy" : $util.dynamodb.toDynamoDBJson("A")
+            ":status" : $util.dynamodb.toDynamoDBJson("CREATED")
         }
     },
-    "index" : "datetime-index",
+    "index" : "status-index",
     "scanIndexForward": false
 }
