@@ -28,6 +28,7 @@ const GetIfLiked = gql`
     query GetIfLiked($authorUsername: String!, $problemSlug: String!) {
         user(username: $authorUsername) {
             problem(slug: $problemSlug) {
+                id
                 likedByMe
                 likeCount
                 commentCount
@@ -39,6 +40,7 @@ const GetLikeCount = gql`
     query GetLikeCount($authorUsername: String!, $problemSlug: String!) {
         user(username: $authorUsername) {
             problem(slug: $problemSlug) {
+                id
                 likeCount
                 commentCount
             }
