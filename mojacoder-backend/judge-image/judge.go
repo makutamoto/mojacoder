@@ -84,7 +84,7 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 			return fmt.Errorf(errorMessage, err)
 		}
 		stdoutWriter := strings.Builder{}
-		result, err := run(definition, inTestcaseFile, &stdoutWriter, nil, 2, 1024)
+		result, err := run(definition, inTestcaseFile, &stdoutWriter, nil, 2, 262144)
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
 		}
