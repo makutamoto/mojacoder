@@ -16,6 +16,7 @@ const LANGUAGE_TO_MODE: { [index: string]: string } = {
     'csharp-mono-csc-3.6.0': 'text/x-csharp',
     'csharp-mono-mcs-6.12.0.107': 'text/x-csharp',
     'bf-20041219': 'text/x-brainfuck',
+    cat: 'text/plain',
 }
 
 export interface EditorProps {

@@ -6,6 +6,7 @@ const programmingLanguageIDToName = {
     'csharp-mono-csc-3.6.0': 'C# (Mono-csc 3.6.0)',
     'csharp-mono-mcs-6.12.0.107': 'C# (Mono-mcs 6.12.0.107)',
     'bf-20041219': 'Brainfuck (bf 20041219)',
+    cat: 'Text (cat)',
 } as const
 
 export function getProgrammingLanguageNameFromID(id: string) {
