@@ -5,6 +5,7 @@ if (process.browser) {
     require('codemirror/mode/clike/clike')
     require('codemirror/mode/go/go')
     require('codemirror/mode/python/python')
+    require('codemirror/mode/brainfuck/brainfuck')
 }
 
 const LANGUAGE_TO_MODE: { [index: string]: string } = {
@@ -14,6 +15,7 @@ const LANGUAGE_TO_MODE: { [index: string]: string } = {
     'g++-9.3.0': 'text/x-c++src',
     'csharp-mono-csc-3.6.0': 'text/x-csharp',
     'csharp-mono-mcs-6.12.0.107': 'text/x-csharp',
+    'bf-20041219': 'text/x-brainfuck',
 }
 
 export interface EditorProps {
