@@ -13,9 +13,18 @@
         },
         {
             "table": "%PROBLEM_TABLE%",
-            "operation" : "DeleteItem",
+            "operation" : "UpdateItem",
             "key" : {
                 "id" : $util.dynamodb.toDynamoDBJson($context.prev.result.id),
+            },
+            "update" : {
+                "expression" : "SET #status = :status",
+                "expressionNames" : {
+                    "#status" : "status"
+                },
+                "expressionValues" : {
+                    ":status" : $util.dynamodb.toDynamoDBJson("DELETED")
+                }
             }
         }
         #end
