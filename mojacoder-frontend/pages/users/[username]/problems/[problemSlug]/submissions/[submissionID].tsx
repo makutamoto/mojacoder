@@ -148,7 +148,7 @@ const Submissions: React.FC<Props> = (props) => {
                         </tr>
                         <tr>
                             <td className="text-nowrap">実行時間</td>
-                            <td className="text-nowrap">{result?.time} kb</td>
+                            <td className="text-nowrap">{result?.time} ms</td>
                         </tr>
                         <tr>
                             <td className="text-nowrap">メモリ</td>
