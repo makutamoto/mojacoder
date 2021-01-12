@@ -13,6 +13,7 @@ import { UserDetail } from '../../../lib/backend_types'
 import Layout from '../../../components/Layout'
 import Top from '../../../components/Top'
 import UserIcon from '../../../components/UserIcon'
+import Heading from '../../../components/Heading'
 
 interface Props {
     user?: UserDetail
@@ -62,8 +63,7 @@ const UserPage: React.FC<Props> = (props) => {
                 </div>
             </Top>
             <Layout>
-                <h2>{t`problem`}</h2>
-                <hr />
+                <Heading>{t`problem`}</Heading>
                 <Table responsive bordered striped hover>
                     <thead>
                         <tr>

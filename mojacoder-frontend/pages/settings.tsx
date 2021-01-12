@@ -10,6 +10,7 @@ import Top from '../components/Top'
 import UserIcon from '../components/UserIcon'
 import ButtonWithSpinner from '../components/ButtonWithSpinner'
 import Dropzone from '../components/Dropzone'
+import Heading from '../components/Heading'
 
 const Status = {
     Normal: 'Normal',
@@ -76,8 +77,7 @@ const Settings: React.FC = () => {
             <Layout>
                 {auth ? (
                     <>
-                        <h2>{t`icon`}</h2>
-                        <hr />
+                        <Heading>{t`icon`}</Heading>
                         <Alert
                             show={status === Status.DoneIcon}
                             variant="success"

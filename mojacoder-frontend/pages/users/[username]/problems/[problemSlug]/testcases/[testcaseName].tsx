@@ -7,6 +7,7 @@ import { Problem } from '../../../../../../lib/backend_types'
 import Editor from '../../../../../../components/Editor'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
+import Heading from '../../../../../../components/Heading'
 
 interface Testcase {
     in: string
@@ -23,11 +24,9 @@ const Submissions: React.FC<Props> = (props) => {
         <>
             <ProblemTop activeKey="testcases" problem={problem} />
             <Layout>
-                <h2>入力</h2>
-                <hr />
+                <Heading>入力</Heading>
                 <Editor value={testcase?.in} readOnly />
-                <h2>出力</h2>
-                <hr />
+                <Heading>出力</Heading>
                 <Editor value={testcase?.out} readOnly />
             </Layout>
         </>

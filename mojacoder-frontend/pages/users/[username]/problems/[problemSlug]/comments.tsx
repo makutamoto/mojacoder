@@ -24,6 +24,7 @@ import ProblemTop from '../../../../../containers/ProblemTop'
 import IconWithText from '../../../../../components/IconWithText'
 import ButtonWithSpinner from '../../../../../components/ButtonWithSpinner'
 import Markdown from '../../../../../components/Markdown'
+import Heading from '../../../../../components/Heading'
 
 import style from './comments.module.css'
 
@@ -186,8 +187,7 @@ const ProblemPage: React.FC<Props> = (props) => {
         <>
             <ProblemTop problem={user?.problem} />
             <Layout>
-                <h2>コメント一覧</h2>
-                <hr />
+                <Heading>コメント一覧</Heading>
                 {comments ? (
                     comments.items.map((comment) => (
                         <Media

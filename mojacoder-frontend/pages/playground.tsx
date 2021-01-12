@@ -12,6 +12,7 @@ import Editor from '../components/Editor'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
 import AlertWithSpinner from '../components/AlertWithSpinner'
+import Heading from '../components/Heading'
 
 import Session from '../lib/session'
 
@@ -131,8 +132,7 @@ const Playground: React.FC = () => {
                                 value={{ lang, code }}
                                 onChange={onCodeEditorChange}
                             />
-                            <h2>{t`stdin`}</h2>
-                            <hr />
+                            <Heading>{t`stdin`}</Heading>
                             <Editor value={stdin} onChange={setStdin} />
                             <Button
                                 variant="primary"
@@ -180,11 +180,9 @@ const Playground: React.FC = () => {
                             </Table>
                         )}
                         <div>
-                            <h2>{t`stdout`}</h2>
-                            <hr />
+                            <Heading>{t`stdout`}</Heading>
                             <Editor value={result.stdout} readOnly />
-                            <h2>{t`stderr`}</h2>
-                            <hr />
+                            <Heading>{t`stderr`}</Heading>
                             <Editor value={result.stderr} readOnly />
                         </div>
                     </>

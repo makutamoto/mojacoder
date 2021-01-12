@@ -18,6 +18,7 @@ import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import Layout from '../../../../../components/Layout'
 import ButtonWithSpinner from '../../../../../components/ButtonWithSpinner'
 import Markdown from '../../../../../components/Markdown'
+import Heading from '../../../../../components/Heading'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
 const Status = {
@@ -87,8 +88,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             <Layout>
                 <Markdown source={user?.problem.statement} />
                 <div>
-                    <h2>{t`submit`}</h2>
-                    <hr />
+                    <Heading>{t`submit`}</Heading>
                     {auth ? (
                         <>
                             {status === Status.EmptySubmission && (
