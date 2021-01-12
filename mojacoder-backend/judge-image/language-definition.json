@@ -29,5 +29,9 @@
         "filename": "main.cs",
         "compileCommand": "mcs main.cs",
         "runCommand": "mono main.exe"
+    },
+    "bf-20041219": {
+        "filename": "main.bf",
+        "runCommand": "bf main.bf"
     }
 }

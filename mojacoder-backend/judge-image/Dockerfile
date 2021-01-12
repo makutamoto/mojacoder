@@ -9,7 +9,7 @@ RUN apt update
 
 RUN apt install -y golang-1.14
 ENV PATH $PATH:/usr/lib/go-1.14/bin/
-RUN apt install -y python3.8 build-essential mono-devel
+RUN apt install -y python3.8 build-essential mono-devel bf
 
 WORKDIR /tmp
 RUN apt install -y wget zip
