@@ -23,6 +23,7 @@ import Layout from '../../../../../components/Layout'
 import ProblemTop from '../../../../../containers/ProblemTop'
 import IconWithText from '../../../../../components/IconWithText'
 import ButtonWithSpinner from '../../../../../components/ButtonWithSpinner'
+import Markdown from '../../../../../components/Markdown'
 
 import style from './comments.module.css'
 
@@ -200,7 +201,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                             <Media.Body>
                                 <Username>{comment.user.detail}</Username>
                                 <p className="mb-0 p-2 text-break">
-                                    {comment.content}
+                                    <Markdown source={comment.content} />
                                 </p>
                                 <div className="d-flex text-secondary">
                                     <span className="flex-grow-1">
@@ -219,7 +220,9 @@ const ProblemPage: React.FC<Props> = (props) => {
                                             </Username>
                                             <div className={style.reply}>
                                                 <p className="mb-0 p-2 text-break">
-                                                    {reply.content}
+                                                    <Markdown
+                                                        source={reply.content}
+                                                    />
                                                 </p>
                                                 <div className="text-right text-secondary">
                                                     <DateTime>
