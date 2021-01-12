@@ -199,7 +199,9 @@ const ProblemPage: React.FC<Props> = (props) => {
                         >
                             <Media.Body>
                                 <Username>{comment.user.detail}</Username>
-                                <p className="mb-0 p-2">{comment.content}</p>
+                                <p className="mb-0 p-2 text-break">
+                                    {comment.content}
+                                </p>
                                 <div className="d-flex text-secondary">
                                     <span className="flex-grow-1">
                                         <IconWithText icon={<ReplyIcon />}>
@@ -216,7 +218,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                                                 {reply.user.detail}
                                             </Username>
                                             <div className={style.reply}>
-                                                <p className="mb-0 p-2">
+                                                <p className="mb-0 p-2 text-break">
                                                     {reply.content}
                                                 </p>
                                                 <div className="text-right text-secondary">
