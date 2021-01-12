@@ -150,7 +150,13 @@ const Playground: React.FC = () => {
                             {t`runningCode`}
                         </AlertWithSpinner>
                         {status === Status.Received && (
-                            <Table className="my-4" bordered striped hover>
+                            <Table
+                                className="my-4"
+                                responsive
+                                bordered
+                                striped
+                                hover
+                            >
                                 <tbody>
                                     <tr>
                                         <td className="text-nowrap">{t`exitCode`}</td>

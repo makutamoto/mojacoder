@@ -35,7 +35,7 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
     const [editorData, setEditorData] = useState<ProblemEditorData | null>(null)
     useEffect(() => {
         if (query.problemSlug) {
-            ;(async () => {
+            const getProblem = async () => {
                 const slug = query.problemSlug as string
                 const { issueProblemDownloadUrl } = await invokeMutation(
                     IssueProblemDownloadUrl,
@@ -79,7 +79,8 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                         testcases,
                     },
                 })
-            })()
+            }
+            getProblem()
         }
     }, [query])
     return (

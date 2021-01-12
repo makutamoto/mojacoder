@@ -64,7 +64,7 @@ const UserPage: React.FC<Props> = (props) => {
             <Layout>
                 <h2>{t`problem`}</h2>
                 <hr />
-                <Table bordered striped hover>
+                <Table responsive bordered striped hover>
                     <thead>
                         <tr>
                             <th className="text-nowrap">{t`problemName`}</th>

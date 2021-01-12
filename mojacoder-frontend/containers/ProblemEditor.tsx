@@ -338,7 +338,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                     <Markdown source={problemStatement} />
                 </Tab>
                 <Tab className="py-3" eventKey="testcases" title="テストケース">
-                    <Table bordered striped hover>
+                    <Table responsive bordered striped hover>
                         <thead>
                             <tr>
                                 <th></th>

@@ -22,7 +22,7 @@ export const Post: React.FC<Props> = ({ newProblems }) => {
                 <h1 className="text-center">新規問題一覧</h1>
             </Top>
             <Layout>
-                <Table bordered striped hover>
+                <Table responsive bordered striped hover>
                     <thead>
                         <tr>
                             <th className="text-nowrap">投稿日時</th>
