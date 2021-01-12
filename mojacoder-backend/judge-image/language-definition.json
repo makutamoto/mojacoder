@@ -37,5 +37,10 @@
     "cat": {
         "filename": "main.txt",
         "runCommand": "cat main.txt"
+    },
+    "rust-1.43.0": {
+        "filename": "main.rs",
+        "compileCommand": "rustc main.rs",
+        "runCommand": "./main"
     }
 }
