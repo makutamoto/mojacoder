@@ -33,5 +33,9 @@
     "bf-20041219": {
         "filename": "main.bf",
         "runCommand": "bf main.bf"
+    },
+    "cat": {
+        "filename": "main.txt",
+        "runCommand": "cat main.txt"
     }
 }
