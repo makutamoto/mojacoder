@@ -301,7 +301,8 @@ export class Problems extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/replies/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/replies/response.vtl')),
         });
-        const deleteProblemGetItemFunction = problemTableDataSource.createFunction({
+        const slugTableDatasource = props.api.addDynamoDbDataSource('slugTable', slugTable);
+        const deleteProblemGetItemFunction = slugTableDatasource.createFunction({
             name: 'deleteProblemGetItem',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/getItem/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/getItem/response.vtl')),
