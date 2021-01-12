@@ -62,6 +62,11 @@ export function getJudgeStatusFromTestcases(
             testcase.status === JudgeStatus.MLE
         ) {
             wholeStatus = JudgeStatus.MLE
+        } else if (
+            wholeStatus === JudgeStatus.AC &&
+            testcase.status === JudgeStatus.RE
+        ) {
+            wholeStatus = JudgeStatus.RE
         }
         time = Math.max(time, testcase.time)
         memory = Math.max(memory, testcase.memory)
