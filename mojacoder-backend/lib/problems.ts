@@ -35,17 +35,17 @@ export class Problems extends cdk.Construct {
                 type: AttributeType.STRING,
             },
         });
-        problemTable.addGlobalSecondaryIndex({
-            indexName: 'status-index',
-            partitionKey: {
-                name: 'status',
-                type: AttributeType.STRING,
-            },
-            sortKey: {
-                name: 'datetime',
-                type: AttributeType.STRING,
-            },
-        });
+        // problemTable.addGlobalSecondaryIndex({
+        //     indexName: 'status-index',
+        //     partitionKey: {
+        //         name: 'status',
+        //         type: AttributeType.STRING,
+        //     },
+        //     sortKey: {
+        //         name: 'datetime',
+        //         type: AttributeType.STRING,
+        //     },
+        // });
         problemTable.addGlobalSecondaryIndex({
             indexName: 'slug-index',
             partitionKey: {
