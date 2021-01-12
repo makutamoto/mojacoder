@@ -15,7 +15,7 @@
             "table": "%PROBLEM_TABLE%",
             "operation" : "UpdateItem",
             "key" : {
-                "id" : $util.dynamodb.toDynamoDBJson($context.prev.result.id),
+                "id" : $util.dynamodb.toDynamoDBJson($context.prev.result.problemID),
             },
             "update" : {
                 "expression" : "SET #status = :status",

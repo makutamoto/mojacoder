@@ -1,5 +1,5 @@
 #if($util.isNull($context.result))
     null
 #else
-    $util.toJson({"id": $context.result.id, "slug": $context.result.slug, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "likeCount": $context.result.likeCount, "commentCount": $context.result.commentCount, "statement": $context.result.statement, "testcaseNames": $context.result.testcaseNames, "submission": $context.result.submission, "submissions": $context.result.submissions})
+    $util.toJson({"problemID": $context.result.problemID})
 #end

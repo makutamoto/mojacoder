@@ -144,7 +144,7 @@ type Mutation {
   postReply(input: PostReplyInput!): Reply! @aws_cognito_user_pools
   issueProblemUploadUrl(input: IssueProblemUploadUrlInput!): String! @aws_cognito_user_pools
   issueProblemDownloadUrl(input: IssueProblemDownloadUrlInput!): String! @aws_cognito_user_pools
-  deleteProblem(input: DeleteProblemInput!): Problem @aws_cognito_user_pools
+  deleteProblem(input: DeleteProblemInput!): String @aws_cognito_user_pools
   setUserIcon(input: SetUserIconInput): String @aws_cognito_user_pools
 }
 
