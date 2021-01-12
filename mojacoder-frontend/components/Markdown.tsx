@@ -12,6 +12,7 @@ export interface MarkdownProps {
 const Markdown: React.FC<MarkdownProps> = ({ source }) => {
     return (
         <ReactMarkdown
+            className="text-break"
             source={source}
             plugins={[math]}
             renderers={{
