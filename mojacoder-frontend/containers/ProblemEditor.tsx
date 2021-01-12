@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
+import { useRouter } from 'next/router'
 import { Alert, Button, Form, Tab, Tabs, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 import parse from 'path-parse'
@@ -109,6 +110,7 @@ const WebEditorStatus = {
     Posting: 'Posting',
     SlugNotSpecified: 'SlugNotSpecified',
     Done: 'Done',
+    Deleting: 'Deleting',
 } as const
 type WebEditorStatus = typeof WebEditorStatus[keyof typeof WebEditorStatus]
 export interface Testcase {
@@ -123,6 +125,11 @@ function readFileAsText(file: File) {
         reader.readAsText(file)
     })
 }
+const DeleteProblem = gql`
+    mutation DeleteProblem($input: DeleteProblemInput!) {
+        deleteProblem(input: $input)
+    }
+`
 export interface WebEditorData {
     slug: string
     title: string
@@ -137,6 +144,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     const [status, setStatus] = useState<WebEditorStatus>(
         WebEditorStatus.Normal
     )
+    const router = useRouter()
     const [problemSlug, setProblemSlug] = useState(data?.slug || '')
     const [problemTitle, setProblemTitle] = useState(data?.title || '')
     const [problemStatement, setProblemStatement] = useState(
@@ -297,6 +305,16 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         testcaseInput,
         testcaseOutput,
     ])
+    const onDelete = useCallback(async () => {
+        if (!window.confirm('削除してよろしいですか？')) return
+        setStatus(WebEditorStatus.Deleting)
+        await invokeMutation(DeleteProblem, {
+            input: {
+                slug: problemSlug,
+            },
+        })
+        router.push('/')
+    }, [setStatus, problemSlug, router])
     return (
         <>
             <Tabs
@@ -441,6 +459,17 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                 完了しました。
             </Alert>
             <div className="text-right">
+                {data && (
+                    <>
+                        <ButtonWithSpinner
+                            variant="danger"
+                            loading={status === WebEditorStatus.Deleting}
+                            onClick={onDelete}
+                        >
+                            削除
+                        </ButtonWithSpinner>{' '}
+                    </>
+                )}
                 <ButtonWithSpinner
                     loading={status === WebEditorStatus.Posting}
                     onClick={onPost}
