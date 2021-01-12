@@ -16,6 +16,7 @@ const OPTIONS = [
     { value: 'csharp-mono-mcs-6.12.0.107', label: 'C# (Mono-mcs 6.12.0.107)' },
     { value: 'bf-20041219', label: 'Brainfuck (bf 20041219)' },
     { value: 'cat', label: 'Text (cat)' },
+    { value: 'rust-1.43.0', label: 'Rust (rustc 1.43.0)' },
 ]
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = (props) => {

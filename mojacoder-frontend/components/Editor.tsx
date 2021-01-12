@@ -6,6 +6,7 @@ if (process.browser) {
     require('codemirror/mode/go/go')
     require('codemirror/mode/python/python')
     require('codemirror/mode/brainfuck/brainfuck')
+    require('codemirror/mode/rust/rust')
 }
 
 const LANGUAGE_TO_MODE: { [index: string]: string } = {
@@ -17,6 +18,7 @@ const LANGUAGE_TO_MODE: { [index: string]: string } = {
     'csharp-mono-mcs-6.12.0.107': 'text/x-csharp',
     'bf-20041219': 'text/x-brainfuck',
     cat: 'text/plain',
+    'rust-1.43.0': 'text/x-rustsrc',
 }
 
 export interface EditorProps {
