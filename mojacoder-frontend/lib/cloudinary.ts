@@ -4,7 +4,7 @@ import join from 'url-join'
 import { Problem } from './backend_types'
 
 const cloudinary = new Cloudinary({
-    cloud_name: 'Makutamoto',
+    ['cloud_name']: 'Makutamoto',
     secure: true,
 })
 
