@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -13,6 +13,7 @@ import {
     invokeMutation,
 } from '../../../../../lib/backend'
 import { UserDetail } from '../../../../../lib/backend_types'
+import { generateProblemOGP } from '../../../../../lib/cloudinary'
 import { useLocalStorage } from '../../../../../lib/localstorage'
 import CodeEditor, { Code } from '../../../../../components/CodeEditor'
 import Layout from '../../../../../components/Layout'
@@ -48,6 +49,9 @@ const ProblemPage: React.FC<Props> = (props) => {
     const [status, setStatus] = useState<Status>(Status.Normal)
     const [lang, setLang] = useLocalStorage('code-lang', 'go-1.14')
     const [code, setCode] = useState('')
+    const ogpImage = useMemo(() => generateProblemOGP(user.problem), [
+        user.problem,
+    ])
     const onCodeEditorChange = useCallback(
         (value: Code) => {
             setLang(value.lang)
@@ -74,15 +78,12 @@ const ProblemPage: React.FC<Props> = (props) => {
     return (
         <>
             <Head>
-                {user && (
-                    <>
-                        <meta property="twitter:card" content="summary" />
-                        <meta
-                            property="og:title"
-                            content={`${user.problem.title} | MojaCoder`}
-                        />
-                    </>
-                )}
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta
+                    property="og:title"
+                    content={`${user.problem.title} | MojaCoder`}
+                />
+                <meta property="og:image" content={ogpImage} />
             </Head>
             <ProblemTop activeKey="problem" problem={user.problem} />
             <Layout>
