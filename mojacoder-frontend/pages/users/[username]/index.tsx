@@ -16,12 +16,11 @@ import UserIcon from '../../../components/UserIcon'
 import Heading from '../../../components/Heading'
 
 interface Props {
-    user?: UserDetail
+    user: UserDetail
 }
 
-const UserPage: React.FC<Props> = (props) => {
+const UserPage: React.FC<Props> = ({ user }) => {
     const { t } = useI18n('user')
-    const { user } = props
     const { auth, setAuth } = Auth.useContainer()
     const OnClickSignOutCallback = useCallback(() => {
         Cognito.signOut()
@@ -44,8 +43,8 @@ const UserPage: React.FC<Props> = (props) => {
             <Top>
                 <div className="text-center">
                     <UserIcon size={256}>{user}</UserIcon>
-                    <h2>{user?.screenName}</h2>
-                    {auth && auth.userID === user?.userID && (
+                    <h2>{user.screenName}</h2>
+                    {auth && auth.userID === user.userID && (
                         <>
                             <Button
                                 variant="danger"
@@ -72,11 +71,11 @@ const UserPage: React.FC<Props> = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {user?.problems.items.map((item) => (
+                        {user.problems.items.map((item) => (
                             <tr key={item.slug}>
                                 <td className="text-nowrap">
                                     <Link
-                                        href={`/users/${user?.screenName}/problems/${item.slug}`}
+                                        href={`/users/${user.screenName}/problems/${item.slug}`}
                                     >
                                         <a>{item.title}</a>
                                     </Link>
@@ -113,7 +112,7 @@ const GetUser = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetUser, {
-        username: params.username || '',
+        username: params.username,
     })
     if (res.user === null) {
         return {
