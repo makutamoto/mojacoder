@@ -15,19 +15,18 @@ interface Testcase {
 }
 
 interface Props {
-    problem?: Problem
-    testcase?: Testcase
+    problem: Problem
+    testcase: Testcase
 }
-const Submissions: React.FC<Props> = (props) => {
-    const { problem, testcase } = props
+const Submissions: React.FC<Props> = ({ problem, testcase }) => {
     return (
         <>
             <ProblemTop activeKey="testcases" problem={problem} />
             <Layout>
                 <Heading>入力</Heading>
-                <Editor value={testcase?.in} readOnly />
+                <Editor value={testcase.in} readOnly />
                 <Heading>出力</Heading>
-                <Editor value={testcase?.out} readOnly />
+                <Editor value={testcase.out} readOnly />
             </Layout>
         </>
     )
@@ -73,9 +72,9 @@ const GetOutTestcase = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const resIn = await invokeQueryWithApiKey(GetProblemOverview, {
-        authorUsername: params.username || '',
-        problemSlug: params.problemSlug || '',
-        testcaseName: params.testcaseName || '',
+        authorUsername: params.username,
+        problemSlug: params.problemSlug,
+        testcaseName: params.testcaseName,
     })
     if (
         resIn.user === null ||
@@ -87,9 +86,9 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
         }
     }
     const resOut = await invokeQueryWithApiKey(GetOutTestcase, {
-        authorUsername: params.username || '',
-        problemSlug: params.problemSlug || '',
-        testcaseName: params.testcaseName || '',
+        authorUsername: params.username,
+        problemSlug: params.problemSlug,
+        testcaseName: params.testcaseName,
     })
     if (
         resOut.user === null ||

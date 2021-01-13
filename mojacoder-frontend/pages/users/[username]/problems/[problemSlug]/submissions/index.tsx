@@ -54,13 +54,12 @@ const GetSubmissions = gql`
 `
 
 interface Props {
-    problem?: Problem
+    problem: Problem
 }
-const Submissions: React.FC<Props> = (props) => {
+const Submissions: React.FC<Props> = ({ problem }) => {
     const { t } = useI18n('submissions')
     const { query, pathname } = useRouter()
     const { auth } = Auth.useContainer()
-    const { problem } = props
     const me = query.me === 'true'
     const [submissions, setSubmissions] = useState<Submission[] | null>(null)
     useEffect(() => {
@@ -70,11 +69,11 @@ const Submissions: React.FC<Props> = (props) => {
             if (valid) {
                 if (!me || auth) {
                     invokeQueryWithApiKey(GetSubmissions, {
-                        authorUsername: query.username || '',
-                        problemSlug: query.problemSlug || '',
+                        authorUsername: query.username,
+                        problemSlug: query.problemSlug,
                         userID: me ? auth.userID : null,
                     }).then((data) => {
-                        const items = data.user?.problem.submissions.items
+                        const items = data.user.problem.submissions.items
                         setSubmissions(items)
                         if (
                             items &&
@@ -162,8 +161,8 @@ const GetProblemOverview = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblemOverview, {
-        username: params.username || '',
-        problemSlug: params.problemSlug || '',
+        username: params.username,
+        problemSlug: params.problemSlug,
     })
     if (res.user === null || res.user.problem === null) {
         return {

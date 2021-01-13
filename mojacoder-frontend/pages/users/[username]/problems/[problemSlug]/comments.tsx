@@ -123,11 +123,10 @@ const PostReply = gql`
 `
 
 interface Props {
-    user?: UserDetail
+    user: UserDetail
 }
 
-const ProblemPage: React.FC<Props> = (props) => {
-    const { user } = props
+const ProblemPage: React.FC<Props> = ({ user }) => {
     const { auth } = Auth.useContainer()
     const { query } = useRouter()
     const [status, setStatus] = useState<Status>(Status.Normal)
@@ -160,7 +159,7 @@ const ProblemPage: React.FC<Props> = (props) => {
         } else {
             invokeMutation(PostComment, {
                 input: {
-                    problemID: user.problem?.id || '',
+                    problemID: user.problem.id,
                     content: content,
                 },
             }).then((res) => {
@@ -176,16 +175,16 @@ const ProblemPage: React.FC<Props> = (props) => {
     }, [query, content, comments, setComments, setStatus, replyTargetID])
     useEffect(() => {
         invokeQueryWithApiKey(GetComments, {
-            authorUsername: query.username || '',
-            problemSlug: query.problemSlug || '',
+            authorUsername: query.username,
+            problemSlug: query.problemSlug,
         }).then((res) => {
-            const comments = res.user?.problem.comments || null
+            const comments = res.user.problem.comments
             setComments(comments)
         })
     }, [query])
     return (
         <>
-            <ProblemTop problem={user?.problem} />
+            <ProblemTop problem={user.problem} />
             <Layout>
                 <Heading>コメント一覧</Heading>
                 {comments ? (
@@ -311,8 +310,8 @@ const GetProblem = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblem, {
-        authorUsername: params.username || '',
-        problemSlug: params.problemSlug || '',
+        authorUsername: params.username,
+        problemSlug: params.problemSlug,
     })
     if (res.user === null || res.user.problem === null) {
         return {

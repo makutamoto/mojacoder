@@ -10,14 +10,13 @@ import Layout from '../../../../../components/Layout'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
 interface Props {
-    user?: UserDetail
+    user: UserDetail
 }
 
-const ProblemPage: React.FC<Props> = (props) => {
-    const { user } = props
+const ProblemPage: React.FC<Props> = ({ user }) => {
     return (
         <>
-            <ProblemTop problem={user?.problem} />
+            <ProblemTop problem={user.problem} />
             <Layout>
                 <Table responsive striped bordered hover>
                     <thead>
@@ -26,7 +25,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {user?.problem.likers.items.map((liker) => (
+                        {user.problem.likers.items.map((liker) => (
                             <tr key={liker.detail.userID}>
                                 <td className="text-nowrap">
                                     <Username>{liker.detail}</Username>
@@ -69,8 +68,8 @@ const GetProblem = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblem, {
-        username: params.username || '',
-        problemSlug: params.problemSlug || '',
+        username: params.username,
+        problemSlug: params.problemSlug,
     })
     if (res.user === null || res.user.problem === null) {
         return {

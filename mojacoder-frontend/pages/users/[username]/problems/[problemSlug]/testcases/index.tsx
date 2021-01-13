@@ -12,16 +12,15 @@ import ProblemTop from '../../../../../../containers/ProblemTop'
 import join from 'url-join'
 
 interface Props {
-    problem?: Problem
+    problem: Problem
 }
-const Submissions: React.FC<Props> = (props) => {
+const Submissions: React.FC<Props> = ({ problem }) => {
     const { query, pathname } = useRouter()
-    const { problem } = props
     return (
         <>
             <ProblemTop activeKey="testcases" problem={problem} />
             <Layout>
-                {problem?.testcaseNames === null ? (
+                {problem.testcaseNames === null ? (
                     <div className="text-center">
                         <Spinner animation="border" />
                     </div>
@@ -33,7 +32,7 @@ const Submissions: React.FC<Props> = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {problem?.testcaseNames.map((name) => (
+                            {problem.testcaseNames.map((name) => (
                                 <tr key={name}>
                                     <td className="text-nowrap">
                                         <Link
@@ -82,8 +81,8 @@ const GetTestcaseNames = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetTestcaseNames, {
-        username: params.username || '',
-        problemSlug: params.problemSlug || '',
+        username: params.username,
+        problemSlug: params.problemSlug,
     })
     if (res.user === null || res.user.problem === null) {
         return {

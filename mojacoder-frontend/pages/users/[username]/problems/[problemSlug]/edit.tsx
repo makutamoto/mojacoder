@@ -27,7 +27,7 @@ const IssueProblemDownloadUrl = gql`
 `
 
 interface Props {
-    user?: UserDetail
+    user: UserDetail
 }
 const ProblemPage: React.FC<Props> = ({ user }) => {
     const { query } = useRouter()
@@ -85,9 +85,9 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
     }, [query])
     return (
         <>
-            <ProblemTop activeKey="edit" problem={user?.problem} />
+            <ProblemTop activeKey="edit" problem={user.problem} />
             <Layout>
-                {auth && auth.userID === user?.userID ? (
+                {auth && auth.userID === user.userID ? (
                     <>
                         {editorData ? (
                             <ProblemEditor data={editorData} />
@@ -124,8 +124,8 @@ const GetProblem = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const res = await invokeQueryWithApiKey(GetProblem, {
-        username: params.username || '',
-        problemSlug: params.problemSlug || '',
+        username: params.username,
+        problemSlug: params.problemSlug,
     })
     if (res.user === null || res.user.problem === null) {
         return {

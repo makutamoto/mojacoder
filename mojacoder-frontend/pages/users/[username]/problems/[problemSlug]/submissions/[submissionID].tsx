@@ -65,15 +65,14 @@ const GetSubmission = gql`
 `
 
 interface Props {
-    problem?: Problem
+    problem: Problem
 }
 
-const Submissions: React.FC<Props> = (props) => {
+const Submissions: React.FC<Props> = ({ problem }) => {
     const { query, pathname } = useRouter()
     const [submission, setSubmission] = useState<Submission | null>(
-        props.problem?.submission || null
+        problem.submission
     )
-    const { problem } = props
     const result = useMemo(() => {
         if (submission)
             return getJudgeStatusFromTestcases(
@@ -91,9 +90,9 @@ const Submissions: React.FC<Props> = (props) => {
                 submission.status === SubmissionStatus.WJ
             ) {
                 invokeQueryWithApiKey(GetSubmission, {
-                    authorUsername: query.username || '',
-                    problemSlug: query.problemSlug || '',
-                    submissionID: query.submissionID || '',
+                    authorUsername: query.username,
+                    problemSlug: query.problemSlug,
+                    submissionID: query.submissionID,
                 }).then((data) => {
                     const submission = data.user.problem.submission
                     setSubmission(submission)
@@ -109,50 +108,48 @@ const Submissions: React.FC<Props> = (props) => {
             <ProblemTop activeKey="submissions" problem={problem} />
             <Layout>
                 <Editor
-                    lang={submission?.lang}
-                    value={submission?.code}
+                    lang={submission.lang}
+                    value={submission.code}
                     lineNumbers
                     readOnly
                 />
                 <h2>コンパイルエラー</h2>
-                <Editor value={submission?.stderr} lineNumbers readOnly />
+                <Editor value={submission.stderr} lineNumbers readOnly />
                 <Table responsive striped bordered hover>
                     <tbody>
                         <tr>
                             <td className="text-nowrap">提出日時</td>
                             <td className="text-nowrap">
-                                <DateTime>{submission?.datetime}</DateTime>
+                                <DateTime>{submission.datetime}</DateTime>
                             </td>
                         </tr>
                         <tr>
                             <td className="text-nowrap">ユーザー</td>
                             <td className="text-nowrap">
-                                <Username>{submission?.user.detail}</Username>
+                                <Username>{submission.user.detail}</Username>
                             </td>
                         </tr>
                         <tr>
                             <td className="text-nowrap">言語</td>
                             <td className="text-nowrap">
                                 {getProgrammingLanguageNameFromID(
-                                    submission?.lang
+                                    submission.lang
                                 )}
                             </td>
                         </tr>
                         <tr>
                             <td className="text-nowrap">結果</td>
                             <td className="text-nowrap">
-                                <JudgeStatusBadge
-                                    status={result?.wholeStatus}
-                                />
+                                <JudgeStatusBadge status={result.wholeStatus} />
                             </td>
                         </tr>
                         <tr>
                             <td className="text-nowrap">実行時間</td>
-                            <td className="text-nowrap">{result?.time} ms</td>
+                            <td className="text-nowrap">{result.time} ms</td>
                         </tr>
                         <tr>
                             <td className="text-nowrap">メモリ</td>
-                            <td className="text-nowrap">{result?.memory} kb</td>
+                            <td className="text-nowrap">{result.memory} kb</td>
                         </tr>
                     </tbody>
                 </Table>
@@ -166,7 +163,7 @@ const Submissions: React.FC<Props> = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {submission?.testcases.map((testcase) => (
+                        {submission.testcases.map((testcase) => (
                             <tr key={testcase.name}>
                                 <td className="text-nowrap">
                                     <Link
@@ -207,9 +204,9 @@ export default Submissions
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     const { user } = await invokeQueryWithApiKey(GetSubmission, {
-        authorUsername: params.username || '',
-        problemSlug: params.problemSlug || '',
-        submissionID: params.submissionID || '',
+        authorUsername: params.username,
+        problemSlug: params.problemSlug,
+        submissionID: params.submissionID,
     })
     if (
         user === null ||

@@ -30,15 +30,11 @@ const UserPage: React.FC<Props> = ({ user }) => {
     return (
         <>
             <Head>
-                {user && (
-                    <>
-                        <meta property="twitter:card" content="summary" />
-                        <meta
-                            property="og:title"
-                            content={`${user.screenName} | MojaCoder`}
-                        />
-                    </>
-                )}
+                <meta property="twitter:card" content="summary" />
+                <meta
+                    property="og:title"
+                    content={`${user.screenName} | MojaCoder`}
+                />
             </Head>
             <Top>
                 <div className="text-center">
