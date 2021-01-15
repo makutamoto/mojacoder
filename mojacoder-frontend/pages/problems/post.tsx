@@ -12,6 +12,15 @@ export const Post: React.FC = () => {
         <>
             <Top>
                 <h1 className="text-center">問題を投稿</h1>
+                <div className="text-center">
+                    <a
+                        href="https://zenn.dev/makutamoto/books/how-to-post-to-mojacoder"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        問題投稿方法
+                    </a>
+                </div>
             </Top>
             <Layout>
                 <>
