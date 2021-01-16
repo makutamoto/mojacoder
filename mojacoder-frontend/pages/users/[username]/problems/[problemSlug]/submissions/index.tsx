@@ -15,6 +15,7 @@ import {
 } from '../../../../../../lib/backend_types'
 import SubmissionTable from '../../../../../../components/SubmissionTable'
 import Layout from '../../../../../../components/Layout'
+import Title from '../../../../../../components/Title'
 import ProblemTop from '../../../../../../containers/ProblemTop'
 
 const GetSubmissions = gql`
@@ -92,6 +93,7 @@ const Submissions: React.FC<Props> = ({ problem }) => {
     }, [query, me, auth])
     return (
         <>
+            <Title>{`'${problem.title}'の提出一覧`}</Title>
             <ProblemTop activeKey="submissions" problem={problem} />
             <Layout>
                 <Nav variant="pills" activeKey={me ? 'me' : 'all'}>

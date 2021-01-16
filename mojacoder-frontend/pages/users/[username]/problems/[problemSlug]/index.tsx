@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import { Alert } from 'react-bootstrap'
@@ -20,6 +19,7 @@ import Layout from '../../../../../components/Layout'
 import ButtonWithSpinner from '../../../../../components/ButtonWithSpinner'
 import Markdown from '../../../../../components/Markdown'
 import Heading from '../../../../../components/Heading'
+import Title from '../../../../../components/Title'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
 const Status = {
@@ -77,14 +77,9 @@ const ProblemPage: React.FC<Props> = (props) => {
     }, [setStatus, user, lang, code])
     return (
         <>
-            <Head>
-                <meta property="twitter:card" content="summary_large_image" />
-                <meta
-                    property="og:title"
-                    content={`${user.problem.title} | MojaCoder`}
-                />
-                <meta property="og:image" content={ogpImage} />
-            </Head>
+            <Title large image={ogpImage}>
+                {user.problem.title}
+            </Title>
             <ProblemTop activeKey="problem" problem={user.problem} />
             <Layout>
                 <Markdown source={user.problem.statement} />

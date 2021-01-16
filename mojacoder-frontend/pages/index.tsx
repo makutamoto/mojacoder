@@ -6,6 +6,7 @@ import { useI18n } from '../lib/i18n'
 import IconWithText from '../components/IconWithText'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
+import Title from '../components/Title'
 
 const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'
@@ -14,6 +15,7 @@ export const Index: React.FC = () => {
     const { t } = useI18n('home')
     return (
         <>
+            <Title />
             <Top>
                 <div className="text-center">
                     <Image

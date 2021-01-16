@@ -4,12 +4,13 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Spinner, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
+import join from 'url-join'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import { Problem } from '../../../../../../lib/backend_types'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
-import join from 'url-join'
+import Title from '../../../../../../components/Title'
 
 interface Props {
     problem: Problem
@@ -18,6 +19,7 @@ const Submissions: React.FC<Props> = ({ problem }) => {
     const { query, pathname } = useRouter()
     return (
         <>
+            <Title>{`'${problem.title}'のテストケース一覧`}</Title>
             <ProblemTop activeKey="testcases" problem={problem} />
             <Layout>
                 {problem.testcaseNames === null ? (

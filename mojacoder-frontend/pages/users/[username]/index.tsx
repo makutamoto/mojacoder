@@ -14,6 +14,7 @@ import Layout from '../../../components/Layout'
 import Top from '../../../components/Top'
 import UserIcon from '../../../components/UserIcon'
 import Heading from '../../../components/Heading'
+import Title from '../../../components/Title'
 
 interface Props {
     user: UserDetail
@@ -29,6 +30,7 @@ const UserPage: React.FC<Props> = ({ user }) => {
     }, [])
     return (
         <>
+            <Title>{`${user.screenName}さんのユーザーページ`}</Title>
             <Head>
                 <meta property="twitter:card" content="summary" />
                 <meta

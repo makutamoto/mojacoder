@@ -15,6 +15,7 @@ import {
 import { UserDetail } from '../../../../../lib/backend_types'
 import Layout from '../../../../../components/Layout'
 import ProblemTop from '../../../../../containers/ProblemTop'
+import Title from '../../../../../components/Title'
 import ProblemEditor, {
     ProblemEditorData,
     Testcase,
@@ -85,6 +86,7 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
     }, [query])
     return (
         <>
+            <Title>{`'${user.problem.title}'を編集`}</Title>
             <ProblemTop activeKey="edit" problem={user.problem} />
             <Layout>
                 {auth && auth.userID === user.userID ? (

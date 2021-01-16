@@ -25,6 +25,7 @@ import IconWithText from '../../../../../components/IconWithText'
 import ButtonWithSpinner from '../../../../../components/ButtonWithSpinner'
 import Markdown from '../../../../../components/Markdown'
 import Heading from '../../../../../components/Heading'
+import Title from '../../../../../components/Title'
 
 import style from './comments.module.css'
 
@@ -184,6 +185,7 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
     }, [query])
     return (
         <>
+            <Title>{`'${user.problem.title}'のコメント一覧`}</Title>
             <ProblemTop problem={user.problem} />
             <Layout>
                 <Heading>コメント一覧</Heading>

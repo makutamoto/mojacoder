@@ -7,6 +7,7 @@ import { invokeQueryWithApiKey } from '../../../../../lib/backend'
 import { UserDetail } from '../../../../../lib/backend_types'
 import Username from '../../../../../components/Username'
 import Layout from '../../../../../components/Layout'
+import Title from '../../../../../components/Title'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 const ProblemPage: React.FC<Props> = ({ user }) => {
     return (
         <>
+            <Title>{`'${user.problem.title}'をいいねした人たち`}</Title>
             <ProblemTop problem={user.problem} />
             <Layout>
                 <Table responsive striped bordered hover>

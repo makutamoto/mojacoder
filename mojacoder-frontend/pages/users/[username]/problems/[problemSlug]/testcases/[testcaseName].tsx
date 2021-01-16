@@ -8,6 +8,7 @@ import Editor from '../../../../../../components/Editor'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
 import Heading from '../../../../../../components/Heading'
+import Title from '../../../../../../components/Title'
 
 interface Testcase {
     in: string
@@ -21,6 +22,7 @@ interface Props {
 const Submissions: React.FC<Props> = ({ problem, testcase }) => {
     return (
         <>
+            <Title>{`'${problem.title}'のテストケース`}</Title>
             <ProblemTop activeKey="testcases" problem={problem} />
             <Layout>
                 <Heading>入力</Heading>

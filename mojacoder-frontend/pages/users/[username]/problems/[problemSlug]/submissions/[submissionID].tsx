@@ -19,6 +19,7 @@ import { getProgrammingLanguageNameFromID } from '../../../../../../lib/programm
 import { getJudgeStatusFromTestcases } from '../../../../../../lib/JudgeStatus'
 import Username from '../../../../../../components/Username'
 import Layout from '../../../../../../components/Layout'
+import Title from '../../../../../../components/Title'
 import ProblemTop from '../../../../../../containers/ProblemTop'
 
 const GetSubmission = gql`
@@ -105,6 +106,7 @@ const Submissions: React.FC<Props> = ({ problem }) => {
     }, [])
     return (
         <>
+            <Title>{`'${problem.title}'の${submission.user.detail.screenName}さんの提出`}</Title>
             <ProblemTop activeKey="submissions" problem={problem} />
             <Layout>
                 <Editor

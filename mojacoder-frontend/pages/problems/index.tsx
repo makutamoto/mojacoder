@@ -10,6 +10,7 @@ import DateTime from '../../components/DateTime'
 import Username from '../../components/Username'
 import Layout from '../../components/Layout'
 import Top from '../../components/Top'
+import Title from '../../components/Title'
 
 interface Props {
     newProblems: Problem[]
@@ -18,6 +19,7 @@ interface Props {
 export const Post: React.FC<Props> = ({ newProblems }) => {
     return (
         <>
+            <Title>新規問題一覧</Title>
             <Top>
                 <h1 className="text-center">新規問題一覧</h1>
             </Top>

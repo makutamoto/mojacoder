@@ -11,6 +11,7 @@ import UserIcon from '../components/UserIcon'
 import ButtonWithSpinner from '../components/ButtonWithSpinner'
 import Dropzone from '../components/Dropzone'
 import Heading from '../components/Heading'
+import Title from '../components/Title'
 
 const Status = {
     Normal: 'Normal',
@@ -71,6 +72,7 @@ const Settings: React.FC = () => {
     }, [setStatus, icon])
     return (
         <>
+            <Title>設定</Title>
             <Top>
                 <h1 className="text-center">{t`title`}</h1>
             </Top>
