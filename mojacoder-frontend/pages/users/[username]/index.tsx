@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
-import Head from 'next/head'
 import { Auth as Cognito } from 'aws-amplify'
 import { Button, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
@@ -31,13 +30,6 @@ const UserPage: React.FC<Props> = ({ user }) => {
     return (
         <>
             <Title>{`${user.screenName}さんのユーザーページ`}</Title>
-            <Head>
-                <meta property="twitter:card" content="summary" />
-                <meta
-                    property="og:title"
-                    content={`${user.screenName} | MojaCoder`}
-                />
-            </Head>
             <Top>
                 <div className="text-center">
                     <UserIcon size={256}>{user}</UserIcon>
