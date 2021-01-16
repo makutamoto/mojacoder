@@ -9,7 +9,7 @@ export interface LanguageSelectorProps {
 
 const OPTIONS = [
     { value: 'go-1.14', label: 'Go (1.14)' },
-    { value: 'python3.8', label: 'Python 3.8' },
+    { value: 'python3.8', label: 'Python3 (CPython 3.8)' },
     { value: 'gcc-9.3.0', label: 'C (GCC 9.3.0)' },
     { value: 'g++-9.3.0', label: 'C++ (GCC 9.3.0)' },
     { value: 'csharp-mono-csc-3.6.0', label: 'C# (Mono-csc 3.6.0)' },
@@ -17,6 +17,7 @@ const OPTIONS = [
     { value: 'bf-20041219', label: 'Brainfuck (bf 20041219)' },
     { value: 'cat', label: 'Text (cat)' },
     { value: 'rust-1.43.0', label: 'Rust (rustc 1.43.0)' },
+    { value: 'pypy3-7.3.1', label: 'Python3 (pypy3 7.3.1)' },
 ]
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = (props) => {

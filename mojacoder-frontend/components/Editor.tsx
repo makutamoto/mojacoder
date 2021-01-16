@@ -19,6 +19,7 @@ const LANGUAGE_TO_MODE: { [index: string]: string } = {
     'bf-20041219': 'text/x-brainfuck',
     cat: 'text/plain',
     'rust-1.43.0': 'text/x-rustsrc',
+    'pypy3-7.3.1': 'python',
 }
 
 export interface EditorProps {
