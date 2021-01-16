@@ -42,5 +42,9 @@
         "filename": "main.rs",
         "compileCommand": "rustc main.rs",
         "runCommand": "./main"
+    },
+    "pypy3-7.3.1": {
+        "filename": "main.py",
+        "runCommand": "pypy3 main.py"
     }
 }

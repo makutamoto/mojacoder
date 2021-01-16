@@ -9,7 +9,7 @@ RUN apt update
 
 RUN apt install -y golang-1.14
 ENV PATH $PATH:/usr/lib/go-1.14/bin/
-RUN apt install -y python3.8 build-essential mono-devel bf rustc
+RUN apt install -y python3.8 build-essential mono-devel bf rustc pypy3
 
 WORKDIR /tmp
 RUN apt install -y wget zip
@@ -19,6 +19,7 @@ RUN mv ./ac-library-master/atcoder /usr/local/include/
 
 RUN apt install -y python3-pip
 RUN pip3 install numpy
+RUN pypy3 -m pip install numpy
 
 RUN groupadd -r -g 400 code && useradd -r -u 400 -g 400 code
 
