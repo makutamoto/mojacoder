@@ -201,6 +201,7 @@ async function deployProblem(key: string): Promise<void> {
 export const handler: S3Handler = async (event) => {
     for(let record of event.Records) {
         const key = record.s3.object.key;
+        console.log(`processing '${key}'...`)
         try {
             await deployProblem(key);
         } catch(err) {
