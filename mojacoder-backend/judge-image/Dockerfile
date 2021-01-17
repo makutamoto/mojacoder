@@ -9,7 +9,7 @@ RUN apt update
 
 RUN apt install -y golang-1.14
 ENV PATH $PATH:/usr/lib/go-1.14/bin/
-RUN apt install -y python3.8 build-essential mono-devel bf rustc pypy3
+RUN apt install -y python3.8 build-essential mono-devel bf cargo pypy3
 
 WORKDIR /tmp
 RUN apt install -y wget zip
@@ -27,6 +27,10 @@ WORKDIR /usr/src/app
 COPY . .
 RUN go build .
 
+WORKDIR /usr/src/app/rust
+RUN cargo build --release
+
 RUN apt install -y curl
 
+WORKDIR /usr/src/app
 ENTRYPOINT ./judge
