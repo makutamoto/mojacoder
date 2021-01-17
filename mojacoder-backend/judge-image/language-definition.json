@@ -40,7 +40,7 @@
     },
     "rust-1.43.0": {
         "filename": "main.rs",
-        "compileCommand": "RUST_LIB=/usr/src/app/rust/target/release/deps/ rustc --edition=2018 -C opt-level=3 $(/usr/src/app/rust/rustc-dep-option-generator) main.rs",
+        "compileCommand": "RUST_LIB=/usr/src/app/rust/target/release/deps/ rustc --edition=2018 -C opt-level=3 $(/usr/src/app/rust/rustc-dep-option-generator --manifest-path /usr/src/app/rust/Cargo.toml) main.rs",
         "runCommand": "./main"
     },
     "pypy3-7.3.1": {
