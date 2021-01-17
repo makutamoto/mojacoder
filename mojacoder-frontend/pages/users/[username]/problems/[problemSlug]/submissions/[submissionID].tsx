@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 import join from 'url-join'
+import clsx from 'clsx'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
@@ -20,7 +21,10 @@ import { getJudgeStatusFromTestcases } from '../../../../../../lib/JudgeStatus'
 import Username from '../../../../../../components/Username'
 import Layout from '../../../../../../components/Layout'
 import Title from '../../../../../../components/Title'
+import CopyButton from '../../../../../../components/CopyButton'
 import ProblemTop from '../../../../../../containers/ProblemTop'
+
+import positionStyles from '../../../../../../css/position.module.css'
 
 const GetSubmission = gql`
     query GetSubmission(
@@ -109,12 +113,23 @@ const Submissions: React.FC<Props> = ({ problem }) => {
             <Title>{`'${problem.title}'の${submission.user.detail.screenName}さんの提出`}</Title>
             <ProblemTop activeKey="submissions" problem={problem} />
             <Layout>
-                <Editor
-                    lang={submission.lang}
-                    value={submission.code}
-                    lineNumbers
-                    readOnly
-                />
+                <div className="position-relative">
+                    <Editor
+                        lang={submission.lang}
+                        value={submission.code}
+                        lineNumbers
+                        readOnly
+                    />
+                    <CopyButton
+                        className={clsx(
+                            'position-absolute',
+                            positionStyles['top-right-0']
+                        )}
+                        variant="light"
+                        size="sm"
+                        value={submission.code}
+                    />
+                </div>
                 <h2>コンパイルエラー</h2>
                 <Editor value={submission.stderr} lineNumbers readOnly />
                 <Table responsive striped bordered hover>
