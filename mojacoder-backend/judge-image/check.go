@@ -8,10 +8,9 @@ import (
 )
 
 func compareValue(answer string, solution string, accuracy float64) bool {
-	integerC, err := strconv.Atoi(solution)
-	if err == nil {
-		integerA, err := strconv.Atoi(answer)
-		return err == nil && integerC == integerA
+	_, err := strconv.Atoi(solution)
+	if err == nil || err.(*strconv.NumError).Err == strconv.ErrRange {
+		return answer == solution
 	}
 	numberC, err := strconv.ParseFloat(solution, 64)
 	if err == nil {
