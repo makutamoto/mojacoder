@@ -35,6 +35,9 @@ export function getJudgeStatusFromTestcases(
     status: SubmissionStatus,
     testcases: JudgeStatusDetail[]
 ) {
+    if (status === SubmissionStatus.IE) {
+        return { wholeStatus: JudgeStatus.IE, progress: null }
+    }
     if (status === SubmissionStatus.CE) {
         return { wholeStatus: JudgeStatus.CE, progress: null }
     }

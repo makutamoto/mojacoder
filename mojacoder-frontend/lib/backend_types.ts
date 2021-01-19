@@ -44,6 +44,7 @@ export const SubmissionStatus = {
     WJ: 'WJ',
     CE: 'CE',
     JUDGED: 'JUDGED',
+    IE: 'IE',
 } as const
 export type SubmissionStatus = typeof SubmissionStatus[keyof typeof SubmissionStatus]
 
