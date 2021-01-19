@@ -108,7 +108,7 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 			continue
 		}
 		stdoutReader := strings.NewReader(stdoutWriter.String())
-		if check(stdoutReader, outTestcaseFile, 0) {
+		if check(stdoutReader, outTestcaseFile, 0.000001) {
 			log.Println("AC")
 			testcases[i].Status = "AC"
 			err = updateSubmission(data.SubmissionID, data.UserID, "WJ", nil, &testcases)

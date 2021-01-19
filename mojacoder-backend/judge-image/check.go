@@ -14,7 +14,7 @@ func compareValue(answer string, solution string, accuracy float64) bool {
 	}
 	numberC, err := strconv.ParseFloat(solution, 64)
 	if err == nil {
-		numberA, err := strconv.ParseFloat(solution, 64)
+		numberA, err := strconv.ParseFloat(answer, 64)
 		return err == nil && math.Abs((numberC-numberA)/numberC) <= accuracy
 	}
 	return answer == solution
