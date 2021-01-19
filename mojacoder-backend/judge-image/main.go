@@ -116,7 +116,12 @@ func main() {
 		err = processCode(definitions, message.data)
 		if err != nil {
 			log.Println(err)
-			// IE
+			if message.data.Type == "SUBMISSION" {
+				err = updateSubmission(message.data.SubmissionID, message.data.UserID, "IE", nil, nil)
+				if err != nil {
+					log.Println(err)
+				}
+			}
 			continue
 		}
 		log.Println("Done!")

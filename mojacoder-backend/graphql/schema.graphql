@@ -98,7 +98,6 @@ enum TestcaseResultStatus {
   TLE
   MLE
   RE
-  IE
 }
 
 type TestcaseResult @aws_api_key @aws_iam {
@@ -112,6 +111,7 @@ enum SubmissionStatus {
   WJ
   CE
   JUDGED
+  IE
 }
 
 type Submission @aws_cognito_user_pools @aws_api_key {
