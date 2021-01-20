@@ -12,12 +12,12 @@
     },
     "gcc-9.3.0": {
         "filename": "main.c",
-        "compileCommand": "gcc main.c",
+        "compileCommand": "gcc -std=gnu11 -O2 -DONLINE_JUDGE -lm main.c",
         "runCommand": "./a.out"
     },
     "g++-9.3.0": {
         "filename": "main.cpp",
-        "compileCommand": "g++ -std=gnu++17 -Wall -Wextra -O2 main.cpp",
+        "compileCommand": "g++ -std=gnu++17 -Wall -Wextra -O2 -DONLINE_JUDGE main.cpp",
         "runCommand": "./a.out"
     },
     "csharp-mono-csc-3.6.0": {
