@@ -105,6 +105,9 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 			if err != nil {
 				return fmt.Errorf(errorMessage, err)
 			}
+			if result.status == RunResultStatusTimeLimitExceeded {
+				break
+			}
 			continue
 		}
 		stdoutReader := strings.NewReader(stdoutWriter.String())
