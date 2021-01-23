@@ -150,6 +150,7 @@ const GetProblemOverview = gql`
             problem(slug: $problemSlug) {
                 id
                 title
+                hasEditorial
                 user {
                     detail {
                         userID

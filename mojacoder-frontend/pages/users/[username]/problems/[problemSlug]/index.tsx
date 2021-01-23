@@ -117,6 +117,7 @@ const GetProblem = gql`
                 id
                 title
                 statement
+                hasEditorial
                 user {
                     detail {
                         userID

@@ -51,6 +51,8 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                 })
                 const jszip = await JSZip.loadAsync(data)
                 const statement = await jszip.file('README.md').async('string')
+                const editorial =
+                    (await jszip.file('EDITORIAL.md')?.async('string')) || ''
                 const { title } = JSON.parse(
                     await jszip.file('problem.json').async('string')
                 )
@@ -77,6 +79,7 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                         slug,
                         title,
                         statement,
+                        editorial,
                         testcases,
                     },
                 })
@@ -113,6 +116,7 @@ const GetProblem = gql`
             problem(slug: $problemSlug) {
                 id
                 title
+                hasEditorial
                 user {
                     detail {
                         userID

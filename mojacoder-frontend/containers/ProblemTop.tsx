@@ -54,7 +54,7 @@ const LikeProblem = gql`
 `
 
 export interface ProblemTopProps {
-    activeKey?: 'problem' | 'submissions' | 'testcases' | 'edit'
+    activeKey?: 'problem' | 'submissions' | 'testcases' | 'editorial' | 'edit'
     problem?: Problem
 }
 
@@ -193,6 +193,13 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                             <Nav.Link eventKey="testcases">{t`testcases`}</Nav.Link>
                         </Link>
                     </Nav.Item>
+                    {problem?.hasEditorial && (
+                        <Nav.Item>
+                            <Link passHref href={join(basePath, 'editorial')}>
+                                <Nav.Link eventKey="editorial">{t`editorial`}</Nav.Link>
+                            </Link>
+                        </Nav.Item>
+                    )}
                     {auth && auth.userID === problem?.user.detail.userID && (
                         <Nav.Item>
                             <Link passHref href={join(basePath, 'edit')}>

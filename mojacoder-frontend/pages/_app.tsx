@@ -80,6 +80,7 @@ const languages = {
             problem: '問題',
             submissions: '提出',
             testcases: 'テストケース',
+            editorial: '解説',
             edit: '編集',
         },
         signIn: {
@@ -172,6 +173,7 @@ const languages = {
             problem: 'Problem',
             submissions: 'Submissions',
             testcases: 'Test cases',
+            editorial: 'Editorial',
             edit: 'Edit',
         },
         signIn: {

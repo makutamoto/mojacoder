@@ -1,41 +1,26 @@
 import React from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import gql from 'graphql-tag'
-import { Table } from 'react-bootstrap'
 
 import { invokeQueryWithApiKey } from '../../../../../lib/backend'
 import { UserDetail } from '../../../../../lib/backend_types'
-import Username from '../../../../../components/Username'
 import Layout from '../../../../../components/Layout'
+import Markdown from '../../../../../components/Markdown'
 import Title from '../../../../../components/Title'
 import ProblemTop from '../../../../../containers/ProblemTop'
 
 interface Props {
-    user: UserDetail
+    user: UserDetail | null
 }
 
-const ProblemPage: React.FC<Props> = ({ user }) => {
+const ProblemPage: React.FC<Props> = (props) => {
+    const { user } = props
     return (
         <>
-            <Title>{`'${user.problem.title}'をいいねした人たち`}</Title>
-            <ProblemTop problem={user.problem} />
+            <Title>{`'${user.problem.title}'の解説`}</Title>
+            <ProblemTop activeKey="editorial" problem={user.problem} />
             <Layout>
-                <Table responsive striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th className="text-nowrap">いいねした人</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {user.problem.likers.items.map((liker) => (
-                            <tr key={liker.detail.userID}>
-                                <td className="text-nowrap">
-                                    <Username>{liker.detail}</Username>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <Markdown source={user.problem.editorial} />
             </Layout>
         </>
     )
@@ -48,16 +33,8 @@ const GetProblem = gql`
             problem(slug: $problemSlug) {
                 id
                 title
+                editorial
                 hasEditorial
-                likers {
-                    items {
-                        detail {
-                            userID
-                            icon
-                            screenName
-                        }
-                    }
-                }
                 user {
                     detail {
                         userID
@@ -74,7 +51,11 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
         username: params.username,
         problemSlug: params.problemSlug,
     })
-    if (res.user === null || res.user.problem === null) {
+    if (
+        res.user === null ||
+        res.user.problem === null ||
+        !res.user.problem.hasEditorial
+    ) {
         return {
             notFound: true,
         }

@@ -69,6 +69,7 @@ const GetTestcaseNames = gql`
             problem(slug: $problemSlug) {
                 id
                 title
+                hasEditorial
                 user {
                     detail {
                         userID

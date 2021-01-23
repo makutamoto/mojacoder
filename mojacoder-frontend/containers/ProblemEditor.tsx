@@ -134,6 +134,7 @@ export interface WebEditorData {
     slug: string
     title: string
     statement: string
+    editorial: string
     testcases: OrderedMap<string, Testcase>
 }
 interface WebEditorProps {
@@ -149,6 +150,9 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     const [problemTitle, setProblemTitle] = useState(data?.title || '')
     const [problemStatement, setProblemStatement] = useState(
         data?.statement || ''
+    )
+    const [problemEditorial, setProblemEditorial] = useState(
+        data?.editorial || ''
     )
     const [testcases, setTestcases] = useState(
         data?.testcases || OrderedMap<string, Testcase>()
@@ -282,6 +286,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         const zip = new JSZip()
         zip.file('problem.json', JSON.stringify({ title: problemTitle }))
         zip.file('README.md', problemStatement)
+        if (problemEditorial) zip.file('EDITORIAL.md', problemEditorial)
         const testcasesDirectory = zip.folder('testcases')
         const inDirectory = testcasesDirectory.folder('in')
         const outDirectory = testcasesDirectory.folder('out')
@@ -300,6 +305,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         setStatus,
         problemTitle,
         problemStatement,
+        problemEditorial,
         testcases,
         currentTestcase,
         testcaseInput,
@@ -446,6 +452,16 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                             </div>
                         </>
                     )}
+                </Tab>
+                <Tab className="py-3" eventKey="editorial" title="解説">
+                    <h6>解説(Markdown)</h6>
+                    <Editor
+                        lineNumbers
+                        value={problemEditorial}
+                        onChange={setProblemEditorial}
+                    />
+                    <h6>解説(プレビュー)</h6>
+                    <Markdown source={problemEditorial} />
                 </Tab>
             </Tabs>
             <hr />

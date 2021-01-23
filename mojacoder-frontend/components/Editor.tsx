@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Controlled } from 'react-codemirror2'
 
 if (process.browser) {
+    require('codemirror/addon/display/autorefresh')
+
     require('codemirror/mode/clike/clike')
     require('codemirror/mode/go/go')
     require('codemirror/mode/python/python')
@@ -40,6 +42,7 @@ const Editor: React.FC<EditorProps> = (props) => {
                     className="my-2"
                     value={props.value}
                     options={{
+                        autoRefresh: true,
                         mode: LANGUAGE_TO_MODE[props.lang],
                         lineNumbers: props.lineNumbers,
                         readOnly: props.readOnly,

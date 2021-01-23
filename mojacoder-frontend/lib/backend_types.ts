@@ -33,6 +33,8 @@ export interface Problem {
     datetime: string
     user: User
     statement: string
+    hasEditorial: boolean | null
+    editorial: string | null
     likedByMe: boolean
     likeCount: number
     likers: Connection<User>
