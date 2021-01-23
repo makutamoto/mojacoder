@@ -4,6 +4,7 @@ import { Controlled } from 'react-codemirror2'
 if (process.browser) {
     require('codemirror/addon/display/autorefresh')
 
+    require('codemirror/mode/markdown/markdown')
     require('codemirror/mode/clike/clike')
     require('codemirror/mode/go/go')
     require('codemirror/mode/python/python')
@@ -12,6 +13,7 @@ if (process.browser) {
 }
 
 const LANGUAGE_TO_MODE: { [index: string]: string } = {
+    markdown: 'text/x-markdown',
     'python3.8': 'python',
     'go-1.14': 'text/x-go',
     'gcc-9.3.0': 'text/x-csrc',

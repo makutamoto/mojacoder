@@ -354,6 +354,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                     </Form.Group>
                     <h6>問題文(Markdown)</h6>
                     <Editor
+                        lang="markdown"
                         lineNumbers
                         value={problemStatement}
                         onChange={setProblemStatement}
@@ -456,6 +457,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                 <Tab className="py-3" eventKey="editorial" title="解説">
                     <h6>解説(Markdown)</h6>
                     <Editor
+                        lang="markdown"
                         lineNumbers
                         value={problemEditorial}
                         onChange={setProblemEditorial}
