@@ -86,6 +86,8 @@ type Problem @aws_cognito_user_pools @aws_api_key {
   commentCount: Int!
   comments: CommentConnection!
   statement: String
+  hasEditorial: Boolean
+  editorial: String
   testcase(name: String!): Testcase
   testcaseNames: [String]!
   submission(id: ID!): Submission

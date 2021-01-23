@@ -26,6 +26,7 @@ interface Config {
 interface Problem {
     title: string
     statement: string
+    editorial: string | null
     testcases: Buffer
     testcasesDir: JSZip
     testcaseNames: string[]
@@ -39,6 +40,10 @@ async function parseZip(data: Buffer): Promise<Problem> {
     const statementFile = zip.file('README.md');
     if(statementFile === null) throw "Statement not found.";
     const statement = await statementFile.async("string");
+    const editorialFile = zip.file('EDITORIAL.md');
+    let editorial: string | null;
+    if(editorialFile) editorial = await statementFile.async("string");
+    else editorial = null;
     const testcasesDir = zip.folder('testcases');
     if(testcasesDir === null) throw "Testcases not found.";
     const testcases = await testcasesDir.generateAsync({
@@ -62,6 +67,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
     return {
         title,
         statement,
+        editorial,
         testcases,
         testcasesDir,
         testcaseNames,
@@ -121,11 +127,17 @@ async function deployProblem(key: string): Promise<void> {
                 ":statement": {
                     S: problem.statement,
                 },
+                ":hasEditorial": {
+                    BOOL: problem.editorial !== null,
+                },
+                ":editorial": {
+                    S: problem.editorial || '',
+                },
                 ":testcaseNames": {
                     L: problem.testcaseNames.map((name) => ({ S: name })),
                 },
             },
-            UpdateExpression: "SET title = :title, statement = :statement, testcaseNames = :testcaseNames",
+            UpdateExpression: "SET title = :title, statement = :statement, hasEditorial = :hasEditorial, editorial = :editorial, testcaseNames = :testcaseNames",
         }).promise();
     } else {
         problemID = uuid();
@@ -181,6 +193,12 @@ async function deployProblem(key: string): Promise<void> {
                             },
                             statement: {
                                 S: problem.statement,
+                            },
+                            hasEditorial: {
+                                BOOL: problem.editorial !== null,
+                            },
+                            editorial: {
+                                S: problem.editorial || '',
                             },
                             testcaseNames: {
                                 L: problem.testcaseNames.map((name) => ({ S: name })),

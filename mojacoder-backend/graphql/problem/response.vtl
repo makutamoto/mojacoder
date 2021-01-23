@@ -1,6 +1,6 @@
 #if($util.isNull($context.arguments.slug))
     #if($context.source.userID == $context.result.userID)
-        $util.toJson({"id": $context.result.id, "slug": $context.result.slug, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "likeCount": $context.result.likeCount, "commentCount": $context.result.commentCount, "statement": $context.result.statement, "testcaseNames": $context.result.testcaseNames, "submission": $context.result.submission, "submissions": $context.result.submissions})
+        $util.toJson({"id": $context.result.id, "slug": $context.result.slug, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "likeCount": $context.result.likeCount, "commentCount": $context.result.commentCount, "statement": $context.result.statement, "hasEditorial": $context.result.hasEditorial, "editorial": $context.result.editorial, "testcaseNames": $context.result.testcaseNames, "submission": $context.result.submission, "submissions": $context.result.submissions})
     #else
         null
     #end
@@ -9,6 +9,6 @@
         null
     #else
         #set($item = $context.result.items[0])
-        $util.toJson({"id": $item.id, "slug": $item.slug, "user": { "userID": $item.userID }, "datetime": $item.datetime, "status": $item.status, "title": $item.title, "likeCount": $item.likeCount, "commentCount": $item.commentCount, "statement": $item.statement, "testcaseNames": $item.testcaseNames, "submission": $item.submission, "submissions": $item.submissions})
+        $util.toJson({"id": $item.id, "slug": $item.slug, "user": { "userID": $item.userID }, "datetime": $item.datetime, "status": $item.status, "title": $item.title, "likeCount": $item.likeCount, "commentCount": $item.commentCount, "statement": $item.statement, "hasEditorial": $item.hasEditorial, "editorial": $item.editorial, "testcaseNames": $item.testcaseNames, "submission": $item.submission, "submissions": $item.submissions})
     #end
 #end
