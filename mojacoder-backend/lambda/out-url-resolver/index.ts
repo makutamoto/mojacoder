@@ -13,7 +13,6 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
         Bucket: TESTCASES_FOR_VIEW,
         Key: `${problemID}/out/${name}`,
         Expires: 60,
-        ContentType: 'text/plain',
     })
     return signedUrl
 };
