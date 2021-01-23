@@ -1,5 +1,5 @@
 #if($context.source.testcaseNames.contains($context.arguments.name))
-$util.toJson({ problemID: $context.source.id, name: $context.arguments.name })
+$util.toJson({ "problemID": $context.source.id, "name": $context.arguments.name })
 #else
 $util.toJson(null)
 #end
