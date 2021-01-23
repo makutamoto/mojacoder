@@ -1,0 +1,10 @@
+{
+  "name": "out-url-resolver",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.64",
+    "aws-sdk": "^2.780.0"
+  }
+}

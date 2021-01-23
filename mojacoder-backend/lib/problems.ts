@@ -14,7 +14,7 @@ export interface ProblemsProps {
 
 export class Problems extends cdk.Construct {
     public readonly testcases: Bucket
-    
+
     constructor(scope: cdk.Construct, id: string, props: ProblemsProps) {
         super(scope, id);
         const problemTable = new Table(this, 'problem-table', {
@@ -136,7 +136,15 @@ export class Problems extends cdk.Construct {
             ]
         });
         this.testcases = new Bucket(this, 'testcases');
-        const testcasesForView = new Bucket(this, 'testcases-for-view');
+        const testcasesForView = new Bucket(this, 'testcases-for-view', {
+            cors: [
+                {
+                    allowedMethods: [HttpMethods.GET],
+                    allowedOrigins: ['https://mojacoder.vercel.app', 'http://localhost:3000'],
+                    allowedHeaders: ['content-type'],
+                }
+            ],
+        });
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
@@ -188,28 +196,44 @@ export class Problems extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'issueProblemDownloadUrl',
         });
-        const testcasesForViewDatasource = props.api.addHttpDataSource('testcasesForView', 'https://' + testcasesForView.bucketRegionalDomainName, {
-            authorizationConfig: {
-                signingRegion: 'ap-northeast-1',
-                signingServiceName: 's3',
-            },
+        props.api.addNoneDataSource('testcase').createResolver({
+            typeName: 'Problem',
+            fieldName: 'testcase',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/testcase/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/testcase/response.vtl')),
         });
-        testcasesForViewDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
-            actions: ['s3:GetObject'],
-            resources: [testcasesForView.bucketArn + '/*'],
-        }));
-        testcasesForViewDatasource.createResolver({
-            typeName: 'Problem',
-            fieldName: 'inTestcase',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/inTestcase/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/inTestcase/response.vtl')),
-        })
-        testcasesForViewDatasource.createResolver({
-            typeName: 'Problem',
-            fieldName: 'outTestcase',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/outTestcase/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/outTestcase/response.vtl')),
-        })
+        props.api.addLambdaDataSource('testcaseInUrlLambda', new NodejsFunction(this, 'testcaseInUrl', {
+            entry: join(__dirname, '../lambda/in-url-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                TESTCASES_FOR_VIEW: testcasesForView.bucketName,
+            },
+            initialPolicy: [
+                new PolicyStatement({
+                    actions: ['s3:GetObject'],
+                    resources: [testcasesForView.bucketArn + '/*'],
+                }),
+            ],
+        })).createResolver({
+            typeName: 'Testcase',
+            fieldName: 'inUrl',
+        });
+        props.api.addLambdaDataSource('testcaseOutUrlLambda', new NodejsFunction(this, 'testcaseOutUrl', {
+            entry: join(__dirname, '../lambda/out-url-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                TESTCASES_FOR_VIEW: testcasesForView.bucketName,
+            },
+            initialPolicy: [
+                new PolicyStatement({
+                    actions: ['s3:GetObject'],
+                    resources: [testcasesForView.bucketArn + '/*'],
+                }),
+            ],
+        })).createResolver({
+            typeName: 'Testcase',
+            fieldName: 'outUrl',
+        });
         const problemTableDataSource = props.api.addDynamoDbDataSource('problem_table', problemTable);
         problemTableDataSource.createResolver({
             typeName: 'UserDetail',

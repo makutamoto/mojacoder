@@ -56,6 +56,13 @@ type LikerConnection {
   nextToken: String
 }
 
+type Testcase {
+  problemID: ID
+  name: String
+  inUrl: AWSURL
+  outUrl: AWSURL
+}
+
 enum ProblemStatus {
   CREATED
   DELETED
@@ -79,8 +86,7 @@ type Problem @aws_cognito_user_pools @aws_api_key {
   commentCount: Int!
   comments: CommentConnection!
   statement: String
-  inTestcase(name: String!): String
-  outTestcase(name: String!): String
+  testcase(name: String!): Testcase
   testcaseNames: [String]!
   submission(id: ID!): Submission
   submissions(nextToken: String, userID: ID): SubmissionConnection!
