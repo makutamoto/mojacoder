@@ -21,6 +21,11 @@ export interface Comment {
     replies: Connection<Reply>
 }
 
+export interface Testcase {
+    inUrl: string
+    outUrl: string
+}
+
 export interface Problem {
     id: string
     slug: string
@@ -33,8 +38,7 @@ export interface Problem {
     likers: Connection<User>
     commentCount: number
     comments: Connection<Comment>
-    inTestcase: string
-    outTestcase: string
+    testcase: Testcase | null
     testcaseNames: string[]
     submission: Submission | null
     submissions: Connection<Submission>
