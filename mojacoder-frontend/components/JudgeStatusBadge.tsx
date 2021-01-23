@@ -21,6 +21,7 @@ export const JudgeStatusColors = {
     TLE: 'warning',
     MLE: 'warning',
     RE: 'warning',
+    CC: 'dark',
     IE: 'danger',
 }
 

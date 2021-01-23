@@ -9,6 +9,7 @@ export const JudgeStatus = {
     TLE: 'TLE',
     MLE: 'MLE',
     RE: 'RE',
+    CC: 'CC',
     IE: 'IE',
 } as const
 export type JudgeStatus = typeof JudgeStatus[keyof typeof JudgeStatus]
@@ -28,6 +29,7 @@ export const JudgeStatusToText = {
     TLE: '実行時間制限超過',
     MLE: 'メモリ制限超過',
     RE: '実行時エラー',
+    CC: 'ジャッジ中止',
     IE: '内部エラー',
 }
 
