@@ -42,7 +42,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
     const statement = await statementFile.async("string");
     const editorialFile = zip.file('EDITORIAL.md');
     let editorial: string | null;
-    if(editorialFile) editorial = await statementFile.async("string");
+    if(editorialFile) editorial = await editorialFile.async("string");
     else editorial = null;
     const testcasesDir = zip.folder('testcases');
     if(testcasesDir === null) throw "Testcases not found.";
