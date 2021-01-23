@@ -17,7 +17,10 @@ import Editor from '../../../../../../components/Editor'
 import JudgeStatusBadge from '../../../../../../components/JudgeStatusBadge'
 import DateTime from '../../../../../../components/DateTime'
 import { getProgrammingLanguageNameFromID } from '../../../../../../lib/programming_language'
-import { getJudgeStatusFromTestcases } from '../../../../../../lib/JudgeStatus'
+import {
+    getJudgeStatusFromTestcases,
+    JudgeStatus,
+} from '../../../../../../lib/JudgeStatus'
 import Username from '../../../../../../components/Username'
 import Layout from '../../../../../../components/Layout'
 import Title from '../../../../../../components/Title'
@@ -200,7 +203,13 @@ const Submissions: React.FC<Props> = ({ problem }) => {
                                 </td>
                                 <td className="text-nowrap">
                                     <JudgeStatusBadge
-                                        status={testcase.status}
+                                        status={
+                                            submission.status !==
+                                                SubmissionStatus.WJ &&
+                                            testcase.status === JudgeStatus.WJ
+                                                ? JudgeStatus.CC
+                                                : testcase.status
+                                        }
                                     />
                                 </td>
                                 <td className="text-nowrap">
