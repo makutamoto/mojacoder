@@ -44,12 +44,20 @@ const Submissions: React.FC<Props> = ({ problem }) => {
             problemSlug: query.problemSlug,
             testcaseName: query.testcaseName,
         }).then(({ user }) => {
-            axios.get(user.problem.testcase.inUrl).then(({ data }) => {
-                setInTestcase(String(data))
-            })
-            axios.get(user.problem.testcase.outUrl).then(({ data }) => {
-                setOutTestcase(String(data))
-            })
+            axios
+                .get(user.problem.testcase.inUrl, {
+                    transformResponse: (value) => value,
+                })
+                .then(({ data }) => {
+                    setInTestcase(String(data))
+                })
+            axios
+                .get(user.problem.testcase.outUrl, {
+                    transformResponse: (value) => value,
+                })
+                .then(({ data }) => {
+                    setOutTestcase(String(data))
+                })
         })
     }, [query, setInTestcase, setOutTestcase])
     return (
