@@ -80,6 +80,7 @@ type Problem @aws_cognito_user_pools @aws_api_key {
   datetime: AWSDateTime!
   status: ProblemStatus!
   title: String
+  difficulty: Int
   likedByMe: Boolean! @aws_cognito_user_pools
   likeCount: Int!
   likers: LikerConnection!
