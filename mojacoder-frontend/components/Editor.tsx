@@ -12,18 +12,36 @@ if (process.browser) {
     require('codemirror/mode/rust/rust')
 }
 
-const LANGUAGE_TO_MODE: { [index: string]: string } = {
+export const LANGUAGE_TO_MODE: { [index: string]: string } = {
     markdown: 'text/x-markdown',
+
     'python3.8': 'python',
+    'pypy3-7.3.1': 'python',
+    python: 'python',
+    py: 'python',
+
     'go-1.14': 'text/x-go',
+    go: 'text/x-go',
+
     'gcc-9.3.0': 'text/x-csrc',
+    c: 'text/x-csrc',
+
     'g++-9.3.0': 'text/x-c++src',
+    cpp: 'text/x-c++src',
+
     'csharp-mono-csc-3.6.0': 'text/x-csharp',
     'csharp-mono-mcs-6.12.0.107': 'text/x-csharp',
+    csharp: 'text/x-csharp',
+    cs: 'text/x-csharp',
+
     'bf-20041219': 'text/x-brainfuck',
+    brainfuck: 'text/x-brainfuck',
+
     cat: 'text/plain',
+    text: 'text/plain',
+
     'rust-1.43.0': 'text/x-rustsrc',
-    'pypy3-7.3.1': 'python',
+    rust: 'text/x-rustsrc',
 }
 
 export interface EditorProps {
@@ -45,7 +63,7 @@ const Editor: React.FC<EditorProps> = (props) => {
                     value={props.value}
                     options={{
                         autoRefresh: true,
-                        mode: LANGUAGE_TO_MODE[props.lang],
+                        mode: LANGUAGE_TO_MODE[props.lang] || props.lang,
                         lineNumbers: props.lineNumbers,
                         readOnly: props.readOnly,
                     }}
