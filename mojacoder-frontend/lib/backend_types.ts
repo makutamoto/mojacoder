@@ -35,6 +35,8 @@ export interface Problem {
     statement: string
     hasEditorial: boolean | null
     editorial: string | null
+    hasDifficulty: boolean | null
+    difficulty: string | null
     likedByMe: boolean
     likeCount: number
     likers: Connection<User>
