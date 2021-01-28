@@ -21,12 +21,14 @@ const s3 = new S3({apiVersion: '2006-03-01'});
 
 interface Config {
     title: string,
+    difficulty: string | null,
 }
 
 interface Problem {
     title: string
     statement: string
     editorial: string | null
+    difficulty: string | null
     testcases: Buffer
     testcasesDir: JSZip
     testcaseNames: string[]
@@ -36,7 +38,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
     const zip = await JSZip.loadAsync(data);
     const configFile = zip.file('problem.json');
     if(configFile === null) throw "Config not fonud.";
-    const { title } = JSON.parse(await configFile.async("string")) as Config;
+    const { title, difficulty } = JSON.parse(await configFile.async("string")) as Config;
     const statementFile = zip.file('README.md');
     if(statementFile === null) throw "Statement not found.";
     const statement = await statementFile.async("string");
@@ -68,6 +70,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
         title,
         statement,
         editorial,
+        difficulty,
         testcases,
         testcasesDir,
         testcaseNames,
@@ -133,11 +136,17 @@ async function deployProblem(key: string): Promise<void> {
                 ":editorial": {
                     S: problem.editorial || '',
                 },
+                ":hasDifficulty": {
+                    BOOL: problem.difficulty !== null,
+                },
+                ":difficulty": {
+                    S: problem.difficulty || '',
+                },
                 ":testcaseNames": {
                     L: problem.testcaseNames.map((name) => ({ S: name })),
                 },
             },
-            UpdateExpression: "SET title = :title, statement = :statement, hasEditorial = :hasEditorial, editorial = :editorial, testcaseNames = :testcaseNames",
+            UpdateExpression: "SET title = :title, statement = :statement, hasEditorial = :hasEditorial, editorial = :editorial, hasDifficulty = :hasDifficulty, difficulty = :difficulty, testcaseNames = :testcaseNames",
         }).promise();
     } else {
         problemID = uuid();
@@ -199,6 +208,12 @@ async function deployProblem(key: string): Promise<void> {
                             },
                             editorial: {
                                 S: problem.editorial || '',
+                            },
+                            hasDifficulty: {
+                                BOOL: problem.difficulty !== null,
+                            },
+                            difficulty: {
+                                S: problem.difficulty || '',
                             },
                             testcaseNames: {
                                 L: problem.testcaseNames.map((name) => ({ S: name })),

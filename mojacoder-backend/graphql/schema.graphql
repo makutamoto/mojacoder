@@ -88,6 +88,8 @@ type Problem @aws_cognito_user_pools @aws_api_key {
   statement: String
   hasEditorial: Boolean
   editorial: String
+  hasDifficulty: Boolean
+  difficulty: String
   testcase(name: String!): Testcase
   testcaseNames: [String]!
   submission(id: ID!): Submission
