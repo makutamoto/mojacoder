@@ -13,6 +13,7 @@ import AlertWithSpinner from '../components/AlertWithSpinner'
 import Dropzone from '../components/Dropzone'
 import Markdown from '../components/Markdown'
 import ButtonWithSpinner from '../components/ButtonWithSpinner'
+import ORSeparator from '../components/ORSeparator'
 
 const IssueUrl = gql`
     mutation IssueUrl($input: IssueProblemUploadUrlInput!) {
@@ -511,11 +512,7 @@ const ProblemEditor: React.FC<ProblemEditorProps> = ({ data }) => {
     return (
         <>
             <ZipUploader zip={zip} />
-            <div className="d-flex align-items-center">
-                <hr className="flex-grow-1 d-inline-block" />
-                <span className="px-2 text-muted">OR</span>
-                <hr className="flex-grow-1 d-inline-block" />
-            </div>
+            <ORSeparator />
             <WebEditor data={data?.problem} setZip={setZip} />
         </>
     )

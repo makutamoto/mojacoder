@@ -83,6 +83,30 @@ const languages = {
             editorial: '解説',
             edit: '編集',
         },
+        passwordControl: {
+            password: 'パスワード',
+            passwordConstraintsMessage:
+                'パスワードは半角英文字大文字小文字・数字・記号をそれぞれ一文字以上かつ８文字以上128文字以内である必要があります。',
+        },
+        forgot: {
+            title: 'パスワードのリセット',
+            sendCode: 'コードを送信',
+            codeSentToYourEmail:
+                'コードが送信されました。メールをご確認ください。',
+            error: 'エラーが発生しました。',
+            userNotExist: 'ユーザーが存在しません。',
+            email: 'メールアドレス',
+            enterEmail: 'メールアドレスを入力してください。',
+            password: 'パスワード',
+            enterPassword: 'パスワードを入力してください。',
+            code: 'コード',
+            enterCode: 'コードを入力してください。',
+            reset: 'リセット',
+            invalidCode: '無効なコードです。',
+            resetAttemptLimitExceeded:
+                'リクエスト数が上限を超えました。しばらく時間をおいてからお試しください。',
+            resetSucceeded: 'パスワードのリセットを完了しました。',
+        },
         signIn: {
             title: 'サインイン',
             confirmationMailSent:
@@ -95,12 +119,11 @@ const languages = {
             enterEmail: 'メールアドレスを入力して下さい。',
             password: 'パスワード',
             enterPassword: 'パスワードを入力して下さい。',
+            forgotPassword: 'パスワードを忘れた場合はこちら',
             signIn: 'サインイン',
         },
         signUp: {
             title: '新規登録',
-            passwordConstraintsMessage:
-                'パスワードは半角英文字大文字小文字・数字・記号をそれぞれ一文字以上かつ８文字以上128文字以内である必要があります。',
             userAlreadyExists: 'ユーザーがすでに存在します。',
             error: 'エラーが発生しました。',
             username: 'ユーザー名',
@@ -176,6 +199,27 @@ const languages = {
             editorial: 'Editorial',
             edit: 'Edit',
         },
+        passwordControl: {
+            password: 'Password',
+            passwordConstraintsMessage:
+                'Your password must contain at least one upper and lower case letter, number, and symbol each, and must be at least 8 but no more than 128 characters long.',
+        },
+        forgot: {
+            title: 'Forgot Password',
+            sendCode: 'Send Code',
+            codeSentToYourEmail: 'Code sent to your email.',
+            error: 'Error.',
+            userNotExist: 'User does not exist.',
+            email: 'Email',
+            enterEmail: 'Enter your email.',
+            enterPassword: 'Enter your password',
+            code: 'Code',
+            enterCode: 'Enter a sent code.',
+            reset: 'Reset',
+            invalidCode: 'Invalid Code.',
+            resetAttemptLimitExceeded: 'Reset Attempt limit exceeded.',
+            resetSucceeded: 'Your password is successfully reset.',
+        },
         signIn: {
             title: 'Sign in',
             confirmationMailSent: 'Confirmation mail sent.',
@@ -184,8 +228,8 @@ const languages = {
             invalidUsernameOrPassword: 'Invalid username or password.',
             email: 'Email',
             enterEmail: 'Enter your email.',
-            password: 'password',
             enterPassword: 'Enter your password',
+            forgotPassword: 'Forgot Password?',
             signIn: 'Sign in',
         },
         signUp: {
@@ -195,8 +239,6 @@ const languages = {
             username: 'Username',
             email: 'Email',
             password: 'Password',
-            passwordConstraintsMessage:
-                'Your password must contain at least one upper and lower case letter, number, and symbol each, and must be at least 8 but no more than 128 characters long.',
             passwordConfirmation: 'Password Confirmation',
             passwordNotMatch: 'Passswords does not match.',
             signUp: 'Sign up',
