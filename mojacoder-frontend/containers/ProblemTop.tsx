@@ -105,7 +105,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                 setCommentCount(res.user?.problem.commentCount || 0)
             })
         }
-    }, [auth, query, setLikedByMe])
+    }, [auth, query])
     return (
         <Top>
             <div className="text-center">

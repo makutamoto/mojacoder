@@ -179,16 +179,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
             setTestcaseInput(input)
             setTestcaseOutput(output)
         },
-        [
-            setCurrentTestcase,
-            setTestcaseName,
-            testcases,
-            setTestcaseInput,
-            setTestcaseOutput,
-            currentTestcase,
-            testcaseInput,
-            testcaseOutput,
-        ]
+        [testcases, currentTestcase, testcaseInput, testcaseOutput]
     )
     const onAddTestcase = useCallback(() => {
         let number = 1
@@ -223,8 +214,6 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         testcaseInput,
         testcaseOutput,
         currentTestcase,
-        setTestcases,
-        setCurrentTestcase,
         testcaseName,
     ])
     const onRestoreTestcase = useCallback(() => {
@@ -232,13 +221,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         const { input, output } = testcases.get(currentTestcase)
         setTestcaseInput(input)
         setTestcaseOutput(output)
-    }, [
-        testcases,
-        currentTestcase,
-        setTestcaseName,
-        setTestcaseInput,
-        setTestcaseOutput,
-    ])
+    }, [testcases, currentTestcase])
     const onTestcaseDrop = useCallback(
         async (inputTestcase: boolean, files: File[]) => {
             let tempTestcases = testcases
@@ -261,13 +244,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                 }
             }
         },
-        [
-            testcases,
-            setTestcases,
-            currentTestcase,
-            setTestcaseInput,
-            setTestcaseOutput,
-        ]
+        [testcases, currentTestcase]
     )
     const onPost = useCallback(async () => {
         const testcase = testcases.get(currentTestcase)
@@ -303,7 +280,6 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         setStatus(WebEditorStatus.Done)
     }, [
         problemSlug,
-        setStatus,
         problemTitle,
         problemStatement,
         problemEditorial,
@@ -321,7 +297,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
             },
         })
         router.push('/')
-    }, [setStatus, problemSlug, router])
+    }, [problemSlug, router])
     return (
         <>
             <Tabs

@@ -57,7 +57,7 @@ const ProblemPage: React.FC<Props> = (props) => {
             setLang(value.lang)
             setCode(value.code)
         },
-        [setLang, setCode]
+        [setLang]
     )
     const onSubmit = useCallback(() => {
         if (code.length === 0) {
@@ -74,7 +74,7 @@ const ProblemPage: React.FC<Props> = (props) => {
         }).then(() => {
             router.push(join(router.asPath, 'submissions'))
         })
-    }, [setStatus, user, lang, code])
+    }, [user, lang, code])
     return (
         <>
             <Title large image={ogpImage}>
