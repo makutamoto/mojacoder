@@ -8,6 +8,8 @@ import Title from '../components/Title'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
 import ButtonWithSpinner from '../components/ButtonWithSpinner'
+import PasswordInput from '../components/PasswordInput'
+import InputWithLabel from '../components/InputWithLabel'
 
 const Status = {
     Normal: 'Normal',
@@ -22,14 +24,12 @@ const SignUp: React.FC = () => {
     const { t } = useI18n('signUp')
     const router = useRouter()
     const form = useRef(null)
-    const passwordInput = useRef(null)
     const [status, setStatus] = useState<Status>(Status.Normal)
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [confirmedPassword, setConfirmedPassword] = useState('')
     const onSubmit = useCallback(() => {
-        if (!form.current.checkValidity() || password !== confirmedPassword) {
+        if (!form.current.checkValidity()) {
             setStatus(Status.ValidationError)
             return
         }
@@ -65,7 +65,7 @@ const SignUp: React.FC = () => {
                     setStatus(Status.Error)
                 }
             })
-    }, [form, username, email, password, confirmedPassword])
+    }, [form, username, email, password])
     return (
         <>
             <Title>{t`title`}</Title>
@@ -87,74 +87,34 @@ const SignUp: React.FC = () => {
                     validated={status === Status.ValidationError}
                     ref={form}
                 >
-                    <Form.Group>
-                        <Form.Label>{t`username`}</Form.Label>
-                        <Form.Control
-                            type="text"
-                            required
-                            placeholder="Makutamoto..."
-                            value={username}
-                            onChange={(e) => setUsername(e.currentTarget.value)}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>{t`email`}</Form.Label>
-                        <Form.Control
-                            type="email"
-                            required
-                            placeholder="makutamoto@example.com..."
-                            value={email}
-                            onChange={(e) => setEmail(e.currentTarget.value)}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>{t`password`}</Form.Label>
-                        <Form.Control
-                            ref={passwordInput}
-                            type="password"
-                            required
-                            placeholder="password..."
-                            pattern="^(?=.*?[!-\/:-@\[-`{-~])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])[!-~]{8,128}$"
-                            value={password}
-                            onChange={(e) => setPassword(e.currentTarget.value)}
-                        />
-                        <Form.Text className="text-muted">
-                            {t`passwordConstraintsMessage`}
-                        </Form.Text>
-                        <Form.Control.Feedback type="invalid">
-                            {t`passwordConstraintsMessage`}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Form>
-                <Form.Group>
-                    <Form.Label>{t`passwordConfirmation`}</Form.Label>
-                    <Form.Control
-                        type="password"
+                    <InputWithLabel
+                        label={t`username`}
+                        type="text"
                         required
-                        placeholder="password..."
-                        isValid={
-                            status === Status.ValidationError &&
-                            confirmedPassword === password
-                        }
-                        isInvalid={
-                            status === Status.ValidationError &&
-                            confirmedPassword !== password
-                        }
-                        value={confirmedPassword}
-                        onChange={(e) =>
-                            setConfirmedPassword(e.currentTarget.value)
-                        }
+                        placeholder="Makutamoto..."
+                        value={username}
+                        onChange={(e) => setUsername(e.currentTarget.value)}
                     />
-                    <Form.Control.Feedback type="invalid">
-                        {t`passwordNotMatch`}
-                    </Form.Control.Feedback>
-                </Form.Group>
-                <ButtonWithSpinner
-                    onClick={onSubmit}
-                    loading={status === Status.SigningUp}
-                >
-                    {t`signUp`}
-                </ButtonWithSpinner>
+                    <InputWithLabel
+                        label={t`email`}
+                        type="email"
+                        required
+                        placeholder="makutamoto@example.com..."
+                        value={email}
+                        onChange={(e) => setEmail(e.currentTarget.value)}
+                    />
+                    <PasswordInput
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.currentTarget.value)}
+                    />
+                    <ButtonWithSpinner
+                        onClick={onSubmit}
+                        loading={status === Status.SigningUp}
+                    >
+                        {t`signUp`}
+                    </ButtonWithSpinner>
+                </Form>
             </Layout>
         </>
     )

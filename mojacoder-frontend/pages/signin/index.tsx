@@ -1,14 +1,17 @@
 import React, { useCallback, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Alert, Form } from 'react-bootstrap'
 import { Auth as Cognito } from 'aws-amplify'
 
-import { useI18n } from '../lib/i18n'
-import Auth, { genAuthSession } from '../lib/auth'
-import Title from '../components/Title'
-import Layout from '../components/Layout'
-import Top from '../components/Top'
-import ButtonWithSpinner from '../components/ButtonWithSpinner'
+import { useI18n } from '../../lib/i18n'
+import Auth, { genAuthSession } from '../../lib/auth'
+import Title from '../../components/Title'
+import Layout from '../../components/Layout'
+import Top from '../../components/Top'
+import ButtonWithSpinner from '../../components/ButtonWithSpinner'
+import PasswordInput from '../../components/PasswordInput'
+import InputWithLabel from '../../components/InputWithLabel'
 
 const Status = {
     Normal: 'Normal',
@@ -87,31 +90,24 @@ const SignIn: React.FC = () => {
                     {t`invalidUsernameOrPassword`}
                 </Alert>
                 <Form noValidate validated={status === Status.ValidationError}>
+                    <InputWithLabel
+                        label={t`email`}
+                        type="email"
+                        required
+                        placeholder="makutamoto@example.com..."
+                        value={email}
+                        onChange={(e) => setEmail(e.currentTarget.value)}
+                        invalidFeedback={t`enterEmail`}
+                    />
+                    <PasswordInput
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.currentTarget.value)}
+                    />
                     <Form.Group>
-                        <Form.Label>{t`email`}</Form.Label>
-                        <Form.Control
-                            type="email"
-                            required
-                            placeholder="makutamoto@example.com..."
-                            value={email}
-                            onChange={(e) => setEmail(e.currentTarget.value)}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {t`enterEmail`}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>{t`password`}</Form.Label>
-                        <Form.Control
-                            type="password"
-                            required
-                            placeholder="password..."
-                            value={password}
-                            onChange={(e) => setPassword(e.currentTarget.value)}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {t`enterPassword`}
-                        </Form.Control.Feedback>
+                        <Link href="/signin/forgot" passHref>
+                            <a>{t`forgotPassword`}</a>
+                        </Link>
                     </Form.Group>
                     <ButtonWithSpinner
                         type="submit"
