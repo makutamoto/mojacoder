@@ -173,7 +173,7 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                 setStatus(Status.Normal)
             })
         }
-    }, [query, content, comments, setComments, setStatus, replyTargetID])
+    }, [query, content, comments, replyTargetID])
     useEffect(() => {
         invokeQueryWithApiKey(GetComments, {
             authorUsername: query.username,

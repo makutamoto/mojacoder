@@ -10,7 +10,7 @@ export function useLocalStorage(
             window.localStorage.setItem(key, value)
             setState(value)
         },
-        [key, setState]
+        [key]
     )
     useEffect(() => setState(window.localStorage.getItem(key)), [])
     return [state, setStateAndLocalStorage]

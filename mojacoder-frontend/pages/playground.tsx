@@ -76,7 +76,7 @@ const Playground: React.FC = () => {
             setLang(value.lang)
             setCode(value.code)
         },
-        [setLang, setCode]
+        [setLang]
     )
     const onRun = useCallback(() => {
         if (code.length === 0) {
