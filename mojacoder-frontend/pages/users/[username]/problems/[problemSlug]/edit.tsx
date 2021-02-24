@@ -53,7 +53,7 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                 const statement = await jszip.file('README.md').async('string')
                 const editorial =
                     (await jszip.file('EDITORIAL.md')?.async('string')) || ''
-                const { title } = JSON.parse(
+                const { title, difficulty } = JSON.parse(
                     await jszip.file('problem.json').async('string')
                 )
                 const testcaseArray: [string, Testcase][] = []
@@ -80,6 +80,7 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                         title,
                         statement,
                         editorial,
+                        difficulty,
                         testcases,
                     },
                 })

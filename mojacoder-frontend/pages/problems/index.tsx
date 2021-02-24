@@ -8,6 +8,7 @@ import { Problem } from '../../lib/backend_types'
 import { invokeQueryWithApiKey } from '../../lib/backend'
 import DateTime from '../../components/DateTime'
 import Username from '../../components/Username'
+import Difficulty from '../../components/Difficulty'
 import Layout from '../../components/Layout'
 import Top from '../../components/Top'
 import Title from '../../components/Title'
@@ -43,6 +44,13 @@ export const Post: React.FC<Props> = ({ newProblems }) => {
                                     <Username>{item.user.detail}</Username>
                                 </td>
                                 <td className="text-nowrap">
+                                    {item.hasDifficulty && (
+                                        <>
+                                            <Difficulty>
+                                                {item.difficulty}
+                                            </Difficulty>{' '}
+                                        </>
+                                    )}
                                     <Link
                                         href={`/users/${item.user.detail.screenName}/problems/${item.slug}`}
                                     >
