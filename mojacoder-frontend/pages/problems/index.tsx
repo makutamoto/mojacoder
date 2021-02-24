@@ -79,6 +79,8 @@ const GetNewProblems = gql`
             title
             datetime
             likeCount
+            hasDifficulty
+            difficulty
             user {
                 detail {
                     userID
