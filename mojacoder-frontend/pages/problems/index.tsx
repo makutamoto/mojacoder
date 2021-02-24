@@ -44,9 +44,11 @@ export const Post: React.FC<Props> = ({ newProblems }) => {
                                     <Username>{item.user.detail}</Username>
                                 </td>
                                 <td className="text-nowrap">
-                                    {item.hasDifficulty &&
-                                        <Difficulty>{item.difficulty}</Difficulty>
-                                    }
+                                    {item.hasDifficulty && (
+                                        <Difficulty>
+                                            {item.difficulty}
+                                        </Difficulty>
+                                    )}
                                     <Link
                                         href={`/users/${item.user.detail.screenName}/problems/${item.slug}`}
                                     >

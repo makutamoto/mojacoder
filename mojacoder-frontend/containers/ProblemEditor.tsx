@@ -136,6 +136,7 @@ export interface WebEditorData {
     title: string
     statement: string
     editorial: string
+    difficulty: string
     testcases: OrderedMap<string, Testcase>
 }
 interface WebEditorProps {
