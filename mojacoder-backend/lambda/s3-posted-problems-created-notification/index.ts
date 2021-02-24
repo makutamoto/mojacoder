@@ -21,7 +21,7 @@ const s3 = new S3({apiVersion: '2006-03-01'});
 
 interface Config {
     title: string,
-    difficulty: string | null,
+    difficulty: string | undefined,
 }
 
 interface Problem {
@@ -70,7 +70,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
         title,
         statement,
         editorial,
-        difficulty,
+        difficulty: difficulty || null,
         testcases,
         testcasesDir,
         testcaseNames,
