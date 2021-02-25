@@ -149,7 +149,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     )
     const router = useRouter()
     const [problemSlug, setProblemSlug] = useState(data?.slug || '')
-    const [problemTitle, setProblemTitle] = useState(data?.title || null)
+    const [problemTitle, setProblemTitle] = useState(data?.title || '')
     const [problemDifficulty, setProblemDifficulty] = useState(
         data?.difficulty || ''
     )
