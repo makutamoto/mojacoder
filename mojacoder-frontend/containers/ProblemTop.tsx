@@ -84,7 +84,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                 setLikedByMe(!likedByMe)
             })
         }
-    }, [auth, query, likedByMe, problem])
+    }, [auth, query, likedByMe, likeCount, problem])
     useEffect(() => {
         if (auth) {
             invokeQuery(GetIfLiked, {
