@@ -116,6 +116,7 @@ export class Judge extends cdk.Construct {
                 {
                     capacityProvider: "FARGATE_SPOT",
                     base: 1,
+                    weight: 1,
                 },
             ],
         });
