@@ -6,7 +6,6 @@ import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
 import { AwsLogDriver, Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
 import { Bucket } from '@aws-cdk/aws-s3'
 import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
-import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { join } from 'path';
 
 export interface JudgeProps {
@@ -79,9 +78,13 @@ export class Judge extends cdk.Construct {
         });
         const approximateNumberOfMessagesVisible = JudgeQueue.metricApproximateNumberOfMessagesVisible();
         const judgeCluster = new Cluster(this, 'judge-cluster', {
+            capacityProviders: ["FARGATE_SPOT"],
             vpc,
         });
-        const judgeTask = new FargateTaskDefinition(this, 'judge-task');
+        const judgeTask = new FargateTaskDefinition(this, 'judge-task', {
+            cpu: 1024,
+            memoryLimitMiB: 2048,
+        });
         judgeTask.addContainer('judge-container', {
             image: ContainerImage.fromAsset(join(__dirname, '../judge-image')),
             logging: new AwsLogDriver({
@@ -109,6 +112,12 @@ export class Judge extends cdk.Construct {
             cluster: judgeCluster,
             taskDefinition: judgeTask,
             assignPublicIp: true,
+            capacityProviderStrategies: [
+                {
+                    capacityProvider: "FARGATE_SPOT",
+                    base: 1,
+                },
+            ],
         });
         const judgeScale = judgeService.autoScaleTaskCount({
             maxCapacity: 2,
