@@ -21,8 +21,8 @@ module.exports = (phase) => {
                     USER_POOL_ID: 'ap-northeast-1_rPJ5fZCy0',
                     USER_POOL_CLIENT_ID: '1iebksqvkjmo3jbmnq7h16688c',
                     APPSYNC_ENDPOINT:
-                        'https://zbw5rgbp6nbplmvbddkkwm7m3a.appsync-api.ap-northeast-1.amazonaws.com/graphql',
-                    APPSYNC_APIKEY: 'da2-eyze5l444jd45o2oooqjcjrkaa',
+                        'https://e3qj5jz4cbezbkndppo5jb43wm.appsync-api.ap-northeast-1.amazonaws.com/graphql',
+                    APPSYNC_APIKEY: 'da2-4utm5h73obduvbxmmgxdn3b4oe',
                     ICON_STORAGE:
                         'https://mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
                     COOKIE_DOMAIN: 'localhost',
@@ -37,8 +37,8 @@ module.exports = (phase) => {
                     USER_POOL_ID: 'ap-northeast-1_rPJ5fZCy0',
                     USER_POOL_CLIENT_ID: '1iebksqvkjmo3jbmnq7h16688c',
                     APPSYNC_ENDPOINT:
-                        'https://zbw5rgbp6nbplmvbddkkwm7m3a.appsync-api.ap-northeast-1.amazonaws.com/graphql',
-                    APPSYNC_APIKEY: 'da2-eyze5l444jd45o2oooqjcjrkaa',
+                        'https://e3qj5jz4cbezbkndppo5jb43wm.appsync-api.ap-northeast-1.amazonaws.com/graphql',
+                    APPSYNC_APIKEY: 'da2-4utm5h73obduvbxmmgxdn3b4oe',
                     ICON_STORAGE:
                         'https://mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
                     COOKIE_DOMAIN: 'mojacoder.vercel.app',
