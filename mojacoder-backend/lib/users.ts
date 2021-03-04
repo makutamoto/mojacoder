@@ -156,18 +156,13 @@ export class Users extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'setUserIcon',
         })
-
-        const certificate = new Certificate(this, 'mojacoder-domain-certificate', {
-            domainName: '*.mojacoder.app',
-            validation: CertificateValidation.fromDns(),
-        })
-        new Distribution(this, 'userIconBucketDistribution', {
-            defaultBehavior: {
-                origin: new S3Origin(userIconBucket),
-                viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-            },
-            domainNames: ['icon.mojacoder.app'],
-            certificate,
-        });
+        // new Distribution(this, 'userIconBucketDistribution', {
+        //     defaultBehavior: {
+        //         origin: new S3Origin(userIconBucket),
+        //         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        //     },
+        //     domainNames: ['icon.mojacoder.app'],
+        //     certificate,
+        // });
     }
 }
