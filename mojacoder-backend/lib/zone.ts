@@ -13,9 +13,9 @@ export class Zone extends cdk.Construct {
         })
         this.certificate = new DnsValidatedCertificate(this, 'mojacoder-domain-certificate', {
             domainName: '*.mojacoder.app',
-            hostedZone: zone,
+            hostedZone: this.zone,
             region: 'us-east-1',
-            validation: CertificateValidation.fromDns(zone),
+            validation: CertificateValidation.fromDns(this.zone),
         })
     }
 }
