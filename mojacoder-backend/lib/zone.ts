@@ -8,7 +8,7 @@ export class Zone extends cdk.Construct {
 
     constructor(scope: cdk.Construct, id: string) {
         super(scope, id);
-        const zone = new PublicHostedZone(this, 'zone', {
+        this.zone = new PublicHostedZone(this, 'zone', {
             zoneName: 'mojacoder.app',
         })
         this.certificate = new DnsValidatedCertificate(this, 'mojacoder-domain-certificate', {
