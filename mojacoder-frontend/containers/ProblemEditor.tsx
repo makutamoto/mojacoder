@@ -41,9 +41,10 @@ const ZipUploaderStatus = {
 } as const
 type ZipUploaderStatus = typeof ZipUploaderStatus[keyof typeof ZipUploaderStatus]
 interface ZipUploaderProps {
+    slug?: string
     zip?: Blob
 }
-const ZipUploader: React.FC<ZipUploaderProps> = ({ zip }) => {
+const ZipUploader: React.FC<ZipUploaderProps> = ({ slug, zip }) => {
     const [status, setStatus] = useState<ZipUploaderStatus>(
         ZipUploaderStatus.Normal
     )
@@ -54,8 +55,12 @@ const ZipUploader: React.FC<ZipUploaderProps> = ({ zip }) => {
             return
         }
         for (const file of files) {
-            const { name } = parse(file.name)
-            await uploadProblem(name, file)
+            if (slug) {
+                await uploadProblem(slug, file)
+            } else {
+                const { name } = parse(file.name)
+                await uploadProblem(name, file)
+            }
         }
         setStatus(ZipUploaderStatus.Done)
     }, [])
@@ -73,7 +78,7 @@ const ZipUploader: React.FC<ZipUploaderProps> = ({ zip }) => {
                     downloadUri && (
                         <a
                             href={downloadUri}
-                            download="problem.zip"
+                            download={`${slug || 'problem'}.zip`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             現在のZipファイルをダウンロード
@@ -488,7 +493,7 @@ const ProblemEditor: React.FC<ProblemEditorProps> = ({ data }) => {
     const [zip, setZip] = useState(data?.zip)
     return (
         <>
-            <ZipUploader zip={zip} />
+            <ZipUploader slug={data?.problem.slug} zip={zip} />
             <ORSeparator />
             <WebEditor data={data?.problem} setZip={setZip} />
         </>
