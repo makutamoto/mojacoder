@@ -41,8 +41,8 @@ module.exports = (phase) => {
                     APPSYNC_APIKEY: 'da2-4utm5h73obduvbxmmgxdn3b4oe',
                     ICON_STORAGE:
                         'https://mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
-                    COOKIE_DOMAIN: 'mojacoder.vercel.app',
-                    ORIGIN: 'https://mojacoder.vercel.app',
+                    COOKIE_DOMAIN: 'mojacoder.app',
+                    ORIGIN: 'https://mojacoder.app',
                 },
                 ...common,
             }
