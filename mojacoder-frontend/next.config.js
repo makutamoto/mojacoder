@@ -7,7 +7,7 @@ const common = {
     },
     images: {
         domains: [
-            'mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
+            'icon.mojacoder.app',
         ],
     },
 }
@@ -24,7 +24,7 @@ module.exports = (phase) => {
                         'https://e3qj5jz4cbezbkndppo5jb43wm.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-4utm5h73obduvbxmmgxdn3b4oe',
                     ICON_STORAGE:
-                        'https://mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
+                        'https://icon.mojacoder.app',
                     COOKIE_DOMAIN: 'localhost',
                     ORIGIN: 'http://localhost:3000',
                 },
@@ -40,7 +40,7 @@ module.exports = (phase) => {
                         'https://e3qj5jz4cbezbkndppo5jb43wm.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-4utm5h73obduvbxmmgxdn3b4oe',
                     ICON_STORAGE:
-                        'https://mojacoderbackendstack-usersusericonbucketc1cb90e3-7m318sricpf1.s3-ap-northeast-1.amazonaws.com',
+                        'https://icon.mojacoder.app',
                     COOKIE_DOMAIN: 'mojacoder.app',
                     ORIGIN: 'https://mojacoder.app',
                 },
