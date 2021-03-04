@@ -148,7 +148,8 @@ export class Problems extends cdk.Construct {
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
-            timeout: Duration.seconds(10),
+            memorySize: 512,
+            timeout: Duration.minutes(15),
             environment: {
                 PROBLEM_TABLE_NAME: problemTable.tableName,
                 SLUG_TABLE_NAME: slugTable.tableName,
