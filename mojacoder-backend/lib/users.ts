@@ -9,6 +9,9 @@ import { LambdaFunction } from '@aws-cdk/aws-events-targets'
 import { join } from 'path';
 import { Duration } from '@aws-cdk/core';
 import { Bucket } from '@aws-cdk/aws-s3';
+import { Distribution, ViewerProtocolPolicy } from '@aws-cdk/aws-cloudfront';
+import { S3Origin } from '@aws-cdk/aws-cloudfront-origins'
+import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager'
 
 export class Users extends cdk.Construct {
     public readonly pool: UserPool
@@ -153,5 +156,18 @@ export class Users extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'setUserIcon',
         })
+
+        const certificate = new Certificate(this, 'mojacoder-domain-certificate', {
+            domainName: '*.mojacoder.app',
+            validation: CertificateValidation.fromDns(),
+        })
+        new Distribution(this, 'userIconBucketDistribution', {
+            defaultBehavior: {
+                origin: new S3Origin(userIconBucket),
+                viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+            },
+            domainNames: ['icon.mojacoder.app'],
+            certificate,
+        });
     }
 }

@@ -133,7 +133,7 @@
     "@aws-cdk/core" "1.91.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-certificatemanager@1.91.0":
+"@aws-cdk/aws-certificatemanager@1.91.0", "@aws-cdk/aws-certificatemanager@^1.91.0":
   version "1.91.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-certificatemanager/-/aws-certificatemanager-1.91.0.tgz#f4d087dbe937dfdab285d1eba4dc439269d64cdf"
   integrity sha512-KFw3qXVPKKAh2Et6wp70jYR/C319Q6eT4X8bQ5G1U522yYb6ce2BsNGQoc+lUGTZnOkT+g7jtF4iGf3d8E7k7A==
@@ -157,7 +157,19 @@
     "@aws-cdk/cx-api" "1.91.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-cloudfront@1.91.0":
+"@aws-cdk/aws-cloudfront-origins@^1.91.0":
+  version "1.91.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cloudfront-origins/-/aws-cloudfront-origins-1.91.0.tgz#ef2814da0966d92ad0ee12f809a68a6cf1dfc9c6"
+  integrity sha512-vayZT70N71dneXrYemVE39HJqXJHR5NGYO0SrrhhapOFuG/GA1+EUdhXVPg+DrNtSSx3Z6Hog1cQlqLFkqOg+A==
+  dependencies:
+    "@aws-cdk/aws-cloudfront" "1.91.0"
+    "@aws-cdk/aws-elasticloadbalancingv2" "1.91.0"
+    "@aws-cdk/aws-iam" "1.91.0"
+    "@aws-cdk/aws-s3" "1.91.0"
+    "@aws-cdk/core" "1.91.0"
+    constructs "^3.2.0"
+
+"@aws-cdk/aws-cloudfront@1.91.0", "@aws-cdk/aws-cloudfront@^1.91.0":
   version "1.91.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cloudfront/-/aws-cloudfront-1.91.0.tgz#d1bb024d4e88f8ff0d1d0395ea9e892cc77bbfd0"
   integrity sha512-Ho/ijKeu8QXJ6ZH3/vJDgFuFJ+T8ugu86AELNNn+M+38pI50g1kkvgmkB2iQ00zbqgvvy0BzsPRz0lLQN0FSIQ==
