@@ -9,7 +9,7 @@ export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
         const zone = new Zone(this, 'zone')
-        const users = new Users(this, 'users')
+        const users = new Users(this, 'users', { certificate: zone.certificate, zone: zone.zone  })
         const problems = new Problems(this, 'problems', {
             api: users.api,
         })
