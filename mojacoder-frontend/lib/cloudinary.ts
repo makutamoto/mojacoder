@@ -24,7 +24,7 @@ export function generateProblemOGP(problem: Problem) {
                               process.env.ICON_STORAGE,
                               `${problem.user.detail.userID}.png`
                           )
-                        : 'https://mojacoder.vercel.app/images/avatar.png'
+                        : 'https://mojacoder.app/images/avatar.png'
                 }`,
                 gravity: 'south_west',
                 x: 30,
