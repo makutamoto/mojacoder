@@ -12,7 +12,9 @@ export function generateProblemOGP(problem: Problem) {
     return cloudinary.url('mojacoder/ogp/problem/MojaCoderProblemOGP.png', {
         transformation: [
             {
-                overlay: `text:Roboto_72:${encodeURIComponent(problem.title)}`,
+                overlay: `text:Roboto_72:${encodeURIComponent(
+                    encodeURIComponent(problem.title)
+                )}`,
                 width: 1000,
                 crop: 'fit',
                 y: -27,
@@ -34,7 +36,7 @@ export function generateProblemOGP(problem: Problem) {
             },
             {
                 overlay: `text:Roboto_36:${encodeURIComponent(
-                    problem.user.detail.screenName
+                    encodeURIComponent(problem.user.detail.screenName)
                 )}`,
                 gravity: 'south_west',
                 x: 104,
