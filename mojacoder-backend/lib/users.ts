@@ -11,14 +11,20 @@ import { Duration } from '@aws-cdk/core';
 import { Bucket } from '@aws-cdk/aws-s3';
 import { Distribution, ViewerProtocolPolicy } from '@aws-cdk/aws-cloudfront';
 import { S3Origin } from '@aws-cdk/aws-cloudfront-origins'
-import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager'
+import { Certificate } from '@aws-cdk/aws-certificatemanager'
+import { CnameRecord, PublicHostedZone } from '@aws-cdk/aws-route53';
+
+export interface UsersProps {
+    zone: PublicHostedZone
+    certificate: Certificate
+}
 
 export class Users extends cdk.Construct {
     public readonly pool: UserPool
     public readonly userTable: Table
     public readonly api: GraphqlApi
 
-    constructor(scope: cdk.Construct, id: string) {
+    constructor(scope: cdk.Construct, id: string, props: UsersProps) {
         super(scope, id);
         this.pool = new UserPool(this, 'user-pool', {
             selfSignUpEnabled: true,
@@ -156,13 +162,19 @@ export class Users extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'setUserIcon',
         })
-        // new Distribution(this, 'userIconBucketDistribution', {
-        //     defaultBehavior: {
-        //         origin: new S3Origin(userIconBucket),
-        //         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        //     },
-        //     domainNames: ['icon.mojacoder.app'],
-        //     certificate,
-        // });
+
+        const userIconBucketDistribution = new Distribution(this, 'userIconBucketDistribution', {
+            defaultBehavior: {
+                origin: new S3Origin(userIconBucket),
+                viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+            },
+            domainNames: ['icon.mojacoder.app'],
+            certificate: props.certificate,
+        })
+        new CnameRecord(this, 'userIconBucketDistributionCname', {
+            domainName: userIconBucketDistribution.distributionDomainName,
+            recordName: 'icon',
+            zone: props.zone,
+        })
     }
 }
