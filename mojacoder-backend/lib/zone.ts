@@ -1,5 +1,5 @@
 import * as cdk from '@aws-cdk/core'
-import { PublicHostedZone } from '@aws-cdk/aws-route53'
+import { ARecord, PublicHostedZone, RecordTarget } from '@aws-cdk/aws-route53'
 import { Certificate, CertificateValidation, DnsValidatedCertificate } from '@aws-cdk/aws-certificatemanager'
 
 export class Zone extends cdk.Construct {
@@ -10,6 +10,11 @@ export class Zone extends cdk.Construct {
         super(scope, id);
         this.zone = new PublicHostedZone(this, 'zone', {
             zoneName: 'mojacoder.app',
+        })
+        new ARecord(this, 'frontendA', {
+            target: RecordTarget.fromIpAddresses('76.76.21.21'),
+            recordName: '@',
+            zone: this.zone,
         })
         this.certificate = new DnsValidatedCertificate(this, 'mojacoder-domain-certificate', {
             domainName: '*.mojacoder.app',
