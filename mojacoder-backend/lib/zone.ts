@@ -13,7 +13,6 @@ export class Zone extends cdk.Construct {
         })
         new ARecord(this, 'frontendA', {
             target: RecordTarget.fromIpAddresses('76.76.21.21'),
-            recordName: '@',
             zone: this.zone,
         })
         this.certificate = new DnsValidatedCertificate(this, 'mojacoder-domain-certificate', {
