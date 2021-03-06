@@ -516,7 +516,7 @@
     "@aws-cdk/core" "1.91.0"
     constructs "^3.2.0"
 
-"@aws-cdk/aws-route53-targets@1.91.0":
+"@aws-cdk/aws-route53-targets@1.91.0", "@aws-cdk/aws-route53-targets@^1.91.0":
   version "1.91.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-route53-targets/-/aws-route53-targets-1.91.0.tgz#8cb1c61f574c4ca86ac806e9dabe7e121d31dadd"
   integrity sha512-Mj1jEhfHuniI45s+ulPRqBEmgFVfthZAFAZZ8FdlaerCvfVKfqWAEeJuZnGKZgoG6kuEgzBqlMsdmcDiLxmzoA==

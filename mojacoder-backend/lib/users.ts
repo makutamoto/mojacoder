@@ -9,10 +9,11 @@ import { LambdaFunction } from '@aws-cdk/aws-events-targets'
 import { join } from 'path';
 import { Duration } from '@aws-cdk/core';
 import { Bucket } from '@aws-cdk/aws-s3';
-import { Distribution, ViewerProtocolPolicy } from '@aws-cdk/aws-cloudfront';
+import { CachePolicy, Distribution, ViewerProtocolPolicy } from '@aws-cdk/aws-cloudfront';
 import { S3Origin } from '@aws-cdk/aws-cloudfront-origins'
 import { Certificate } from '@aws-cdk/aws-certificatemanager'
-import { CnameRecord, PublicHostedZone } from '@aws-cdk/aws-route53';
+import { ARecord, PublicHostedZone, RecordTarget } from '@aws-cdk/aws-route53';
+import { CloudFrontTarget } from '@aws-cdk/aws-route53-targets'
 
 export interface UsersProps {
     zone: PublicHostedZone
@@ -166,13 +167,14 @@ export class Users extends cdk.Construct {
         const userIconBucketDistribution = new Distribution(this, 'userIconBucketDistribution', {
             defaultBehavior: {
                 origin: new S3Origin(userIconBucket),
+                cachePolicy: CachePolicy.CACHING_DISABLED,
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             },
             domainNames: ['icon.mojacoder.app'],
             certificate: props.certificate,
         })
-        new CnameRecord(this, 'userIconBucketDistributionCname', {
-            domainName: userIconBucketDistribution.distributionDomainName,
+        new ARecord(this, 'userIconBucketDistributionCname', {
+            target: RecordTarget.fromAlias(new CloudFrontTarget(userIconBucketDistribution)),
             recordName: 'icon',
             zone: props.zone,
         })
