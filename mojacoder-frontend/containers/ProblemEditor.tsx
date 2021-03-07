@@ -151,7 +151,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     const [problemSlug, setProblemSlug] = useState(data?.slug || '')
     const [problemTitle, setProblemTitle] = useState(data?.title || '')
     const [problemDifficulty, setProblemDifficulty] = useState(
-        data?.difficulty || ''
+        data?.difficulty || 'none'
     )
     const [problemStatement, setProblemStatement] = useState(
         data?.statement || ''
