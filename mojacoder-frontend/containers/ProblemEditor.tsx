@@ -270,7 +270,8 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
             'problem.json',
             JSON.stringify({
                 title: problemTitle,
-                difficulty: problemDifficulty,
+                difficulty:
+                    problemDifficulty == 'none' ? undefined : problemDifficulty,
             })
         )
         zip.file('README.md', problemStatement)
@@ -349,7 +350,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                                 setProblemDifficulty(e.currentTarget.value)
                             }
                         >
-                            <option>-</option>
+                            <option value="none">-</option>
                             <option value="gray">灰</option>
                             <option value="brown">茶</option>
                             <option value="green">緑</option>
