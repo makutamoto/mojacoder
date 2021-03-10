@@ -26,10 +26,17 @@ export interface Testcase {
     outUrl: string
 }
 
+export const ProblemStatus = {
+    CREATED: 'CREATED',
+    CREATED_PRIVATE: 'CREATED_PRIVATE',
+} as const
+export type ProblemStatus = typeof ProblemStatus[keyof typeof ProblemStatus]
+
 export interface Problem {
     id: string
     slug: string
     title: string
+    status: ProblemStatus
     datetime: string
     user: User
     statement: string

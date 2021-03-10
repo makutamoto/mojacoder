@@ -139,6 +139,7 @@ const DeleteProblem = gql`
 export interface WebEditorData {
     slug: string
     title: string
+    notListed: boolean
     statement: string
     editorial: string
     difficulty: string
@@ -155,6 +156,9 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     const router = useRouter()
     const [problemSlug, setProblemSlug] = useState(data?.slug || '')
     const [problemTitle, setProblemTitle] = useState(data?.title || '')
+    const [problemNotListed, setProblemNotListed] = useState(
+        data?.notListed || false
+    )
     const [problemDifficulty, setProblemDifficulty] = useState(
         data?.difficulty || 'none'
     )
@@ -275,6 +279,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
             'problem.json',
             JSON.stringify({
                 title: problemTitle,
+                notListed: problemNotListed,
                 difficulty:
                     problemDifficulty == 'none' ? undefined : problemDifficulty,
             })
@@ -297,6 +302,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     }, [
         problemSlug,
         problemTitle,
+        problemNotListed,
         problemDifficulty,
         problemStatement,
         problemEditorial,
@@ -343,6 +349,17 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                             value={problemTitle}
                             onChange={(e) =>
                                 setProblemTitle(e.currentTarget.value)
+                            }
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Check
+                            type="switch"
+                            id="not-listed-switch"
+                            label="問題一覧に表示しない。"
+                            checked={problemNotListed}
+                            onChange={(e) =>
+                                setProblemNotListed(e.currentTarget.checked)
                             }
                         />
                     </Form.Group>
