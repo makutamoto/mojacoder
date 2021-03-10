@@ -155,6 +155,9 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     const router = useRouter()
     const [problemSlug, setProblemSlug] = useState(data?.slug || '')
     const [problemTitle, setProblemTitle] = useState(data?.title || '')
+    const [problemDifficulty, setProblemDifficulty] = useState(
+        data?.difficulty || 'none'
+    )
     const [problemStatement, setProblemStatement] = useState(
         data?.statement || ''
     )
@@ -268,7 +271,14 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         }
         setStatus(WebEditorStatus.Posting)
         const zip = new JSZip()
-        zip.file('problem.json', JSON.stringify({ title: problemTitle }))
+        zip.file(
+            'problem.json',
+            JSON.stringify({
+                title: problemTitle,
+                difficulty:
+                    problemDifficulty == 'none' ? undefined : problemDifficulty,
+            })
+        )
         zip.file('README.md', problemStatement)
         if (problemEditorial) zip.file('EDITORIAL.md', problemEditorial)
         const testcasesDirectory = zip.folder('testcases')
@@ -287,6 +297,7 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     }, [
         problemSlug,
         problemTitle,
+        problemDifficulty,
         problemStatement,
         problemEditorial,
         testcases,
@@ -334,6 +345,26 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                                 setProblemTitle(e.currentTarget.value)
                             }
                         />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>難易度</Form.Label>
+                        <Form.Control
+                            as="select"
+                            value={problemDifficulty}
+                            onChange={(e) =>
+                                setProblemDifficulty(e.currentTarget.value)
+                            }
+                        >
+                            <option value="none">-</option>
+                            <option value="gray">灰</option>
+                            <option value="brown">茶</option>
+                            <option value="green">緑</option>
+                            <option value="cyan">水</option>
+                            <option value="blue">青</option>
+                            <option value="yellow">黄</option>
+                            <option value="orange">橙</option>
+                            <option value="red">赤</option>
+                        </Form.Control>
                     </Form.Group>
                     <h6>問題文(Markdown)</h6>
                     <Editor
