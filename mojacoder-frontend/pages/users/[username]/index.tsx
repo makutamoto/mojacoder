@@ -49,7 +49,7 @@ const UserPage: React.FC<Props> = ({ user }) => {
             .catch((err) => console.error(err))
     }, [])
     useEffect(() => {
-        ;(async () => {
+        const loadProblems = async () => {
             const variables = {
                 userID: user.userID,
             }
@@ -60,7 +60,8 @@ const UserPage: React.FC<Props> = ({ user }) => {
                 res = await invokeQueryWithApiKey(GetUserProblems, variables)
             }
             setProblems(res.user.problems.items)
-        })()
+        }
+        loadProblems()
     }, [auth, user])
     return (
         <>
@@ -88,19 +89,19 @@ const UserPage: React.FC<Props> = ({ user }) => {
             </Top>
             <Layout>
                 <Heading>{t`problem`}</Heading>
-                <Table responsive bordered striped hover>
-                    <thead>
-                        <tr>
-                            <th className="text-nowrap">{t`problemName`}</th>
-                            <th className="text-nowrap">いいね数</th>
-                            {auth && auth.userID === user.userID && (
-                                <th className="text-nowrap">全体公開</th>
-                            )}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {problems ? (
-                            problems.map((item) => (
+                {problems ? (
+                    <Table responsive bordered striped hover>
+                        <thead>
+                            <tr>
+                                <th className="text-nowrap">{t`problemName`}</th>
+                                <th className="text-nowrap">いいね数</th>
+                                {auth && auth.userID === user.userID && (
+                                    <th className="text-nowrap">全体公開</th>
+                                )}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {problems.map((item) => (
                                 <tr key={item.slug}>
                                     <td className="text-nowrap">
                                         <Link
@@ -121,12 +122,12 @@ const UserPage: React.FC<Props> = ({ user }) => {
                                         </td>
                                     )}
                                 </tr>
-                            ))
-                        ) : (
-                            <Spinner animation="border" />
-                        )}
-                    </tbody>
-                </Table>
+                            ))}
+                        </tbody>
+                    </Table>
+                ) : (
+                    <Spinner animation="border" />
+                )}
             </Layout>
         </>
     )
