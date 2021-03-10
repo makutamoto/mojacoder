@@ -21,11 +21,13 @@ const s3 = new S3({apiVersion: '2006-03-01'});
 
 interface Config {
     title: string,
-    difficulty: string | undefined,
+    notListed?: boolean,
+    difficulty?: string,
 }
 
 interface Problem {
     title: string
+    notListed: boolean,
     statement: string
     editorial: string | null
     difficulty: string | null
@@ -38,7 +40,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
     const zip = await JSZip.loadAsync(data);
     const configFile = zip.file('problem.json');
     if(configFile === null) throw "Config not fonud.";
-    const { title, difficulty } = JSON.parse(await configFile.async("string")) as Config;
+    const { title, notListed, difficulty } = JSON.parse(await configFile.async("string")) as Config;
     const statementFile = zip.file('README.md');
     if(statementFile === null) throw "Statement not found.";
     const statement = await statementFile.async("string");
@@ -68,6 +70,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
     })
     return {
         title,
+        published: notListed || false,
         statement,
         editorial,
         difficulty: difficulty || null,
@@ -101,6 +104,7 @@ async function deployProblem(key: string): Promise<void> {
     const problem = await parseZip(data.Body as Buffer);
     const keyPath = posix.parse(key);
     const userID = keyPath.dir;
+    const status = problem.notListed ? 'CREATED_NOT_LISTED' : 'CREATED'
     const slug = decodeURIComponent(keyPath.name);
     const slugRecord = await dynamodb.getItem({
         TableName: SLUG_TABLE_NAME,
@@ -123,9 +127,15 @@ async function deployProblem(key: string): Promise<void> {
                     S: problemID,
                 },
             },
+            ExpressionAttributeNames: {
+                "#status": "status",
+            },
             ExpressionAttributeValues: {
                 ":title": {
                     S: problem.title,
+                },
+                ":status": {
+                    S: status,
                 },
                 ":statement": {
                     S: problem.statement,
@@ -146,7 +156,7 @@ async function deployProblem(key: string): Promise<void> {
                     L: problem.testcaseNames.map((name) => ({ S: name })),
                 },
             },
-            UpdateExpression: "SET title = :title, statement = :statement, hasEditorial = :hasEditorial, editorial = :editorial, hasDifficulty = :hasDifficulty, difficulty = :difficulty, testcaseNames = :testcaseNames",
+            UpdateExpression: "SET title = :title, #status = :status, statement = :statement, hasEditorial = :hasEditorial, editorial = :editorial, hasDifficulty = :hasDifficulty, difficulty = :difficulty, testcaseNames = :testcaseNames",
         }).promise();
     } else {
         problemID = uuid();
@@ -189,7 +199,7 @@ async function deployProblem(key: string): Promise<void> {
                                 S: (new Date()).toISOString(),
                             },
                             status: {
-                                S: 'CREATED',
+                                S: status,
                             },
                             likeCount: {
                                 N: '0',

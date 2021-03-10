@@ -11,12 +11,19 @@
         }
     },
     "filter" : {
-        "expression" : "#status = :status",
+        #if($context.source.userID == $context.identity.sub)
+        "expression" : "#status = :CREATED OR #status = :CREATED_NOT_LISTED",
+        #else
+        "expression" : "#status = :CREATED",
+        #end
         "expressionNames" : {
             "#status" : "status"
         },
         "expressionValues" : {
-            ":status" : $util.dynamodb.toDynamoDBJson("CREATED")
+            #if($context.source.userID == $context.identity.sub)
+            ":CREATED_NOT_LISTED" : $util.dynamodb.toDynamoDBJson("CREATED_NOT_LISTED"),
+            #end
+            ":CREATED" : $util.dynamodb.toDynamoDBJson("CREATED")
         },
     },
     "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),

@@ -22,12 +22,13 @@
         }
     },
     "filter" : {
-        "expression" : "#status = :status",
+        "expression" : "#status = :CREATED OR #status = :CREATED_NOT_LISTED",
         "expressionNames" : {
             "#status" : "status"
         },
         "expressionValues" : {
-            ":status" : $util.dynamodb.toDynamoDBJson("CREATED")
+            ":CREATED" : $util.dynamodb.toDynamoDBJson("CREATED"),
+            ":CREATED_NOT_LISTED" : $util.dynamodb.toDynamoDBJson("CREATED_NOT_LISTED")
         },
     },
     "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),

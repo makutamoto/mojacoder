@@ -65,6 +65,7 @@ type Testcase {
 
 enum ProblemStatus {
   CREATED
+  CREATED_NOT_LISTED
   DELETED
 }
 
