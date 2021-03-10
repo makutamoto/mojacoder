@@ -69,7 +69,7 @@ enum ProblemStatus {
   DELETED
 }
 
-type ProblemConnection {
+type ProblemConnection @aws_cognito_user_pools @aws_api_key {
 	items: [Problem]
 	nextToken: String
 }
