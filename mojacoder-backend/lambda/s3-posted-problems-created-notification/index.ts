@@ -70,7 +70,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
     })
     return {
         title,
-        published: notListed || false,
+        notListed: notListed || false,
         statement,
         editorial,
         difficulty: difficulty || null,
