@@ -18,8 +18,7 @@ RUN apt install -y wget curl zip
 RUN wget http://www.jsoftware.com/download/j902/install/j902_amd64.deb
 RUN mkdir -p /usr/share/icons/hicolor/scalable/apps/
 RUN dpkg -i j902_amd64.deb
-RUN curl -s https://get.sdkman.io | bash && source ~/.sdkman/bin/sdkman-init.sh
-RUN sdk install kotlin
+RUN curl -s https://get.sdkman.io | bash && source ~/.sdkman/bin/sdkman-init.sh && sdk install kotlin
 RUN wget https://github.com/atcoder/ac-library/archive/master.zip
 RUN unzip ./master.zip
 RUN mv ./ac-library-master/atcoder /usr/local/include/
