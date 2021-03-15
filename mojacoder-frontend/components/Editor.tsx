@@ -42,6 +42,12 @@ export const LANGUAGE_TO_MODE: { [index: string]: string } = {
 
     'rust-1.43.0': 'text/x-rustsrc',
     rust: 'text/x-rustsrc',
+
+    'ruby-2.7': 'text/x-ruby',
+    ruby: 'text/x-ruby',
+
+    'j-902': 'text/plain',
+    j: 'text/plain',
 }
 
 export interface EditorProps {

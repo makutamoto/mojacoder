@@ -18,6 +18,8 @@ const OPTIONS = [
     { value: 'cat', label: 'Text (cat)' },
     { value: 'rust-1.43.0', label: 'Rust (rustc 1.43.0)' },
     { value: 'pypy3-7.3.1', label: 'Python3 (pypy3 7.3.1)' },
+    { value: 'ruby-2.7', label: 'Ruby (CRuby 2.7)' },
+    { value: 'j-902', label: 'J (j902)' },
 ]
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = (props) => {
