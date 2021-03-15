@@ -9,10 +9,13 @@ RUN apt update
 
 RUN apt install -y golang-1.14
 ENV PATH $PATH:/usr/lib/go-1.14/bin/
-RUN apt install -y python3.8 build-essential mono-devel bf cargo pypy3
+RUN apt install -y python3.8 build-essential mono-devel bf cargo pypy3 ruby2.7 default-jdk
+RUN snap install --classic kotlin
 
 WORKDIR /tmp
 RUN apt install -y wget zip
+RUN wget http://www.jsoftware.com/download/j902/install/j902_amd64.deb
+RUN dpkg -i j902_amd64.deb
 RUN wget https://github.com/atcoder/ac-library/archive/master.zip
 RUN unzip ./master.zip
 RUN mv ./ac-library-master/atcoder /usr/local/include/

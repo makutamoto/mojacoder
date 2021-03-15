@@ -46,5 +46,23 @@
     "pypy3-7.3.1": {
         "filename": "main.py",
         "runCommand": "pypy3 main.py"
+    },
+    "ruby-2.7": {
+        "filename": "main.rb",
+        "runCommand": "ruby main.rb"
+    },
+    "java-11": {
+        "filename": "Main.java",
+        "compileCommand": "javac Main.java",
+        "runCommand": "java Main"
+    },
+    "j-902": {
+        "filename": "main.ijs",
+        "runCommand": "ijconsole main.ijs"
+    },
+    "kotlin-1.4": {
+        "filename": "main.kt",
+        "compileCommand": "kotlinc main.kt -include-runtime -d main.jar",
+        "runCommand": "java -jar hello.jar"
     }
 }
