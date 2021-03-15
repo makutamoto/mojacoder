@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+SHELL ["/bin/bash", "-c"]
+
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update -y
 RUN apt install -y gnupg ca-certificates
@@ -16,7 +18,7 @@ RUN apt install -y wget curl zip
 RUN wget http://www.jsoftware.com/download/j902/install/j902_amd64.deb
 RUN mkdir -p /usr/share/icons/hicolor/scalable/apps/
 RUN dpkg -i j902_amd64.deb
-RUN curl -s https://get.sdkman.io | bash && . "~/.sdkman/bin/sdkman-init.sh"
+RUN curl -s https://get.sdkman.io | bash && source ~/.sdkman/bin/sdkman-init.sh
 RUN sdk install kotlin
 RUN wget https://github.com/atcoder/ac-library/archive/master.zip
 RUN unzip ./master.zip
