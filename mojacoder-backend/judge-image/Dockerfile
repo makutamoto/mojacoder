@@ -13,7 +13,7 @@ RUN apt install -y python3.8 build-essential mono-devel bf cargo pypy3 ruby2.7 d
 RUN curl -s https://get.sdkman.io | bash && sdk install kotlin
 
 WORKDIR /tmp
-RUN apt install -y wget zip
+RUN apt install -y wget curl zip
 RUN wget http://www.jsoftware.com/download/j902/install/j902_amd64.deb
 RUN dpkg -i j902_amd64.deb
 RUN wget https://github.com/atcoder/ac-library/archive/master.zip
