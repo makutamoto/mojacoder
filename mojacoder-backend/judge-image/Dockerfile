@@ -10,7 +10,7 @@ RUN apt update
 RUN apt install -y golang-1.14
 ENV PATH $PATH:/usr/lib/go-1.14/bin/
 RUN apt install -y python3.8 build-essential mono-devel bf cargo pypy3 ruby2.7 default-jdk
-RUN snap install --classic kotlin
+RUN curl -s https://get.sdkman.io | bash && sdk install kotlin
 
 WORKDIR /tmp
 RUN apt install -y wget zip
