@@ -16,7 +16,7 @@ func compile(definition LanguageDefinition, bucket, key string) (bool, string, e
 	if definition.CompileCommand == "" {
 		return true, "", nil
 	}
-	cmd := exec.Command("bash", "-c", definition.CompileCommand)
+	cmd := exec.Command("bash", "-l", "-c", definition.CompileCommand)
 	cmd.Env = []string{
 		"PATH=" + os.Getenv("PATH"),
 		"HOME=" + os.Getenv("HOME"),
