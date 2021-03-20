@@ -62,7 +62,7 @@
     },
     "kotlin-1.4": {
         "filename": "main.kt",
-        "compileCommand": "kotlinc main.kt -include-runtime -d main.jar",
+        "compileCommand": "~root/.sdkman/candidates/kotlin/current/bin/kotlinc main.kt -include-runtime -d main.jar",
         "runCommand": "java -jar hello.jar"
     }
 }
