@@ -64,5 +64,14 @@
         "filename": "main.kt",
         "compileCommand": "~root/.sdkman/candidates/kotlin/current/bin/kotlinc main.kt -include-runtime -d main.jar",
         "runCommand": "java -jar main.jar"
+    },
+    "commonlisp-2.0": {
+        "filename": "main.lisp",
+        "compileCommand": "sbcl --noinform --eval \"(compile-file \\\"main.lisp\\\")\" --quit",
+        "runCommand": "sbcl --script main.fasl"
+    },
+    "clojure-1.10": {
+        "filename": "main.clj",
+        "runCommand": "clojure main.clj"
     }
 }
