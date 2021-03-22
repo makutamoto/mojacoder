@@ -32,7 +32,7 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData)
 	if err != nil {
 		return fmt.Errorf(errorMessage, err)
 	}
-	err = os.MkdirAll(TEMP_DIR, 755)
+	err = os.MkdirAll(TEMP_DIR, 0755)
 	if err != nil {
 		return fmt.Errorf(errorMessage, err)
 	}

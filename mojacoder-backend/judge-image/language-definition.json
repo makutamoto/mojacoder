@@ -53,7 +53,7 @@
     },
     "java-11": {
         "filename": "Main.java",
-        "compileCommand": "javac Main.java && chmod o+r Main.class",
+        "compileCommand": "javac Main.java",
         "runCommand": "java Main"
     },
     "j-902": {
