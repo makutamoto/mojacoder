@@ -10,6 +10,8 @@ if (process.browser) {
     require('codemirror/mode/python/python')
     require('codemirror/mode/brainfuck/brainfuck')
     require('codemirror/mode/rust/rust')
+    require('codemirror/mode/commonlisp/commonlisp')
+    require('codemirror/mode/clojure/clojure')
 }
 
 export const LANGUAGE_TO_MODE: { [index: string]: string } = {
@@ -46,8 +48,17 @@ export const LANGUAGE_TO_MODE: { [index: string]: string } = {
     'ruby-2.7': 'text/x-ruby',
     ruby: 'text/x-ruby',
 
+    'java-11': 'text/x-java',
+    java: 'text/x-java',
+
     'j-902': 'text/plain',
     j: 'text/plain',
+
+    'kotlin-1.4': 'text/x-kotlin',
+    kotlin: 'text/x-kotlin',
+
+    'commonlisp-2.0': 'text/x-common-lisp',
+    commonlisp: 'text/x-common-lisp',
 }
 
 export interface EditorProps {

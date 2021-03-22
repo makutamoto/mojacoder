@@ -10,7 +10,10 @@ const programmingLanguageIDToName = {
     'rust-1.43.0': 'Rust (rustc 1.43.0)',
     'pypy3-7.3.1': 'Python3 (pypy3 7.3.1)',
     'ruby-2.7': 'Ruby (CRuby 2.7)',
+    'java-11': 'Java 11 (Open JDK 11)',
     'j-902': 'J (j902)',
+    'kotlin-1.4': 'Kotlin (1.4)',
+    'commonlisp-2.0': 'Common Lisp (2.0)',
 } as const
 
 export function getProgrammingLanguageNameFromID(id: string) {

@@ -19,7 +19,10 @@ const OPTIONS = [
     { value: 'rust-1.43.0', label: 'Rust (rustc 1.43.0)' },
     { value: 'pypy3-7.3.1', label: 'Python3 (pypy3 7.3.1)' },
     { value: 'ruby-2.7', label: 'Ruby (CRuby 2.7)' },
+    { value: 'java-11', label: 'Java 11 (Open JDK 11)' },
     { value: 'j-902', label: 'J (j902)' },
+    { value: 'kotlin-1.4', label: 'Kotlin (1.4)' },
+    { value: 'commonlisp-2.0', label: 'Common Lisp (2.0)' },
 ]
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = (props) => {
