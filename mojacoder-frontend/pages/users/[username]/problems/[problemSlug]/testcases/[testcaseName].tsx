@@ -36,13 +36,14 @@ interface Props {
 }
 const Submissions: React.FC<Props> = ({ problem }) => {
     const { query } = useRouter()
+    const { username, problemSlug, testcaseName } = query
     const [inTestcase, setInTestcase] = useState<string | null>(null)
     const [outTestcase, setOutTestcase] = useState<string | null>(null)
     useEffect(() => {
         invokeQueryWithApiKey(GetTestcase, {
-            authorUsername: query.username,
-            problemSlug: query.problemSlug,
-            testcaseName: query.testcaseName,
+            authorUsername: username,
+            problemSlug: problemSlug,
+            testcaseName: testcaseName,
         }).then(({ user }) => {
             axios
                 .get(user.problem.testcase.inUrl, {
@@ -65,10 +66,11 @@ const Submissions: React.FC<Props> = ({ problem }) => {
             <Title>{`'${problem.title}'のテストケース`}</Title>
             <ProblemTop activeKey="testcases" problem={problem} />
             <Layout>
-                <Heading>入力</Heading>
+                <Heading>{testcaseName}</Heading>
+                <h3>入力</h3>
                 {!inTestcase && <ProgressBar animated now={100} />}
                 <Editor value={inTestcase || ''} readOnly />
-                <Heading>出力</Heading>
+                <h3>出力</h3>
                 {!outTestcase && <ProgressBar animated now={100} />}
                 <Editor value={outTestcase || ''} readOnly />
             </Layout>
