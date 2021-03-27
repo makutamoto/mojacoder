@@ -69,9 +69,5 @@
         "filename": "main.lisp",
         "compileCommand": "sbcl --noinform --eval \"(compile-file \\\"main.lisp\\\")\" --quit",
         "runCommand": "sbcl --script main.fasl"
-    },
-    "clojure-1.10": {
-        "filename": "main.clj",
-        "runCommand": "clojure main.clj"
     }
 }

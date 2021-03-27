@@ -11,7 +11,6 @@ if (process.browser) {
     require('codemirror/mode/brainfuck/brainfuck')
     require('codemirror/mode/rust/rust')
     require('codemirror/mode/commonlisp/commonlisp')
-    require('codemirror/mode/clojure/clojure')
 }
 
 export const LANGUAGE_TO_MODE: { [index: string]: string } = {
