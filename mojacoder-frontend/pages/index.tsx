@@ -27,6 +27,7 @@ export const Index: React.FC = () => {
                     <h2>
                         <span
                             style={{
+                                display: 'inline-block',
                                 background:
                                     'linear-gradient(to right, #DC3545, #007BFF)',
                                 WebkitBackgroundClip: 'text',
