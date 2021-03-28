@@ -273,11 +273,6 @@ const App = ({ Component, pageProps }: AppProps) => {
                             href="/images/logo.svg"
                             type="image/svg+xml"
                         />
-                        <script
-                            data-ad-client="ca-pub-1558648672247263"
-                            async
-                            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-                        ></script>
                     </Head>
                     <Appbar />
                     <Component {...pageProps} />
