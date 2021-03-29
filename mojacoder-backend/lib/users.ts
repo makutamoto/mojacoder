@@ -163,17 +163,17 @@ export class Users extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'setUserIcon',
         })
-        const renameScreenNameDataSource = this.api.addDynamoDbDataSource('renameScreenName', usernameTable)
+        const renameScreenNameDataSource = this.api.addDynamoDbDataSource('renameScreenName', this.userTable)
         renameScreenNameDataSource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
-            actions: ['dynamodb:UpdateItem'],
-            resources: [this.userTable.tableArn],
+            actions: ['dynamodb:DeleteItem', 'dynamodb:PutItem'],
+            resources: [usernameTable.tableArn],
         }))
         this.api.createResolver({
             typeName: 'Mutation',
             fieldName: 'renameScreenName',
             pipelineConfig: [
                 renameScreenNameDataSource.createFunction({
-                    name: 'renameScreenNameTransactionGetItem',
+                    name: 'renameScreenNameGetItem',
                     requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/GetItem/request.vtl')),
                     responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/GetItem/response.vtl')),
                 }),
