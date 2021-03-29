@@ -1,1 +1,4 @@
+#if(!$util.isNull($context.error))
+$util.error($context.error)
+#end
 $util.toJson({"username": $context.result.username })
