@@ -1,6 +1,3 @@
-#if($context.identity.sub != $context.source.userID)
-$util.error("Renaming another user is not allowed.")
-#end
 #set($screenName = $context.arguments.screenName)
 {
     "version" : "2018-05-29",
