@@ -169,7 +169,7 @@ export class Users extends cdk.Construct {
             resources: [usernameTable.tableArn],
         }))
         renameScreenNameDataSource.createResolver({
-            typeName: 'UserDetail',
+            typeName: 'Mutation',
             fieldName: 'renameScreenName',
             requestMappingTemplate: MappingTemplate.fromString(
                 MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/request.vtl')).renderTemplate()
