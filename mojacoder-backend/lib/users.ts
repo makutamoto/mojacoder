@@ -163,10 +163,10 @@ export class Users extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'setUserIcon',
         })
-        const renameScreenNameDataSource = this.api.addDynamoDbDataSource('renameScreenName', this.userTable)
+        const renameScreenNameDataSource = this.api.addDynamoDbDataSource('renameScreenName', usernameTable)
         renameScreenNameDataSource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
-            actions: ['dynamodb:PutItem', 'dynamodb:DeleteItem'],
-            resources: [usernameTable.tableArn],
+            actions: ['dynamodb:UpdateItem'],
+            resources: [this.userTable.tableArn],
         }))
         this.api.createResolver({
             typeName: 'Mutation',
