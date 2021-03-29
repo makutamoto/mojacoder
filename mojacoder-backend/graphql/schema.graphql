@@ -23,6 +23,7 @@ type UserDetail @aws_cognito_user_pools @aws_api_key {
   icon: Boolean!
   problem(id: ID, slug: String): Problem
   problems(nextToken: String): ProblemConnection!
+  renameScreenName(screenName: String!): String! @aws_cognito_user_pools
 }
 
 type ReplyConnection @aws_cognito_user_pools @aws_api_key {

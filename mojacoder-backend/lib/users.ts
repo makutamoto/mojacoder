@@ -163,6 +163,21 @@ export class Users extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'setUserIcon',
         })
+        const renameScreenNameDataSource = this.api.addDynamoDbDataSource('renameScreenName', this.userTable)
+        renameScreenNameDataSource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
+            actions: ['dynamodb:PutItem', 'dynamodb:DeleteItem'],
+            resources: [usernameTable.tableArn],
+        }))
+        renameScreenNameDataSource.createResolver({
+            typeName: 'UserDetail',
+            fieldName: 'renameScreenName',
+            requestMappingTemplate: MappingTemplate.fromString(
+                MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/request.vtl')).renderTemplate()
+                    .replace(/%USER_TABLE%/g, this.userTable.tableName)
+                    .replace(/%USERNAME_TABLE%/g, usernameTable.tableName)
+            ),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/response.vtl')),
+        })
 
         const userIconBucketDistribution = new Distribution(this, 'userIconBucketDistribution', {
             defaultBehavior: {
