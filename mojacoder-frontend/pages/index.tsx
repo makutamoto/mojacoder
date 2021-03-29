@@ -83,6 +83,20 @@ export const Index: React.FC = () => {
                         </IconWithText>
                     </div>
                 </Layout>
+                <Layout>
+                    <h3>謝辞</h3>
+                    <p>
+                        キャッチフレーズを
+                        <a
+                            href="https://twitter.com/programsamisii"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            @programsamisii
+                        </a>
+                        さんからいただきました。 ありがとうございます！
+                    </p>
+                </Layout>
             </div>
         </>
     )
