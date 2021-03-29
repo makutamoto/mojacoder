@@ -7,17 +7,17 @@
             "table": "%USERNAME_TABLE%",
             "operation" : "DeleteItem",
             "key": {
-                "username" : $util.dynamodb.toDynamoDBJson($context.source.screenName)
+                "username" : $util.dynamodb.toDynamoDBJson($context.source.screenName.toUpperCase())
             }
         },
         {
             "table": "%USERNAME_TABLE%",
             "operation" : "PutItem",
             "key": {
-                "username" : $util.dynamodb.toDynamoDBJson($screenName)
+                "username" : $util.dynamodb.toDynamoDBJson($screenName.toUpperCase())
             },
             "condition" : {
-                "expression": "attribute_not_exists(screenName)"
+                "expression": "attribute_not_exists(username)"
             }
         },
         {
