@@ -168,7 +168,7 @@ export class Users extends cdk.Construct {
             actions: ['dynamodb:PutItem', 'dynamodb:DeleteItem'],
             resources: [usernameTable.tableArn],
         }))
-        renameScreenNameDataSource.createResolver({
+        this.api.createResolver({
             typeName: 'Mutation',
             fieldName: 'renameScreenName',
             pipelineConfig: [
