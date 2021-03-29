@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Alert } from 'react-bootstrap'
+import { Alert, Form } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
@@ -19,6 +19,9 @@ const Status = {
     ClearingIcon: 'ClearingIcon',
     DoneIcon: 'DoneIcon',
     ErrorIcon: 'ErrorIcon',
+    UpdatingScreenName: 'UpdatingScreenName',
+    DoneScreenName: 'DoneScreenName',
+    ErrorScreenName: 'ErrorScreenName',
 } as const
 type Status = typeof Status[keyof typeof Status]
 
@@ -28,11 +31,18 @@ const SetUserIcon = gql`
     }
 `
 
+const RenameScreenName = gql`
+    mutation RenameScreenName($screenName: String!) {
+        renameScreenName(screenName: $screenName)
+    }
+`
+
 const Settings: React.FC = () => {
     const { t } = useI18n('settings')
     const { auth } = Auth.useContainer()
     const [status, setStatus] = useState<Status>(Status.Normal)
     const [icon, setIcon] = useState<string | null>(null)
+    const [screenName, setScreenName] = useState<string>('')
     const onIconDrop = useCallback(
         (files: File[]) => {
             if (files.length === 0) return
@@ -70,6 +80,19 @@ const Settings: React.FC = () => {
         }
         setStatus(Status.DoneIcon)
     }, [setStatus, icon])
+    const onUpdateUsername = useCallback(async () => {
+        setStatus(Status.UpdatingScreenName)
+        try {
+            await invokeMutation(RenameScreenName, {
+                screenName,
+            })
+        } catch (err) {
+            console.error(err)
+            setStatus(Status.ErrorScreenName)
+            return
+        }
+        setStatus(Status.DoneScreenName)
+    }, [setStatus, screenName])
     return (
         <>
             <Title>設定</Title>
@@ -113,6 +136,34 @@ const Settings: React.FC = () => {
                                 loading={status === Status.UpdatingIcon}
                                 disabled={icon === null}
                                 onClick={onUpdateIcon}
+                            >{t`update`}</ButtonWithSpinner>
+                        </div>
+
+                        <Heading>{t`username`}</Heading>
+                        <Alert
+                            show={status === Status.DoneScreenName}
+                            variant="success"
+                        >{t`updatedMessage`}</Alert>
+                        <Alert
+                            show={status === Status.ErrorScreenName}
+                            variant="danger"
+                        >{t`renamingErrorMessage`}</Alert>
+                        <Alert variant="warning">{t`renamingUsernameAlert`}</Alert>
+                        <Form.Group>
+                            <Form.Control
+                                type="text"
+                                placeholder={`${auth.screenName}...`}
+                                value={screenName}
+                                onChange={(e) =>
+                                    setScreenName(e.currentTarget.value)
+                                }
+                            />
+                        </Form.Group>
+                        <div className="text-right">
+                            <ButtonWithSpinner
+                                loading={status === Status.UpdatingScreenName}
+                                disabled={screenName.length === 0}
+                                onClick={onUpdateUsername}
                             >{t`update`}</ButtonWithSpinner>
                         </div>
                     </>

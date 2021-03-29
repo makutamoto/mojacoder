@@ -143,6 +143,10 @@ const languages = {
                 'ここにファイルをドロップするか、クリックして選択してください。',
             regulationOfIcon:
                 '正方形で幅が512ピクセル以下かつサイズが1MB以下であるPNGファイルを設定できます。',
+            username: 'ユーザー名',
+            renamingUsernameAlert:
+                'ユーザー名を変更すると問題へのリンクが変わります。',
+            renamingErrorMessage: 'このユーザー名はすでに使われています。',
             updatedMessage: '更新が完了しました。',
             errorMessage: 'エラーが発生しました。',
         },
@@ -252,6 +256,10 @@ const languages = {
             dropHereOrSelect: 'Drop a .png file here, or click to select it.',
             regulationOfIcon:
                 'The .png file must be square and its width and file size must NOT exceed 512 px and 1MB.',
+            username: 'Username',
+            renamingUsernameAlert:
+                "Changing your username changes your problems' addresses.",
+            renamingErrorMessage: 'This username is already taken.',
             updatedMessage: 'Done.',
             errorMessage: 'Error.',
         },
