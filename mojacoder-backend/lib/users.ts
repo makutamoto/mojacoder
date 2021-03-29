@@ -171,11 +171,23 @@ export class Users extends cdk.Construct {
         renameScreenNameDataSource.createResolver({
             typeName: 'Mutation',
             fieldName: 'renameScreenName',
-            requestMappingTemplate: MappingTemplate.fromString(
-                MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/request.vtl')).renderTemplate()
-                    .replace(/%USER_TABLE%/g, this.userTable.tableName)
-                    .replace(/%USERNAME_TABLE%/g, usernameTable.tableName)
-            ),
+            pipelineConfig: [
+                renameScreenNameDataSource.createFunction({
+                    name: 'renameScreenNameTransactionGetItem',
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/GetItem/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/GetItem/response.vtl')),
+                }),
+                renameScreenNameDataSource.createFunction({
+                    name: 'renameScreenNameTransactionWriteItems',
+                    requestMappingTemplate: MappingTemplate.fromString(
+                        MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/TransactionWriteItems/request.vtl')).renderTemplate()
+                            .replace(/%USER_TABLE%/g, this.userTable.tableName)
+                            .replace(/%USERNAME_TABLE%/g, usernameTable.tableName)
+                    ),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/TransactionWriteItems/response.vtl')),
+                })
+            ],
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/response.vtl')),
         })
 

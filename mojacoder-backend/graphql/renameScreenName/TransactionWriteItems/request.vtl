@@ -1,0 +1,45 @@
+#set($screenName = $context.arguments.screenName)
+{
+    "version" : "2018-05-29",
+    "operation": "TransactWriteItems",
+    "transactItems": [
+        {
+            "table": "%USERNAME_TABLE%",
+            "operation" : "DeleteItem",
+            "key": {
+                "username" : $util.dynamodb.toDynamoDBJson($context.prev.result.username)
+            }
+        },
+        {
+            "table": "%USERNAME_TABLE%",
+            "operation" : "PutItem",
+            "key": {
+                "username" : $util.dynamodb.toDynamoDBJson($screenName.toUpperCase())
+            },
+            "condition" : {
+                "expression": "attribute_not_exists(username)"
+            }
+        },
+        {
+            "table": "%USER_TABLE%",
+            "operation" : "UpdateItem",
+            "key" : {
+                "id" : $util.dynamodb.toDynamoDBJson($context.identity.sub)
+            },
+            "update" : {
+                "expression" : "SET #screenName = :screenName, #username = :username",
+                "expressionNames" : {
+                    "#screenName": "screenName",
+                    "#username": "username"
+                },
+                "expressionValues" : {
+                	":screenName": $util.dynamodb.toDynamoDBJson($screenName),
+                    ":username": $util.dynamodb.toDynamoDBJson($screenName.toUpperCase())
+                }
+            },
+            "condition" : {
+                "expression": "attribute_exists(id)"
+            }
+        }
+    ]
+}
