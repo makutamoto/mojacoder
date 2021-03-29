@@ -34,10 +34,9 @@ export const Index: React.FC = () => {
                                 color: 'transparent',
                             }}
                         >
-                            <span className="d-inline-block">解けた！を</span>
-                            <span className="d-inline-block">
-                                私も作りたい。
-                            </span>
+                            解けた！を
+                            <br className="d-block d-sm-none" />
+                            私も作りたい。
                         </span>
                     </h2>
                 </Container>
