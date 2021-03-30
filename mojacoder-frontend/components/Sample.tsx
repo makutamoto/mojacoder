@@ -18,7 +18,7 @@ const Sample: React.FC<Props> = ({ lang, title, value }) => {
             {lang ? (
                 lang === 'md' ? (
                     <div
-                        {...({ readonly: 'true' } as any)}
+                        {...({ readOnly: true } as any)}
                         className="form-control mt-1 mb-0 h-100"
                     >
                         <Markdown source={value} preventLastMargin />
@@ -28,7 +28,7 @@ const Sample: React.FC<Props> = ({ lang, title, value }) => {
                 )
             ) : (
                 <pre
-                    {...({ readonly: 'true' } as any)}
+                    {...({ readOnly: true } as any)}
                     className="form-control mt-1 mb-0 h-100"
                 >
                     {value}
