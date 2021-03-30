@@ -53,6 +53,6 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     res.setHeader('Cache-Control', 's-maxage=86400')
     res.end(sitemap)
     return {
-        props: null,
+        props: {},
     }
 }
