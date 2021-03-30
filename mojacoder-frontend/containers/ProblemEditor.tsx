@@ -14,6 +14,7 @@ import Dropzone from '../components/Dropzone'
 import Markdown from '../components/Markdown'
 import ButtonWithSpinner from '../components/ButtonWithSpinner'
 import ORSeparator from '../components/ORSeparator'
+import DifficultySelector from '../components/DifficultySelector'
 
 const IssueUrl = gql`
     mutation IssueUrl($input: IssueProblemUploadUrlInput!) {
@@ -365,23 +366,11 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>難易度</Form.Label>
-                        <Form.Control
-                            as="select"
+                        <DifficultySelector
+                            id="post-problem-difficulty-selector"
                             value={problemDifficulty}
-                            onChange={(e) =>
-                                setProblemDifficulty(e.currentTarget.value)
-                            }
-                        >
-                            <option value="none">-</option>
-                            <option value="gray">灰</option>
-                            <option value="brown">茶</option>
-                            <option value="green">緑</option>
-                            <option value="cyan">水</option>
-                            <option value="blue">青</option>
-                            <option value="yellow">黄</option>
-                            <option value="orange">橙</option>
-                            <option value="red">赤</option>
-                        </Form.Control>
+                            onChange={setProblemDifficulty}
+                        />
                     </Form.Group>
                     <h6>問題文(Markdown)</h6>
                     <Editor
