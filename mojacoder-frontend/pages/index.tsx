@@ -67,6 +67,21 @@ export const Index: React.FC = () => {
                     </p>
                 </Layout>
                 <Layout>
+                    <h3>寄付のお願い</h3>
+                    <p>
+                        MojaCoderは現在維持費として月額5000円程かかっています。
+                        <br />
+                        今後のジャッジサーバー増強や機能追加のためにも寄付をお願いしたいです。
+                    </p>
+                    <iframe
+                        src="https://github.com/sponsors/makutamoto/button"
+                        title="Sponsor makutamoto"
+                        height="35"
+                        width="116"
+                        style={{ border: 0 }}
+                    ></iframe>
+                </Layout>
+                <Layout>
                     <h3>お問い合わせ</h3>
                     <div>
                         <a href={TWITTER_LINK} target="_blank" rel="noreferrer">
