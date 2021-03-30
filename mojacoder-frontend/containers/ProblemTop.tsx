@@ -53,6 +53,14 @@ const LikeProblem = gql`
     }
 `
 
+const circleButtonStyles: React.CSSProperties = {
+    width: '40px',
+    height: '40px',
+    borderRadius: '20px',
+    border: 'solid lightgray 1px',
+    background: 'white',
+}
+
 export interface ProblemTopProps {
     activeKey?: 'problem' | 'submissions' | 'testcases' | 'editorial' | 'edit'
     problem?: Problem
@@ -126,10 +134,10 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                                 <IconWithText
                                     icon={
                                         <Button
-                                            className="px-1 py-0"
                                             variant="light"
                                             size="sm"
                                             onClick={onLike}
+                                            style={circleButtonStyles}
                                         >
                                             {likedByMe ? (
                                                 <HeartFillIcon className="text-danger" />
@@ -150,13 +158,25 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                         )}
                         {commentCount !== null && (
                             <>
-                                <IconWithText icon={<CommentDiscussionIcon />}>
-                                    <Link
-                                        href={join(basePath, 'comments')}
-                                        passHref
-                                    >
-                                        <a>{commentCount}</a>
-                                    </Link>
+                                <IconWithText
+                                    icon={
+                                        <Link
+                                            href={join(basePath, 'comments')}
+                                            passHref
+                                        >
+                                            <a>
+                                                <Button
+                                                    variant="light"
+                                                    size="sm"
+                                                    style={circleButtonStyles}
+                                                >
+                                                    <CommentDiscussionIcon />
+                                                </Button>
+                                            </a>
+                                        </Link>
+                                    }
+                                >
+                                    {commentCount}
                                 </IconWithText>{' '}
                             </>
                         )}
