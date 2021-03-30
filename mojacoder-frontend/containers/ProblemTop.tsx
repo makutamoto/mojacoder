@@ -128,7 +128,7 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                     <div>
                         <Username>{problem?.user.detail}</Username>
                     </div>
-                    <div className="mt-2">
+                    <div className="my-2">
                         {likeCount !== null && (
                             <>
                                 <IconWithText
