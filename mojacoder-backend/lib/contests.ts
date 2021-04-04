@@ -115,7 +115,7 @@ export class Contest extends cdk.Construct {
         createContestDatasource.createResolver({
             typeName: 'Mutation',
             fieldName: 'createContest',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/createContest/request.vtl')),
+            requestMappingTemplate: MappingTemplate.fromString(MappingTemplate.fromFile(join(__dirname, '../graphql/createContest/request.vtl')).renderTemplate().replace(/%CONTEST_TABLE%/g, contestTable.tableName).replace(/%CONTEST_SLUG_TABLE%/g, contestSlugTable.tableName)),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/createContest/response.vtl')),
         })
         
@@ -156,7 +156,7 @@ export class Contest extends cdk.Construct {
                 }),
                 deleteContestDatasource.createFunction({
                     name: 'DeleteContestDeleteItems',
-                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/deleteItems/request.vtl')),
+                    requestMappingTemplate: MappingTemplate.fromString(MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/deleteItems/request.vtl')).renderTemplate().replace(/%CONTEST_TABLE%/g, contestTable.tableName).replace(/%CONTEST_SLUG_TABLE%/g, contestSlugTable.tableName)),
                     responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/deleteItems/response.vtl')),
                 }),
             ],
