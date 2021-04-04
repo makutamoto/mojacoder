@@ -162,7 +162,7 @@ export class Contest extends cdk.Construct {
             ],
         })
 
-        const deleteContestDatasource = props.api.addDynamoDbDataSource('deleteContest', contestantTable)
+        const deleteContestDatasource = props.api.addDynamoDbDataSource('deleteContest', contestTable)
         deleteContestDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['dynamodb:DeleteItem'],
             resources: [contestSlugTable.tableArn],
