@@ -1,3 +1,6 @@
+#if(!$util.isNull($context.error))
+$util.error($context.error)
+#end
 #set($problems = [])
 #foreach($problem in $context.arguments.input.problems)
     $util.qr($problems.add({ "problem": { "problemID": $problem.problemID }, "point": $problem.point }))
