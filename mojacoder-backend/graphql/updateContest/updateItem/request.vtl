@@ -2,7 +2,7 @@
     "version" : "2018-05-29",
     "operation" : "UpdateItem",
     "key" : {
-        "id" : $util.dynamodb.toDynamoDBJson($context.prev.result.contestID),
+        "id" : $util.dynamodb.toDynamoDBJson($context.stash.id),
     },
     "update" : {
         "expression" : "SET #name = :name, #description = :description, #status = :status, #startDatetime = :startDatetime, #duration = :duration, #penaltySeconds = :penaltySeconds, #problems = :problems",
