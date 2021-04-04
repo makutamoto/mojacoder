@@ -22,6 +22,7 @@ $util.qr($context.stash.put("datetime", $util.time.nowISO8601()))
                 "id" : $util.dynamodb.toDynamoDBJson($context.stash.id)
             },
             "attributeValues" : {
+                "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
                 "slug": $util.dynamodb.toDynamoDBJson($context.arguments.input.slug),
                 "status": $util.dynamodb.toDynamoDBJson($context.arguments.input.status),
                 "datetime": $util.dynamodb.toDynamoDBJson($context.stash.datetime),
