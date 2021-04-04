@@ -1,4 +1,4 @@
-#set($now = $util.time.nowEpochSeconds)
+#set($now = $util.time.nowEpochSeconds())
 #set($startTime = $util.time.parseISO8601ToEpochMilliSeconds($context.source.startDatetime) / 1000)
 #set($end = $startTime + $context.source.duration)
 #if(!$util.isNull($context.result) || $context.source.userID == $context.identity.sub || $now > $end)
