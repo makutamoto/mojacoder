@@ -146,18 +146,18 @@ export class Contest extends cdk.Construct {
         props.api.createResolver({
             typeName: 'Mutation',
             fieldName: 'deleteContest',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/response.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/response.vtl')),
             pipelineConfig: [
                 contestTableDatasource.createFunction({
                     name: 'DeleteContestGetItem',
-                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/GetItem/request.vtl')),
-                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/GetItem/response.vtl')),
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/getItem/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/getItem/response.vtl')),
                 }),
                 deleteContestDatasource.createFunction({
                     name: 'DeleteContestDeleteItems',
-                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/deleteItems/request.vtl')),
-                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteProblem/deleteItems/response.vtl')),
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/deleteItems/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/deleteItems/response.vtl')),
                 }),
             ],
         })
