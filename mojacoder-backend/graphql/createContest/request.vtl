@@ -1,5 +1,5 @@
-$util.qr($context.stash.put("id", $util.autoId()))
-$util.qr($context.stash.put("datetime", $util.time.nowISO8601()))
+#set($id = $util.autoId())
+#set($datetime = $util.time.nowISO8601())
 {
     "version" : "2018-05-29",
     "operation": "TransactWriteItems",
@@ -19,12 +19,12 @@ $util.qr($context.stash.put("datetime", $util.time.nowISO8601()))
             "table": "%CONTEST_TABLE%",
             "operation" : "PutItem",
             "key" : {
-                "id" : $util.dynamodb.toDynamoDBJson($context.stash.id)
+                "id" : $util.dynamodb.toDynamoDBJson($id)
             },
             "attributeValues" : {
-                "slug": $util.dynamodb.toDynamoDBJson($context.stash.slug),
+                "slug": $util.dynamodb.toDynamoDBJson($context.arguments.input.slug),
                 "status": $util.dynamodb.toDynamoDBJson($context.arguments.input.status),
-                "datetime": $util.dynamodb.toDynamoDBJson($context.stash.datetime),
+                "datetime": $util.dynamodb.toDynamoDBJson($datetime),
                 "name": $util.dynamodb.toDynamoDBJson($context.arguments.input.name),
                 "description": $util.dynamodb.toDynamoDBJson($context.arguments.input.description),
                 "startDatetime": $util.dynamodb.toDynamoDBJson($context.arguments.input.startDatetime),
