@@ -107,7 +107,7 @@ export class Contest extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestProblems/response.vtl')),
         })
 
-        const createContestDatasource = props.api.addDynamoDbDataSource('createContest', contestantTable)
+        const createContestDatasource = props.api.addDynamoDbDataSource('createContest', contestTable)
         createContestDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['dynamodb:PutItem'],
             resources: [contestSlugTable.tableArn],
