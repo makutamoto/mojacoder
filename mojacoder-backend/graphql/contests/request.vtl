@@ -23,7 +23,7 @@
             #if($context.source.userID == $context.identity.sub)
             ":UNLISTED" : $util.dynamodb.toDynamoDBJson("UNLISTED"),
             #end
-            ":CREATED" : $util.dynamodb.toDynamoDBJson("PUBLIC")
+            ":PUBLIC" : $util.dynamodb.toDynamoDBJson("PUBLIC")
         },
     },
     "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),

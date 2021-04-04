@@ -9,7 +9,7 @@
         },
         "expressionValues" : {
             ":userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
-            ":slug" : $util.dynamodb.toDynamoDBJson($context.arguments.slug)
+            ":slug" : $util.dynamodb.toDynamoDBJson($context.arguments.input.slug)
         }
     },
     "index" : "contest-slug-index",
