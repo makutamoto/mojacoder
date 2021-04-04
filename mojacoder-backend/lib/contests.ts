@@ -3,9 +3,11 @@ import { join } from 'path';
 import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
+import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 
 export interface ContestProps {
     api: GraphqlApi
+    submissionTable: Table
 }
 
 export class Contest extends cdk.Construct {
@@ -129,6 +131,28 @@ export class Contest extends cdk.Construct {
             fieldName: 'problems',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestProblems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestProblems/response.vtl')),
+        })
+
+        props.api.addLambdaDataSource('standingLambda', new NodejsFunction(this, 'standings', {
+            entry: join(__dirname, '../lambda/standings-resolver/index.ts'),
+            handler: 'handler',
+            environment: {
+                CONTESTANT_TABLE: contestantTable.tableName,
+                SUBMISSION_TABLE: props.submissionTable.tableName,
+            },
+            initialPolicy: [
+                new PolicyStatement({
+                    actions: ['dynamodb:Query'],
+                    resources: [contestantTable.tableArn],
+                }),
+                new PolicyStatement({
+                    actions: ['dynamodb:Query'],
+                    resources: [props.submissionTable.tableArn],
+                }),
+            ]
+        })).createResolver({
+            typeName: 'Contest',
+            fieldName: 'standings',
         })
 
         const createContestDatasource = props.api.addDynamoDbDataSource('createContest', contestTable)

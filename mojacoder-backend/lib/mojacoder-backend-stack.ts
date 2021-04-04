@@ -14,12 +14,13 @@ export class MojacoderBackendStack extends cdk.Stack {
         const problems = new Problems(this, 'problems', {
             api: users.api,
         })
-        new Judge(this, 'judge', {
+        const judge = new Judge(this, 'judge', {
             api: users.api,
             testcases: problems.testcases,
         })
         new Contest(this, 'contest', {
             api: users.api,
+            submissionTable: judge.submissionTable,
         })
     }
 }

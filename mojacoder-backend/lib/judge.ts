@@ -14,6 +14,8 @@ export interface JudgeProps {
 }
 
 export class Judge extends cdk.Construct {
+    public readonly submissionTable: Table
+    
     constructor(scope: cdk.Construct, id: string, props: JudgeProps) {
         super(scope, id);
         const JudgeQueueDeadLetterQueue = new Queue(this, 'JudgeQueueDeadLetterQueue');
@@ -23,14 +25,14 @@ export class Judge extends cdk.Construct {
                 maxReceiveCount: 4,
             }
         });
-        const submissionTable = new Table(this, 'submissionTable', {
+        this.submissionTable = new Table(this, 'submissionTable', {
             billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: 'id',
                 type: AttributeType.STRING,
             },
         });
-        submissionTable.addGlobalSecondaryIndex({
+        this.submissionTable.addGlobalSecondaryIndex({
             indexName: 'problemID-index',
             partitionKey: {
                 name: 'problemID',
@@ -41,7 +43,7 @@ export class Judge extends cdk.Construct {
                 type: AttributeType.STRING,
             },
         })
-        submissionTable.addGlobalSecondaryIndex({
+        this.submissionTable.addGlobalSecondaryIndex({
             indexName: 'submission-contestID-index',
             partitionKey: {
                 name: 'contestID',
@@ -73,7 +75,7 @@ export class Judge extends cdk.Construct {
             actions: ['sqs:ReceiveMessage', 'sqs:DeleteMessage'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({
-            resources: [submissionTable.tableArn],
+            resources: [this.submissionTable.tableArn],
             actions: ['dynamodb:UpdateItem'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({
@@ -109,7 +111,7 @@ export class Judge extends cdk.Construct {
                 AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,
                 API_ENDPOINT: props.api.graphqlUrl,
                 JUDGEQUEUE_URL: JudgeQueue.queueUrl,
-                SUBMISSION_TABLE_NAME: submissionTable.tableName,
+                SUBMISSION_TABLE_NAME: this.submissionTable.tableName,
                 PLAYGROUND_CODE_BUCKET_NAME: playgroundCodeBucket.bucketName,
                 SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
                 TESTCASES_BUCKET_NAME: props.testcases.bucketName,
@@ -173,7 +175,7 @@ export class Judge extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/code/response.vtl')),
         })
-        const submissionTableDataSource = props.api.addDynamoDbDataSource('submission_table', submissionTable);
+        const submissionTableDataSource = props.api.addDynamoDbDataSource('submission_table', this.submissionTable);
         const submitCodePutItemFunction = submissionTableDataSource.createFunction({
             name: 'submitCodePutItem',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/putItem/request.vtl')),
