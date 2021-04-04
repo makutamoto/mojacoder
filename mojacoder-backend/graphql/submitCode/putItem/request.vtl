@@ -7,6 +7,7 @@
     "attributeValues" : {
         "lang" : $util.dynamodb.toDynamoDBJson($context.arguments.input.lang),
         "problemID" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problemID),
+        "contestID" : $util.dynamodb.toDynamoDBJson($context.arguments.input.contestID),
         "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
         "datetime" : $util.dynamodb.toDynamoDBJson($util.time.nowISO8601()),
         "status" : $util.dynamodb.toDynamoDBJson("WJ"),

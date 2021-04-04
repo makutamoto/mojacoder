@@ -239,8 +239,14 @@ export class Problems extends cdk.Construct {
         problemTableDataSource.createResolver({
             typeName: 'UserDetail',
             fieldName: 'problem',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/response.vtl')),
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problemDetail/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problemDetail/response.vtl')),
+        });
+        problemTableDataSource.createResolver({
+            typeName: 'Problem',
+            fieldName: 'detail',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problemDetail/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problemDetail/response.vtl')),
         });
         problemTableDataSource.createResolver({
             typeName: 'UserDetail',

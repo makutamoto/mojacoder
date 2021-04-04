@@ -1,0 +1,15 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "#status = :status",
+        "expressionNames" : {
+            "#status" : "status"
+        },
+        "expressionValues" : {
+            ":status" : $util.dynamodb.toDynamoDBJson("PUBLIC")
+        }
+    },
+    "index" : "status-index",
+    "scanIndexForward": false
+}

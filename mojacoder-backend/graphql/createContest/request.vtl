@@ -1,0 +1,40 @@
+$util.qr($context.stash.put("id", $util.autoId()))
+$util.qr($context.stash.put("datetime", $util.time.nowISO8601())
+{
+    "version" : "2018-05-29",
+    "operation": "TransactWriteItems",
+    "transactItems": [
+        {
+            "table": "%CONTEST_SLUG_TABLE%",
+            "operation" : "PutItem",
+            "key": {
+                "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
+                "slug" : $util.dynamodb.toDynamoDBJson($context.arguments.input.slug)
+            },
+            "condition" : {
+                "expression": "attribute_not_exists(userID) AND attribute_not_exists(slug)"
+            }
+        },
+        {
+            "table": "%CONTEST_TABLE%",
+            "operation" : "PutItem",
+            "key" : {
+                "id" : $util.dynamodb.toDynamoDBJson($context.stash.id)
+            },
+            "attributeValues" : {
+                "slug": $util.dynamodb.toDynamoDBJson($context.stash.slug),
+                "status": $util.dynamodb.toDynamoDBJson($context.arguments.input.status),
+                "datetime": $util.dynamodb.toDynamoDBJson($context.stash.datetime),
+                "name": $util.dynamodb.toDynamoDBJson($context.arguments.input.name),
+                "description": $util.dynamodb.toDynamoDBJson($context.arguments.input.description),
+                "startDatetime": $util.dynamodb.toDynamoDBJson($context.arguments.input.startDatetime),
+                "duration": $util.dynamodb.toDynamoDBJson($context.arguments.input.duration),
+                "penaltySeconds": $util.dynamodb.toDynamoDBJson($context.arguments.input.penaltySeconds),
+                "problems": $util.dynamodb.toDynamoDBJson($context.arguments.input.problems)
+            },
+            "condition" : {
+                "expression": "attribute_not_exists(id)",
+            },
+        }
+    ]
+}

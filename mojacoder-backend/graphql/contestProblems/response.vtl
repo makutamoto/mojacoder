@@ -1,0 +1,5 @@
+#if(!$util.isNull($context.result) || $context.source.userID == $context.identity.sub)
+$util.toJson($context.source.problems)
+#else
+$util.error("Permission Denied.")
+#end

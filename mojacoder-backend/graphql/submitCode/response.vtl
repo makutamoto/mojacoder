@@ -1,2 +1,2 @@
 #set($submission = $context.stash.submission)
-$util.toJson({ "id": $submission.id, "lang": $submission.lang, "problemID": $submission.problemID, "userID" : $submission.userID, "datetime" : $submission.datetime, "status" : $submission.status, "stderr" : $submission.stderr, "testcases" : $submission.testcases})
+$util.toJson({ "id": $submission.id, "lang": $submission.lang, "problemID": $submission.problemID, "contestID": $submission.contestID, "userID" : $submission.userID, "datetime" : $submission.datetime, "status" : $submission.status, "stderr" : $submission.stderr, "testcases" : $submission.testcases})

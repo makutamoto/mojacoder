@@ -21,8 +21,10 @@ type UserDetail @aws_cognito_user_pools @aws_api_key {
   userID: ID!
   screenName: String!
   icon: Boolean!
-  problem(id: ID, slug: String): Problem
+  problem(id: ID, slug: String): ProblemDetail
   problems(nextToken: String): ProblemConnection!
+  contests(nextToken: String): ContestConnection!
+  contest(id: ID, slug: String): Contest
 }
 
 type ReplyConnection @aws_cognito_user_pools @aws_api_key {
@@ -70,11 +72,16 @@ enum ProblemStatus {
 }
 
 type ProblemConnection @aws_cognito_user_pools @aws_api_key {
-	items: [Problem]
+	items: [ProblemDetail]
 	nextToken: String
 }
 
 type Problem @aws_cognito_user_pools @aws_api_key {
+  problemID: ID!
+  detail: ProblemDetail
+}
+
+type ProblemDetail @aws_cognito_user_pools @aws_api_key {
   id: ID!
   slug: String!
   user: User!
@@ -128,6 +135,7 @@ enum SubmissionStatus {
 type Submission @aws_cognito_user_pools @aws_api_key {
   id: ID!
   problemID: ID!
+  contestID: ID
   user: User!
   datetime: AWSDateTime!
   lang: String!
@@ -145,6 +153,51 @@ type UpdateSubmissionOutput @aws_iam @aws_api_key {
   testcases: [TestcaseResult]
 }
 
+type ContestProblem @aws_cognito_user_pools {
+  problem: Problem!
+  point: Int!
+}
+
+type ContestSubmission @aws_cognito_user_pools @aws_api_key {
+  penalty: Int!
+  score: Int
+  secondsFromStart: Int
+}
+
+type Standing @aws_cognito_user_pools @aws_api_key {
+  rank: Int!
+  user: User!
+  score: Int!
+  penalty: Int!
+  secondsFromStart: Int!
+  submissions: [ContestSubmission]!
+}
+
+enum ContestStatus {
+  PUBLIC
+  UNLISTED
+}
+
+type Contest @aws_cognito_user_pools @aws_api_key {
+  id: ID!
+  user: User!
+  status: ContestStatus!
+  slug: String!
+  name: String!
+  description: String!
+  datetime: AWSDateTime!
+  startDatetime: AWSDateTime!
+  duration: Int!
+  penaltySeconds: Int!
+  problems: [ContestProblem]! @aws_cognito_user_pools
+  standings: [Standing]!
+}
+
+type ContestConnection @aws_cognito_user_pools @aws_api_key {
+	items: [Contest]
+	nextToken: String
+}
+
 type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
   runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
@@ -155,9 +208,13 @@ type Mutation {
   postReply(input: PostReplyInput!): Reply! @aws_cognito_user_pools
   issueProblemUploadUrl(input: IssueProblemUploadUrlInput!): String! @aws_cognito_user_pools
   issueProblemDownloadUrl(input: IssueProblemDownloadUrlInput!): String! @aws_cognito_user_pools
-  deleteProblem(input: DeleteProblemInput!): String @aws_cognito_user_pools
+  deleteProblem(input: DeleteProblemInput!): ID @aws_cognito_user_pools
   setUserIcon(input: SetUserIconInput): String @aws_cognito_user_pools
   renameScreenName(screenName: String!): String! @aws_cognito_user_pools
+  createContest(input: CreateContestInput!): Contest! @aws_cognito_user_pools
+  updateContest(input: UpdateContestInput!): Contest! @aws_cognito_user_pools
+  deleteContest(input: DeleteContestInput!): ID @aws_cognito_user_pools
+  joinContest(input: JoinContestInput!): Boolean! @aws_cognito_user_pools
 }
 
 type ResponsePlayground @aws_cognito_user_pools @aws_iam {
@@ -172,7 +229,8 @@ type ResponsePlayground @aws_cognito_user_pools @aws_iam {
 
 type Query @aws_cognito_user_pools @aws_api_key {
   user(userID: ID, username: String): UserDetail
-  newProblems: [Problem]!
+  newProblems: [ProblemDetail]!
+  newContests: [Contest]!
 }
 
 type Subscription @aws_cognito_user_pools {
@@ -198,6 +256,7 @@ input RunPlaygroundInput {
 
 input SubmitCodeInput {
   problemID: ID!
+  contestID: ID
   lang: String!
   code: String!
 }
@@ -246,4 +305,40 @@ input DeleteProblemInput @aws_cognito_user_pools {
 
 input SetUserIconInput @aws_cognito_user_pools {
   icon: String!
+}
+
+input ContestProblemInput @aws_cognito_user_pools {
+  problemID: ID!
+  point: Int!
+}
+
+input CreateContestInput @aws_cognito_user_pools {
+  slug: String!
+  name: String!
+  status: ContestStatus!
+  description: String!
+  startDatetime: AWSDateTime!
+  duration: Int!
+  penaltySeconds: Int!
+  problems: [ContestProblemInput]!
+}
+
+input UpdateContestInput @aws_cognito_user_pools {
+  id: ID!
+  name: String!
+  status: ContestStatus!
+  description: String!
+  startDatetime: AWSDateTime!
+  duration: Int!
+  penaltySeconds: Int!
+  problems: [ContestProblemInput]!
+}
+
+input DeleteContestInput @aws_cognito_user_pools {
+  contestID: ID!
+}
+
+input JoinContestInput @aws_cognito_user_pools {
+  contestID: ID!
+  join: Boolean!
 }

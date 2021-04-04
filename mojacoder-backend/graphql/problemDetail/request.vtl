@@ -3,7 +3,11 @@
     "version" : "2018-05-29",
     "operation" : "GetItem",
     "key" : {
-        "id" : $util.dynamodb.toDynamoDBJson($context.arguments.id),
+        #if($util.isNull($context.arguments.id))
+        "id" : $util.dynamodb.toDynamoDBJson($context.source.problemID)
+        #else
+        "id" : $util.dynamodb.toDynamoDBJson($context.arguments.id)
+        #end
     },
 }
 #else

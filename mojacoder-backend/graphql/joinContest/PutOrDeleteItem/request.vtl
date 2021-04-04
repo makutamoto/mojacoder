@@ -1,0 +1,21 @@
+#set($now = $util.time.nowEpochSeconds())
+#set($start = $util.time.parseISO8601ToEpochMilliSeconds($context.prev.result.startDatetime) / 1000)
+{
+    "version" : "2018-05-29",
+    #if($context.arguments.input.join)
+        #set($end = $start + $context.prev.result.duration)
+        #if($now > $end)
+            $util.error("You can not join ended contests.")
+        #end
+    "operation" : "PutItem",
+    #else
+        #if($now >= $start)
+            $util.error("You can not leave started contests.")
+        #end
+    "operation" : "DeleteItem",
+    #end
+    "key": {
+        "contestID" : $util.dynamodb.toDynamoDBJson($context.arguments.input.contestID),
+        "userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub)
+    }
+}

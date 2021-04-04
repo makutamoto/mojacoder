@@ -1,0 +1,37 @@
+#if($util.isNull($context.arguments.slug))
+{
+    "version" : "2018-05-29",
+    "operation" : "GetItem",
+    "key" : {
+        "id" : $util.dynamodb.toDynamoDBJson($context.arguments.id)
+    },
+}
+#else
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "#slug = :slug AND #userID = :userID",
+        "expressionNames" : {
+            "#userID": "userID",
+            "#slug" : "slug"
+        },
+        "expressionValues" : {
+            ":userID": $util.dynamodb.toDynamoDBJson($context.source.userID),
+            ":slug" : $util.dynamodb.toDynamoDBJson($context.arguments.slug)
+        }
+    },
+    "filter" : {
+        "expression" : "#status = :PUBLIC OR #status = :UNLISTED",
+        "expressionNames" : {
+            "#status" : "status"
+        },
+        "expressionValues" : {
+            ":PUBLIC" : $util.dynamodb.toDynamoDBJson("PUBLIC"),
+            ":UNLISTED" : $util.dynamodb.toDynamoDBJson("UNLISTED")
+        },
+    },
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
+    "index" : "slug-index"
+}
+#end

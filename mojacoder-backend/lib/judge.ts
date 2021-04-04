@@ -40,7 +40,18 @@ export class Judge extends cdk.Construct {
                 name: 'datetime',
                 type: AttributeType.STRING,
             },
-        });
+        })
+        submissionTable.addGlobalSecondaryIndex({
+            indexName: 'contestID-index',
+            partitionKey: {
+                name: 'contestID',
+                type: AttributeType.STRING,
+            },
+            sortKey: {
+                name: 'datetime',
+                type: AttributeType.STRING,
+            },
+        })
         const submittedCodeBucket = new Bucket(this, 'submittedCodeBucket');
         const playgroundCodeBucket = new Bucket(this, 'playgroundCodeBucket');
         const vpc = new Vpc(this, 'vpc', {
