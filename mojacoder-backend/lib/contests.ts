@@ -19,7 +19,7 @@ export class Contest extends cdk.Construct {
             },
         })
         contestTable.addGlobalSecondaryIndex({
-            indexName: 'datetime-index',
+            indexName: 'contest-datetime-index',
             partitionKey: {
                 name: 'id',
                 type: AttributeType.STRING,
@@ -30,7 +30,7 @@ export class Contest extends cdk.Construct {
             },
         })
         contestTable.addGlobalSecondaryIndex({
-            indexName: 'slug-index',
+            indexName: 'contest-slug-index',
             partitionKey: {
                 name: 'userID',
                 type: AttributeType.STRING,
@@ -41,7 +41,7 @@ export class Contest extends cdk.Construct {
             }
         })
         contestTable.addGlobalSecondaryIndex({
-            indexName: 'userID-index',
+            indexName: 'contest-userID-index',
             partitionKey: {
                 name: 'userID',
                 type: AttributeType.STRING,

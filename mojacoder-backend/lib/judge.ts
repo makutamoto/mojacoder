@@ -42,7 +42,7 @@ export class Judge extends cdk.Construct {
             },
         })
         submissionTable.addGlobalSecondaryIndex({
-            indexName: 'contestID-index',
+            indexName: 'submission-contestID-index',
             partitionKey: {
                 name: 'contestID',
                 type: AttributeType.STRING,
