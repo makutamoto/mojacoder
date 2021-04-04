@@ -198,7 +198,7 @@ export class Problems extends cdk.Construct {
             fieldName: 'issueProblemDownloadUrl',
         });
         props.api.addNoneDataSource('testcase').createResolver({
-            typeName: 'Problem',
+            typeName: 'ProblemDetail',
             fieldName: 'testcase',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/testcase/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/testcase/response.vtl')),
@@ -277,13 +277,13 @@ export class Problems extends cdk.Construct {
         });
         const likersTableDatasource = props.api.addDynamoDbDataSource('likersTable', likersTable);
         likersTableDatasource.createResolver({
-            typeName: 'Problem',
+            typeName: 'ProblemDetail',
             fieldName: 'likedByMe',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likedByMe/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likedByMe/response.vtl')),
         });
         likersTableDatasource.createResolver({
-            typeName: 'Problem',
+            typeName: 'ProblemDetail',
             fieldName: 'likers',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/likers/response.vtl')),
@@ -305,7 +305,7 @@ export class Problems extends cdk.Construct {
         });
         const commentTableDatasource = props.api.addDynamoDbDataSource('commentTable', commentTable);
         commentTableDatasource.createResolver({
-            typeName: 'Problem',
+            typeName: 'ProblemDetail',
             fieldName: 'comments',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/comments/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/comments/response.vtl')),
