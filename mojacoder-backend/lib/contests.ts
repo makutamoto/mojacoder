@@ -1,6 +1,6 @@
 import * as cdk from '@aws-cdk/core'
 import { join } from 'path';
-import { GraphqlApi, MappingTemplate, SortKeyStep } from '@aws-cdk/aws-appsync';
+import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 
@@ -138,7 +138,7 @@ export class Contest extends cdk.Construct {
             ],
         })
 
-        const deleteContestDatasource = props.api.addDynamoDbDataSource('deleteContest', contestantTableDatasource)
+        const deleteContestDatasource = props.api.addDynamoDbDataSource('deleteContest', contestantTable)
         deleteContestDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['dynamodb:DeleteItem'],
             resources: [contestSlugTable.tableArn],
