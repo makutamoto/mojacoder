@@ -82,24 +82,24 @@ export class Contest extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/newContests/response.vtl')),
         })
 
-        // props.api.createResolver({
-        //     typeName: 'Mutation',
-        //     fieldName: 'updateContest',
-        //     requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/request.vtl')),
-        //     responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/response.vtl')),
-        //     pipelineConfig: [
-        //         contestTableDatasource.createFunction({
-        //             name: 'updateContestQuery',
-        //             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/query/request.vtl')),
-        //             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/query/response.vtl')),
-        //         }),
-        //         contestTableDatasource.createFunction({
-        //             name: 'updateContestUpdateItem',
-        //             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/updateItem/request.vtl')),
-        //             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/updateItem/response.vtl')),
-        //         }),
-        //     ],
-        // })
+        props.api.createResolver({
+            typeName: 'Mutation',
+            fieldName: 'updateContest',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/response.vtl')),
+            pipelineConfig: [
+                contestTableDatasource.createFunction({
+                    name: 'updateContestQuery',
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/query/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/query/response.vtl')),
+                }),
+                contestTableDatasource.createFunction({
+                    name: 'updateContestUpdateItem',
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/updateItem/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/updateItem/response.vtl')),
+                }),
+            ],
+        })
         
         const contestSlugTable = new Table(this, 'contestSlugTable', {
             billingMode: BillingMode.PAY_PER_REQUEST,
