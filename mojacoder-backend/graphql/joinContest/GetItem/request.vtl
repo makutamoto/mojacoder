@@ -2,6 +2,6 @@
 	"version": "2018-05-29",
 	"operation": "GetItem",
 	"key": {
-		"id": $util.dynamodb.toDynamoDBJson($context.arguments.id)
+		"id": $util.dynamodb.toDynamoDBJson($context.arguments.input.contestID)
 	}
 }
