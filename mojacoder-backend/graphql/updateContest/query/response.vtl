@@ -1,0 +1,5 @@
+#if($context.result.scannedCount == 0)
+    $util.error("Contest not found.")
+#else
+    $util.toJson({"contestID": $context.result.items[0].contestID})
+#end

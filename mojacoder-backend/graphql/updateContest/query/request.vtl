@@ -1,0 +1,16 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "#userID = :userID AND #slug = :slug",
+        "expressionNames" : {
+            "#userID" : "userID",
+            "#slug": "slug"
+        },
+        "expressionValues" : {
+            ":userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub),
+            ":slug" : $util.dynamodb.toDynamoDBJson($context.arguments.slug)
+        }
+    },
+    "index" : "slug-index",
+}

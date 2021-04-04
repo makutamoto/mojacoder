@@ -70,11 +70,24 @@ export class Contest extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/newContests/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/newContests/response.vtl')),
         })
-        contestTableDatasource.createResolver({
+
+        props.api.createResolver({
             typeName: 'Mutation',
             fieldName: 'updateContest',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/response.vtl')),
+            pipelineConfig: [
+                contestTableDatasource.createFunction({
+                    name: 'updateContestQuery',
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/query/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/query/response.vtl')),
+                }),
+                contestTableDatasource.createFunction({
+                    name: 'updateContestUpdateItem',
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/updateItem/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/updateContest/updateItem/response.vtl')),
+                }),
+            ],
         })
         
         const contestSlugTable = new Table(this, 'contestSlugTable', {
@@ -150,9 +163,9 @@ export class Contest extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/response.vtl')),
             pipelineConfig: [
                 contestTableDatasource.createFunction({
-                    name: 'DeleteContestGetItem',
-                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/getItem/request.vtl')),
-                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/getItem/response.vtl')),
+                    name: 'DeleteContestQuery',
+                    requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/query/request.vtl')),
+                    responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/deleteContest/query/response.vtl')),
                 }),
                 deleteContestDatasource.createFunction({
                     name: 'DeleteContestDeleteItems',

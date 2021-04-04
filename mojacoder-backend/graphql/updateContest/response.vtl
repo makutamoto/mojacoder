@@ -2,4 +2,4 @@
 #foreach($problem in $context.arguments.input.problems)
     $util.qr($problems.add({ "problem": { "problemID": $problem.problemID }, "point": $problem.point }))
 #end
-$util.toJson({ "id": $context.stash.id, "slug": $context.stash.slug, "status": $context.arguments.status, "user": { "userID": $context.arguments.userID }, "datetime": $context.stash.datetime, "startDatetime": $context.arguments.input.startDatetime, "duration": $context.arguments.input.duration, "name": $context.arguments.input.name, "description": $context.arguments.input.description, "penaltySeconds": $context.arguments.input.penaltySeconds, "problems": $problems })
+$util.toJson({ "id": $context.arguments.input.id, "slug": $context.arguments.input.slug, "status": $context.arguments.input.status, "user": { "userID": $context.arguments.input.userID }, "datetime": $context.stash.datetime, "startDatetime": $context.arguments.input.startDatetime, "duration": $context.arguments.input.duration, "name": $context.arguments.input.name, "description": $context.arguments.input.description, "penaltySeconds": $context.arguments.input.penaltySeconds, "problems": $problems })

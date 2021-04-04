@@ -324,7 +324,7 @@ input CreateContestInput @aws_cognito_user_pools {
 }
 
 input UpdateContestInput @aws_cognito_user_pools {
-  id: ID!
+  slug: String!
   name: String!
   status: ContestStatus!
   description: String!
@@ -335,7 +335,7 @@ input UpdateContestInput @aws_cognito_user_pools {
 }
 
 input DeleteContestInput @aws_cognito_user_pools {
-  contestID: ID!
+  slug: String!
 }
 
 input JoinContestInput @aws_cognito_user_pools {

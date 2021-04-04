@@ -1,0 +1,28 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key" : {
+        "id" : $util.dynamodb.toDynamoDBJson($context.prev.result.contestID),
+    },
+    "update" : {
+        "expression" : "SET #name = :name, #description = :description, #status = :status, #startDatetime = :startDatetime, #duration = :duration, #penaltySeconds = :penaltySeconds, #problems = :problems",
+        "expressionNames" : {
+            "#name": "name",
+            "#description": "description",
+            "#status": "status",
+            "#startDatetime": "startDatetime",
+            "#duration": "duration",
+            "#penaltySeconds": "penaltySeconds",
+            "#problems": "problems"
+        },
+        "expressionValues" : {
+            ":name" : $util.dynamodb.toDynamoDBJson($context.arguments.input.name),
+            ":description" : $util.dynamodb.toDynamoDBJson($context.arguments.input.description),
+            ":status": $util.dynamodb.toDynamoDBJson($context.arguments.input.status),
+            ":startDatetime" : $util.dynamodb.toDynamoDBJson($context.arguments.input.startDatetime),
+            ":duration" : $util.dynamodb.toDynamoDBJson($context.arguments.input.duration),
+            ":penaltySeconds" : $util.dynamodb.toDynamoDBJson($context.arguments.input.penaltySeconds),
+            ":problems" : $util.dynamodb.toDynamoDBJson($context.arguments.input.problems)
+        }
+    }
+}
