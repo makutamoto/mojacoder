@@ -243,13 +243,13 @@ export class Judge extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/onResponsePlayground/response.vtl')),
         });
         submissionTableDataSource.createResolver({
-            typeName: 'Problem',
+            typeName: 'ProblemDetail',
             fieldName: 'submission',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submission/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submission/response.vtl')),
         });
         submissionTableDataSource.createResolver({
-            typeName: 'Problem',
+            typeName: 'ProblemDetail',
             fieldName: 'submissions',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submissions/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submissions/response.vtl')),
