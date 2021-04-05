@@ -9,7 +9,9 @@ if(SUBMISSION_TABLE === undefined) throw "SUBMISSION_TABLE is not defined.";
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'})
 
 interface ContestProblem {
-    problemID: string
+    problem: {
+        problemID: string
+    }
     point: number
 }
 
@@ -21,6 +23,7 @@ interface ProblemIndex {
 interface Source {
     id: string
     startDatetime: string
+    duration: number
     penaltySeconds: number
     problems: ContestProblem[]
 }
@@ -45,12 +48,12 @@ interface Standing {
 }
 
 export const handler: AppSyncResolverHandler<{ input: { problemName: string } }, Standing[]> = async (event) => {
-    const { startDatetime, penaltySeconds, ...source } = event.source as Source
+    const { startDatetime, duration, penaltySeconds, ...source } = event.source as Source
     const contestID = source.id
     const startEpoch = new Date(startDatetime).getTime()
     const problems = new Map<string, ProblemIndex>()
     for(const index of source.problems.keys()) {
-        const { problemID, point } = source.problems[index]
+        const { problem: { problemID }, point } = source.problems[index]
         problems.set(problemID, {
             index,
             point: point,
@@ -70,6 +73,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
         KeyConditionExpression: "#contestID = :contestID",
         ProjectionExpression: "#userID",
     }).promise()).Items!
+    if(contestants.length == 0) return []
     const results = new Map<string, Standing>()
     for(let contestant of contestants) {
         const userID = contestant.userID.S!
@@ -110,6 +114,8 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
         ProjectionExpression: "#userID, #datetime, #problemID, #status, #testcases",
     }).promise()).Items!
     submissionLoop: for(const submission of submissions) {
+        const secondsFromStart = Math.floor((new Date(submission.datetime.S!).getTime() - startEpoch) / 1000)
+        if(secondsFromStart < 0 || secondsFromStart > duration) continue
         const userID = submission.userID.S!
         const result = results.get(userID)
         if(!result) continue
@@ -125,12 +131,23 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
             }
         }
         resultSubmission.score = problem.point
-        resultSubmission.secondsFromStart = Math.floor((new Date(submission.datetime.S!).getTime() - startEpoch) / 1000)
+        resultSubmission.secondsFromStart = secondsFromStart
         result.score += problem.point
         result.penalty += resultSubmission.penalty
         result.secondsFromStart = Math.max(result.secondsFromStart, resultSubmission.secondsFromStart + penaltySeconds * resultSubmission.secondsFromStart)
     }
     const standings = Array.from(results.values())
     standings.sort((a, b) => a.score - b.score || b.secondsFromStart - a.secondsFromStart)
+    let rank = 1;
+    let prevScore = standings[0].score
+    let prevSecondsFromStart = standings[0].secondsFromStart
+    for(let i = 1;i < standings.length;i++) {
+        if(prevScore !== standings[i].score || prevSecondsFromStart !== standings[i].secondsFromStart) {
+            rank++;
+            prevScore = standings[i].score
+            prevSecondsFromStart = standings[i].secondsFromStart
+        }
+        standings[i].rank = rank
+    }
     return standings
 };

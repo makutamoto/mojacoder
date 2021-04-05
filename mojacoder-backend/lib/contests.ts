@@ -133,7 +133,7 @@ export class Contest extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestProblems/response.vtl')),
         })
 
-        props.api.addLambdaDataSource('standingLambda', new NodejsFunction(this, 'standings', {
+        props.api.addLambdaDataSource('standingsLambda', new NodejsFunction(this, 'standings', {
             entry: join(__dirname, '../lambda/standings-resolver/index.ts'),
             handler: 'handler',
             environment: {
@@ -147,7 +147,7 @@ export class Contest extends cdk.Construct {
                 }),
                 new PolicyStatement({
                     actions: ['dynamodb:Query'],
-                    resources: [props.submissionTable.tableArn],
+                    resources: [props.submissionTable.tableArn + '/index/*'],
                 }),
             ]
         })).createResolver({
