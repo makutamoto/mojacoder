@@ -81,7 +81,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
             user: {
                 userID,
             },
-            rank: 0,
+            rank: 1,
             score: 0,
             penalty: 0,
             secondsFromStart: 0,
