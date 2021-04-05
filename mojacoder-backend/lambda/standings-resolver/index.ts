@@ -66,7 +66,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
             ':contestID': {
                 S: contestID,
             },
-        }, 
+        },
         KeyConditionExpression: "#contestID = :contestID",
         ProjectionExpression: "#userID",
     }).promise()).Items!
@@ -88,6 +88,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
     }
     const submissions = (await dynamodb.query({
         TableName: SUBMISSION_TABLE,
+        IndexName: 'submission-contestID-index',
         ExpressionAttributeNames: {
             '#contestID': 'contestID',
             '#userID': 'userID',
@@ -104,7 +105,8 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
                 S: 'JUDGED',
             },
         }, 
-        KeyConditionExpression: "#contestID = :contestID AND #status = :status",
+        KeyConditionExpression: "#contestID = :contestID",
+        FilterExpression: '#status = :status',
         ProjectionExpression: "#userID, #datetime, #problemID, #status, #testcases",
     }).promise()).Items!
     submissionLoop: for(const submission of submissions) {

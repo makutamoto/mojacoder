@@ -62,7 +62,7 @@ export class Contest extends cdk.Construct {
             sortKey: {
                 name: 'datetime',
                 type: AttributeType.STRING,
-            }
+            },
         })
         const contestTableDatasource = props.api.addDynamoDbDataSource('contestTable', contestTable)
         contestTableDatasource.createResolver({
