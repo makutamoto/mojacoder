@@ -133,27 +133,27 @@ export class Contest extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestProblems/response.vtl')),
         })
 
-        props.api.addLambdaDataSource('standingsLambda', new NodejsFunction(this, 'standings', {
-            entry: join(__dirname, '../lambda/standings-resolver/index.ts'),
-            handler: 'handler',
-            environment: {
-                CONTESTANT_TABLE: contestantTable.tableName,
-                SUBMISSION_TABLE: props.submissionTable.tableName,
-            },
-            initialPolicy: [
-                new PolicyStatement({
-                    actions: ['dynamodb:Query'],
-                    resources: [contestantTable.tableArn],
-                }),
-                new PolicyStatement({
-                    actions: ['dynamodb:Query'],
-                    resources: [props.submissionTable.tableArn + '/index/*'],
-                }),
-            ]
-        })).createResolver({
-            typeName: 'Contest',
-            fieldName: 'standings',
-        })
+        // props.api.addLambdaDataSource('standingsLambda', new NodejsFunction(this, 'standings', {
+        //     entry: join(__dirname, '../lambda/standings-resolver/index.ts'),
+        //     handler: 'handler',
+        //     environment: {
+        //         CONTESTANT_TABLE: contestantTable.tableName,
+        //         SUBMISSION_TABLE: props.submissionTable.tableName,
+        //     },
+        //     initialPolicy: [
+        //         new PolicyStatement({
+        //             actions: ['dynamodb:Query'],
+        //             resources: [contestantTable.tableArn],
+        //         }),
+        //         new PolicyStatement({
+        //             actions: ['dynamodb:Query'],
+        //             resources: [props.submissionTable.tableArn + '/index/*'],
+        //         }),
+        //     ]
+        // })).createResolver({
+        //     typeName: 'Contest',
+        //     fieldName: 'standings',
+        // })
 
         const createContestDatasource = props.api.addDynamoDbDataSource('createContest', contestTable)
         createContestDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
