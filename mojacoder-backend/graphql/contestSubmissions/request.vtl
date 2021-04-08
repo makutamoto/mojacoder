@@ -1,0 +1,19 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "contestID = :contestID",
+        "expressionValues" : {
+            ":contestID" : $util.dynamodb.toDynamoDBJson($context.source.contestID)
+        }
+    },
+    "filter" : {
+        "expression" : "userID = :userID",
+        "expressionValues" : {
+            ":userID" : $util.dynamodb.toDynamoDBJson($context.identity.sub)
+        }
+    },
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null)),
+    "index" : "contestID-index",
+    "scanIndexForward": false
+}

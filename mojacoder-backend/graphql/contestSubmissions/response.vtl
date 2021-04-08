@@ -1,0 +1,12 @@
+#set($items = [])
+#foreach($item in $context.result.items)
+	#set($testcases = [])
+	#foreach($testcase in $item.testcases)
+		$util.qr($testcases.add({ "name": $testcase.get("name"), "status": $testcase.get("status"), "time": $testcase.get("time"), "memory": $testcase.get("memory") }))
+	#end
+    $util.qr($items.add({ "id": $item.id, "problemID": $item.problemID, "user": { "userID": $item.userID }, "datetime": $item.datetime, "lang": $item.lang, "status": $item.status, "stderr": $item.stderr, "testcases": $testcases }))
+#end
+{
+    "items": $util.toJson($items),
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.result.nextToken, null))
+}

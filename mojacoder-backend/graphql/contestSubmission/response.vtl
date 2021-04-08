@@ -1,0 +1,10 @@
+#if($context.source.contestID == $context.result.contestID)
+    #set($submission = $context.result)
+    #set($testcases = [])
+	#foreach($testcase in $submission.testcases)
+		$util.qr($testcases.add({ "name": $testcase.get("name"), "status": $testcase.get("status"), "time": $testcase.get("time"), "memory": $testcase.get("memory") }))
+	#end
+    $util.toJson({ "id": $submission.id, "problemID": $submission.problemID, "user": { "userID": $submission.userID }, "datetime": $submission.datetime, "lang": $submission.lang, "status": $submission.status, "stderr": $submission.stderr, "testcases": $testcases })
+#else
+    null
+#end

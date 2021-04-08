@@ -1,0 +1,8 @@
+#set($size = $context.source.problems.size())
+#set($index = $context.arguments.index)
+$util.validate($index < 1 || $size <= $index, "Index out of range.")
+{
+    "version" : "2018-05-29",
+    "payload" : {
+    }
+}

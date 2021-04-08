@@ -201,6 +201,18 @@ export class Judge extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/response.vtl')),
         });
+        submissionTableDataSource.createResolver({
+            typeName: 'ContestSecret',
+            fieldName: 'submissions',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmissions/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmissions/response.vtl')),
+        })
+        submissionTableDataSource.createResolver({
+            typeName: 'ContestSecret',
+            fieldName: 'submission',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmission/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmission/response.vtl')),
+        })
         const playgroundCodeBucketDatasource = props.api.addHttpDataSource('playgroundCodeBucket', 'https://' + playgroundCodeBucket.bucketRegionalDomainName, {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
