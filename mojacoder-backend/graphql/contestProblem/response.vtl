@@ -1,1 +1,2 @@
-$util.toJson($context.source.problems[$context.arguments.index])
+#set($index = $context.arguments.index - 1)
+$util.toJson($context.source.problems[$index])
