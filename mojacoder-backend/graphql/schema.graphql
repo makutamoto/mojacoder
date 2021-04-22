@@ -118,7 +118,7 @@ enum TestcaseResultStatus {
   RE
 }
 
-type TestcaseResult @aws_api_key @aws_iam {
+type TestcaseResult @aws_api_key @aws_cognito_user_pools @aws_iam {
   name: String!
   status: TestcaseResultStatus!
   time: Int!
