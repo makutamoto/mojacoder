@@ -104,7 +104,7 @@ type ProblemDetail @aws_cognito_user_pools @aws_api_key {
   submissions(nextToken: String, userID: ID): SubmissionConnection!
 }
 
-type SubmissionConnection {
+type SubmissionConnection @aws_cognito_user_pools @aws_api_key {
   items: [Submission]
   nextToken: String
 }
