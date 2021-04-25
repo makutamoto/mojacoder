@@ -179,7 +179,7 @@ enum ContestStatus {
 }
 
 type ContestDetail @aws_cognito_user_pools {
-  contestID: ID!
+  contestID: ID
   joined: Boolean!
   problems: [ContestProblem]
   problem(index: Int!): ContestProblem
