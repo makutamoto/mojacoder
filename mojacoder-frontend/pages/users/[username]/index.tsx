@@ -10,7 +10,7 @@ import { invokeQuery, invokeQueryWithApiKey } from '../../../lib/backend'
 import {
     UserDetail,
     ProblemStatus,
-    Problem,
+    ProblemDetail,
     Query,
 } from '../../../lib/backend_types'
 import Heading from '../../../components/Heading'
@@ -38,7 +38,7 @@ interface Props {
 const UserPage: React.FC<Props> = ({ user }) => {
     const { t } = useI18n('user')
     const { auth } = Auth.useContainer()
-    const [problems, setProblems] = useState<Problem[]>(null)
+    const [problems, setProblems] = useState<ProblemDetail[]>(null)
     useEffect(() => {
         const loadProblems = async () => {
             const variables = {

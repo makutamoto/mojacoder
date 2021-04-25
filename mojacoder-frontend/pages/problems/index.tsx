@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
-import { Problem } from '../../lib/backend_types'
+import { ProblemDetail } from '../../lib/backend_types'
 import { invokeQueryWithApiKey } from '../../lib/backend'
 import DateTime from '../../components/DateTime'
 import Username from '../../components/Username'
@@ -14,7 +14,7 @@ import Top from '../../components/Top'
 import Title from '../../components/Title'
 
 interface Props {
-    newProblems: Problem[]
+    newProblems: ProblemDetail[]
 }
 
 export const Post: React.FC<Props> = ({ newProblems }) => {

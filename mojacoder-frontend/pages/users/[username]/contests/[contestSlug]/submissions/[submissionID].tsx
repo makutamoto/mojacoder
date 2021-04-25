@@ -9,7 +9,7 @@ import clsx from 'clsx'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
-    Problem,
+    ProblemDetail,
     Submission,
     SubmissionStatus,
 } from '../../../../../../lib/backend_types'
@@ -74,7 +74,7 @@ const GetSubmission = gql`
 `
 
 interface Props {
-    problem: Problem
+    problem: ProblemDetail
 }
 
 const Submissions: React.FC<Props> = ({ problem }) => {
