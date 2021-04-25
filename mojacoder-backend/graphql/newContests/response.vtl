@@ -4,6 +4,6 @@
     #foreach($problem in $item.problems)
         $util.qr($problems.add({ "problem": { "problemID": $problem.problemID }, "point": $problem.point }))
     #end
-    $util.qr($items.add({ "id": $item.id, "slug": $item.slug, "status": $item.status, "user": { "userID": $item.userID }, "datetime": $item.datetime, "startDatetime": $item.startDatetime, "duration": $item.duration, "name": $item.name, "description": $item.description, "penaltySeconds": $item.penaltySeconds, "problems": $problems, "numberOfProblems": $problems.size() }))
+    $util.qr($items.add({ "id": $item.id, "slug": $item.slug, "status": $item.status, "user": { "userID": $item.userID }, "datetime": $item.datetime, "startDatetime": $item.startDatetime, "duration": $item.duration, "name": $item.name, "description": $item.description, "penaltySeconds": $item.penaltySeconds, "problems": $problems, "numberOfTasks": $problems.size() }))
 #end
 $util.toJson($items)
