@@ -7,13 +7,13 @@ import gql from 'graphql-tag'
 import join from 'url-join'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
-import { Problem } from '../../../../../../lib/backend_types'
+import { ProblemDetail } from '../../../../../../lib/backend_types'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
 import Title from '../../../../../../components/Title'
 
 interface Props {
-    problem: Problem
+    problem: ProblemDetail
 }
 const Submissions: React.FC<Props> = ({ problem }) => {
     const { query, pathname } = useRouter()

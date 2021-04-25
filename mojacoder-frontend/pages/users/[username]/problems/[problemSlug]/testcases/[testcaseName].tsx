@@ -6,7 +6,7 @@ import axios from 'axios'
 import { ProgressBar } from 'react-bootstrap'
 
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
-import { Problem } from '../../../../../../lib/backend_types'
+import { ProblemDetail } from '../../../../../../lib/backend_types'
 import Editor from '../../../../../../components/Editor'
 import Layout from '../../../../../../components/Layout'
 import ProblemTop from '../../../../../../containers/ProblemTop'
@@ -32,7 +32,7 @@ const GetTestcase = gql`
 `
 
 interface Props {
-    problem: Problem
+    problem: ProblemDetail
 }
 const Submissions: React.FC<Props> = ({ problem }) => {
     const { query } = useRouter()
