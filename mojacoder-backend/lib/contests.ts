@@ -128,14 +128,14 @@ export class Contest extends cdk.Construct {
         const contestantTableDatasource = props.api.addDynamoDbDataSource('contestantTable', contestantTable)
         contestantTableDatasource.createResolver({
             typeName: 'Contest',
-            fieldName: 'secret',
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSecret/request.vtl')),
-            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSecret/response.vtl')),
+            fieldName: 'detail',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestDetail/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestDetail/response.vtl')),
         })
         
         const contestProblemDatasouce = props.api.addNoneDataSource('contestProblem')
         contestProblemDatasouce.createResolver({
-            typeName: 'ContestSecret',
+            typeName: 'ContestDetail',
             fieldName: 'problem',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestProblem/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestProblem/response.vtl')),

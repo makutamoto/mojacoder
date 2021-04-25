@@ -108,7 +108,7 @@ export class Judge extends cdk.Construct {
             },
             environment: {
                 AWS_ACCESS_KEY_ID: accessKey.ref,
-                AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,
+                AWS_DETAIL_ACCESS_KEY: accessKey.attrDetailAccessKey,
                 API_ENDPOINT: props.api.graphqlUrl,
                 JUDGEQUEUE_URL: JudgeQueue.queueUrl,
                 SUBMISSION_TABLE_NAME: this.submissionTable.tableName,
@@ -202,13 +202,13 @@ export class Judge extends cdk.Construct {
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/response.vtl')),
         });
         submissionTableDataSource.createResolver({
-            typeName: 'ContestSecret',
+            typeName: 'ContestDetail',
             fieldName: 'submissions',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmissions/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmissions/response.vtl')),
         })
         submissionTableDataSource.createResolver({
-            typeName: 'ContestSecret',
+            typeName: 'ContestDetail',
             fieldName: 'submission',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmission/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/contestSubmission/response.vtl')),

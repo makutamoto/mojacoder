@@ -1,8 +1,0 @@
-#set($now = $util.time.nowEpochSeconds())
-#set($startTime = $util.time.parseISO8601ToEpochMilliSeconds($context.source.startDatetime) / 1000)
-#set($end = $startTime + $context.source.duration)
-#if(($startTime <= $now && !$util.isNull($context.result)) || $context.source.userID == $context.identity.sub || $now > $end)
-$util.toJson({ "contestID": $context.source.id, "problems": $context.source.problems })
-#else
-$util.toJson(null)
-#end

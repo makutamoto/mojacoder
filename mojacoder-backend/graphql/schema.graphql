@@ -178,11 +178,12 @@ enum ContestStatus {
   UNLISTED
 }
 
-type ContestSecret @aws_cognito_user_pools {
+type ContestDetail @aws_cognito_user_pools {
   contestID: ID!
-  problems: [ContestProblem]!
+  joined: Boolean!
+  problems: [ContestProblem]
   problem(index: Int!): ContestProblem
-  submissions: SubmissionConnection!
+  submissions: SubmissionConnection
   submission(id: ID!): Submission
 }
 
@@ -199,7 +200,7 @@ type Contest @aws_cognito_user_pools @aws_api_key {
   penaltySeconds: Int!
   numberOfTasks: Int!
   standings: [Standing]!
-  secret: ContestSecret @aws_cognito_user_pools
+  detail: ContestDetail! @aws_cognito_user_pools
 }
 
 type ContestConnection @aws_cognito_user_pools @aws_api_key {
