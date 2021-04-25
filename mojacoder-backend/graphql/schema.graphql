@@ -197,6 +197,7 @@ type Contest @aws_cognito_user_pools @aws_api_key {
   startDatetime: AWSDateTime!
   duration: Int!
   penaltySeconds: Int!
+  numberOfProblems: Int!
   standings: [Standing]!
   secret: ContestSecret @aws_cognito_user_pools
 }

@@ -4,7 +4,7 @@
         #foreach($problem in $context.result.problems)
             $util.qr($problems.add({ "problem": { "problemID": $problem.problemID }, "point": $problem.point }))
         #end
-        $util.toJson({ "id": $context.result.id, "slug": $context.result.slug, "status": $context.result.status, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "startDatetime": $context.result.startDatetime, "duration": $context.result.duration, "name": $context.result.name, "description": $context.result.description, "penaltySeconds": $context.result.penaltySeconds, "problems": $problems })
+        $util.toJson({ "id": $context.result.id, "slug": $context.result.slug, "status": $context.result.status, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "startDatetime": $context.result.startDatetime, "duration": $context.result.duration, "name": $context.result.name, "description": $context.result.description, "penaltySeconds": $context.result.penaltySeconds, "problems": $problems, "numberOfProblems": $problems.size() })
     #else
         null
     #end
@@ -17,6 +17,6 @@
         #foreach($problem in $item.problems)
             $util.qr($problems.add({ "problem": { "problemID": $problem.problemID }, "point": $problem.point }))
         #end
-        $util.toJson({ "id": $item.id, "slug": $item.slug, "status": $item.status, "user": { "userID": $item.userID }, "datetime": $item.datetime, "startDatetime": $item.startDatetime, "duration": $item.duration, "name": $item.name, "description": $item.description, "penaltySeconds": $item.penaltySeconds, "problems": $problems })
+        $util.toJson({ "id": $item.id, "slug": $item.slug, "status": $item.status, "user": { "userID": $item.userID }, "datetime": $item.datetime, "startDatetime": $item.startDatetime, "duration": $item.duration, "name": $item.name, "description": $item.description, "penaltySeconds": $item.penaltySeconds, "problems": $problems, "numberOfProblems": $problems.size() })
     #end
 #end
