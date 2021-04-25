@@ -11,7 +11,7 @@ import {
     invokeQueryWithApiKey,
     invokeMutation,
 } from '../lib/backend'
-import { Problem } from '../lib/backend_types'
+import { ProblemDetail } from '../lib/backend_types'
 import Auth from '../lib/auth'
 import Top from '../components/Top'
 import IconWithText from '../components/IconWithText'
@@ -63,7 +63,7 @@ const circleButtonStyles: React.CSSProperties = {
 
 export interface ProblemTopProps {
     activeKey?: 'problem' | 'submissions' | 'testcases' | 'editorial' | 'edit'
-    problem?: Problem
+    problem?: ProblemDetail
 }
 
 const ProblemTop: React.FC<ProblemTopProps> = (props) => {

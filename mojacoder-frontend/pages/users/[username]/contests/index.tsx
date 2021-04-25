@@ -4,27 +4,26 @@ import Link from 'next/link'
 import { Spinner, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
-import { useI18n } from '../../../lib/i18n'
-import Auth from '../../../lib/auth'
-import { invokeQuery, invokeQueryWithApiKey } from '../../../lib/backend'
+import { useI18n } from '../../../../lib/i18n'
+import Auth from '../../../../lib/auth'
+import { invokeQuery, invokeQueryWithApiKey } from '../../../../lib/backend'
 import {
     UserDetail,
-    ProblemStatus,
-    Problem,
+    ContestStatus,
+    Contest,
     Query,
-} from '../../../lib/backend_types'
-import Heading from '../../../components/Heading'
-import UserPageLayout from '../../../containers/UserPageLayout'
+} from '../../../../lib/backend_types'
+import Heading from '../../../../components/Heading'
+import UserPageLayout from '../../../../containers/UserPageLayout'
 
 const GetUserProblems = gql`
     query GetUserProblems($userID: ID!) {
         user(userID: $userID) {
-            problems {
+            contests {
                 items {
                     slug
-                    title
+                    name
                     status
-                    likeCount
                 }
             }
         }
@@ -35,12 +34,12 @@ interface Props {
     user: UserDetail
 }
 
-const UserPage: React.FC<Props> = ({ user }) => {
+const Contests: React.FC<Props> = ({ user }) => {
     const { t } = useI18n('user')
     const { auth } = Auth.useContainer()
-    const [problems, setProblems] = useState<Problem[]>(null)
+    const [contests, setContests] = useState<Contest[]>(null)
     useEffect(() => {
-        const loadProblems = async () => {
+        const loadContests = async () => {
             const variables = {
                 userID: user.userID,
             }
@@ -50,40 +49,36 @@ const UserPage: React.FC<Props> = ({ user }) => {
             } else {
                 res = await invokeQueryWithApiKey(GetUserProblems, variables)
             }
-            setProblems(res.user.problems.items)
+            setContests(res.user.contests.items)
         }
-        loadProblems()
+        loadContests()
     }, [auth, user])
     return (
         <UserPageLayout user={user}>
-            <Heading>{t`problem`}</Heading>
-            {problems ? (
+            <Heading>{t`contest`}</Heading>
+            {contests ? (
                 <Table responsive bordered striped hover>
                     <thead>
                         <tr>
                             <th className="text-nowrap">{t`problemName`}</th>
-                            <th className="text-nowrap">いいね数</th>
                             {auth && auth.userID === user.userID && (
                                 <th className="text-nowrap">全体公開</th>
                             )}
                         </tr>
                     </thead>
                     <tbody>
-                        {problems.map((item) => (
+                        {contests.map((item) => (
                             <tr key={item.slug}>
                                 <td className="text-nowrap">
                                     <Link
-                                        href={`/users/${user.screenName}/problems/${item.slug}`}
+                                        href={`/users/${user.screenName}/contests/${item.slug}`}
                                     >
-                                        <a>{item.title}</a>
+                                        <a>{item.name}</a>
                                     </Link>
-                                </td>
-                                <td className="text-nowrap">
-                                    {item.likeCount}
                                 </td>
                                 {auth && auth.userID === user.userID && (
                                     <td className="text-nowrap">
-                                        {item.status === ProblemStatus.CREATED
+                                        {item.status === ContestStatus.PUBLIC
                                             ? 'Yes'
                                             : 'No'}
                                     </td>
@@ -99,7 +94,7 @@ const UserPage: React.FC<Props> = ({ user }) => {
     )
 }
 
-export default UserPage
+export default Contests
 
 const GetUser = gql`
     query GetUser($username: String!) {

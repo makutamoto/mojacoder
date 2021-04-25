@@ -1,14 +1,14 @@
 import { Cloudinary } from 'cloudinary-core'
 import join from 'url-join'
 
-import { Problem } from './backend_types'
+import { ProblemDetail } from './backend_types'
 
 const cloudinary = new Cloudinary({
     ['cloud_name']: 'Makutamoto',
     secure: true,
 })
 
-export function generateProblemOGP(problem: Problem) {
+export function generateProblemOGP(problem: ProblemDetail) {
     return cloudinary.url('mojacoder/ogp/problem/MojaCoderProblemOGP.png', {
         transformation: [
             {

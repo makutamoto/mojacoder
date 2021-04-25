@@ -9,7 +9,7 @@ import { useI18n } from '../../../../../../lib/i18n'
 import Auth from '../../../../../../lib/auth'
 import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
 import {
-    Problem,
+    ProblemDetail,
     Submission,
     SubmissionStatus,
 } from '../../../../../../lib/backend_types'
@@ -55,7 +55,7 @@ const GetSubmissions = gql`
 `
 
 interface Props {
-    problem: Problem
+    problem: ProblemDetail
 }
 const Submissions: React.FC<Props> = ({ problem }) => {
     const { t } = useI18n('submissions')

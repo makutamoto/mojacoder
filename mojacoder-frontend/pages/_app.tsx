@@ -83,6 +83,34 @@ const languages = {
             editorial: '解説',
             edit: '編集',
         },
+        contest: {
+            contestJoined: 'コンテストに参加しています。',
+            contestJoinedMessage: '問題をみたり解いたりできます。',
+            leave: '参加をキャンセル',
+            contestNotJoined: 'コンテストに参加していません。',
+            contestNotJoinedMessage:
+                '問題をみたり解いたりするには参加する必要があります。',
+            join: '参加',
+        },
+        contestTop: {
+            top: 'トップ',
+            tasks: '問題',
+            standings: '順位表',
+            submissions: '提出',
+            editorials: '解説',
+            edit: '編集',
+        },
+        contestTasks: {
+            problemName: '問題名',
+            point: '得点',
+            accessDenied: '権限がありません。',
+        },
+        contestStandings: {
+            accessDenied: '権限がありません。',
+            rank: '順位',
+            user: 'ユーザー',
+            sum: '総合',
+        },
         passwordControl: {
             password: 'パスワード',
             passwordConstraintsMessage:
@@ -202,6 +230,34 @@ const languages = {
             testcases: 'Test cases',
             editorial: 'Editorial',
             edit: 'Edit',
+        },
+        contest: {
+            contestJoined: 'You have joined this contest!',
+            contestJoinedMessage: 'You can view and solve tasks.',
+            leave: 'Leave',
+            contestNotJoined: "You haven't joined this contest.",
+            contestNotJoinedMessage:
+                'You must join the contest to view and solve tasks.',
+            join: 'Join',
+        },
+        contestTop: {
+            top: 'Top',
+            tasks: 'Tasks',
+            standings: 'Standings',
+            submissions: 'Submissions',
+            editorials: 'Editorials',
+            edit: 'Edit',
+        },
+        contestTasks: {
+            problemName: 'Task Name',
+            point: 'Point',
+            accessDenied: 'Access Denied.',
+        },
+        contestStandings: {
+            accessDenied: 'Access Denied',
+            rank: 'Rank',
+            user: 'User',
+            sum: 'Sum',
         },
         passwordControl: {
             password: 'Password',

@@ -33,6 +33,11 @@ export const ProblemStatus = {
 export type ProblemStatus = typeof ProblemStatus[keyof typeof ProblemStatus]
 
 export interface Problem {
+    problemID: string
+    detail: ProblemDetail
+}
+
+export interface ProblemDetail {
     id: string
     slug: string
     title: string
@@ -84,13 +89,66 @@ export interface UserDetail {
     userID: string
     screenName: string
     icon: boolean
-    problem: Problem | null
-    problems: Connection<Problem>
+    problem: ProblemDetail | null
+    problems: Connection<ProblemDetail>
+    contests: Connection<Contest>
+    contest: Contest | null
+}
+
+export interface ContestProblem {
+    problem: Problem
+    point: number
+}
+
+export interface ContestSubmission {
+    penalty: number
+    score: number
+    secondsFromStart: number
+}
+
+export interface Standing {
+    rank: number
+    user: User
+    score: number
+    penalty: number
+    secondsFromStart: number
+    submissions: ContestSubmission[]
+}
+
+export const ContestStatus = {
+    PUBLIC: 'PUBLIC',
+    UNLISTED: 'UNLISTED',
+} as const
+export type ContestStatus = typeof ContestStatus[keyof typeof ContestStatus]
+
+export interface ContestDetail {
+    joined: boolean
+    contestID?: string
+    problems?: ContestProblem[]
+    problem?: ContestProblem
+    submissions?: Connection<Submission>
+    submission?: Submission
+}
+
+export interface Contest {
+    id: string
+    user: User
+    status: ContestStatus
+    slug: string
+    name: string
+    description: string
+    datetime: string
+    startDatetime: string
+    duration: number
+    penaltySeconds: number
+    numberOfTasks: number
+    standings: Standing[]
+    detail: ContestDetail
 }
 
 export interface Query {
     user: UserDetail | null
-    newProblems: Problem[]
+    newProblems: ProblemDetail[]
 }
 
 export interface Mutation {
