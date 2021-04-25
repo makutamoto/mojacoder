@@ -108,7 +108,7 @@ export class Judge extends cdk.Construct {
             },
             environment: {
                 AWS_ACCESS_KEY_ID: accessKey.ref,
-                AWS_DETAIL_ACCESS_KEY: accessKey.attrDetailAccessKey,
+                AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,
                 API_ENDPOINT: props.api.graphqlUrl,
                 JUDGEQUEUE_URL: JudgeQueue.queueUrl,
                 SUBMISSION_TABLE_NAME: this.submissionTable.tableName,
