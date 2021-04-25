@@ -1,8 +1,8 @@
 #set($size = $context.source.problems.size())
 #set($index = $context.arguments.index)
 #if(1 <= $index && $index <= $size)
-    $util.toJson(null)
-#else
     #set($index = $index - 1)
     $util.toJson($context.source.problems[$index])
+#else
+    $util.toJson(null)
 #end
