@@ -134,7 +134,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
         resultSubmission.secondsFromStart = secondsFromStart
         result.score += problem.point
         result.penalty += resultSubmission.penalty
-        result.secondsFromStart = Math.max(result.secondsFromStart, resultSubmission.secondsFromStart + penaltySeconds * resultSubmission.secondsFromStart)
+        result.secondsFromStart = Math.max(result.secondsFromStart, resultSubmission.secondsFromStart + penaltySeconds * resultSubmission.penalty)
     }
     const standings = Array.from(results.values())
     standings.sort((a, b) => a.score - b.score || b.secondsFromStart - a.secondsFromStart)
