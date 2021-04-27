@@ -36,7 +36,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                     <SubmissionBox
                         id="problem-code-editor"
                         problemID={user.problem.id}
-                        redirect="submission"
+                        redirect="submissions"
                     />
                 </div>
             </Layout>
