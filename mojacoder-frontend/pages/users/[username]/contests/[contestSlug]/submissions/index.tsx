@@ -26,6 +26,7 @@ const GetContestSubmissions = gql`
             contest(slug: $contestSlug) {
                 id
                 detail {
+                    contestID
                     submissions {
                         items {
                             id
