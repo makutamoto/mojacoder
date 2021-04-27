@@ -33,6 +33,7 @@ const GetContestTasks = gql`
             contest(slug: $contestSlug) {
                 id
                 detail {
+                    contestID
                     problems {
                         point
                         problem {

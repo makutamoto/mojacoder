@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Auth as Cognito } from 'aws-amplify'
-import { Button } from 'react-bootstrap'
+import { Button, Nav } from 'react-bootstrap'
+import join from 'url-join'
 
 import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
@@ -13,11 +15,15 @@ import Title from '../components/Title'
 
 interface Props {
     user: UserDetail
+    activeKey: 'problems' | 'contests'
 }
 
-const UserPage: React.FC<Props> = ({ user, children }) => {
+const UserPage: React.FC<Props> = ({ user, activeKey, children }) => {
     const { t } = useI18n('user')
     const { auth, setAuth } = Auth.useContainer()
+    const { query } = useRouter()
+    const { username } = query
+    const basePath = join('/users', (username || '') as string)
     const OnClickSignOutCallback = useCallback(() => {
         Cognito.signOut()
             .then(() => setAuth(null))
@@ -47,7 +53,22 @@ const UserPage: React.FC<Props> = ({ user, children }) => {
                     )}
                 </div>
             </Top>
-            <Layout>{children}</Layout>
+            <Layout>
+                <Nav variant="pills" activeKey={activeKey}>
+                    <Nav.Item>
+                        <Link passHref href={basePath}>
+                            <Nav.Link eventKey="problems">{t`problems`}</Nav.Link>
+                        </Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Link passHref href={join(basePath, 'contests')}>
+                            <Nav.Link eventKey="contests">{t`contests`}</Nav.Link>
+                        </Link>
+                    </Nav.Item>
+                </Nav>
+                <hr />
+                <div>{children}</div>
+            </Layout>
         </>
     )
 }

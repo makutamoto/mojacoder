@@ -65,7 +65,8 @@ const languages = {
         user: {
             userNotFound: 'ユーザーが存在しません。',
             signOut: 'サインアウト',
-            problem: '問題',
+            problems: '問題',
+            contests: 'コンテスト',
             problemName: '問題名',
             settings: '設定',
         },
@@ -110,6 +111,9 @@ const languages = {
             rank: '順位',
             user: 'ユーザー',
             sum: '総合',
+        },
+        contestSubmission: {
+            accessDenied: '権限がありません。',
         },
         passwordControl: {
             password: 'パスワード',
@@ -213,7 +217,8 @@ const languages = {
         user: {
             userNotFound: 'User not found.',
             signOut: 'Sign out',
-            problem: 'Problems',
+            problems: 'Problems',
+            contests: 'Contests',
             problemName: 'Problem Name',
             settings: 'Settings',
         },
@@ -258,6 +263,9 @@ const languages = {
             rank: 'Rank',
             user: 'User',
             sum: 'Sum',
+        },
+        contestSubmission: {
+            accessDenied: 'Access Denied',
         },
         passwordControl: {
             password: 'Password',

@@ -13,7 +13,6 @@ import {
     ProblemDetail,
     Query,
 } from '../../../lib/backend_types'
-import Heading from '../../../components/Heading'
 import UserPageLayout from '../../../containers/UserPageLayout'
 
 const GetUserProblems = gql`
@@ -55,8 +54,7 @@ const UserPage: React.FC<Props> = ({ user }) => {
         loadProblems()
     }, [auth, user])
     return (
-        <UserPageLayout user={user}>
-            <Heading>{t`problem`}</Heading>
+        <UserPageLayout activeKey="problems" user={user}>
             {problems ? (
                 <Table responsive bordered striped hover>
                     <thead>

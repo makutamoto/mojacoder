@@ -13,7 +13,6 @@ import {
     Contest,
     Query,
 } from '../../../../lib/backend_types'
-import Heading from '../../../../components/Heading'
 import UserPageLayout from '../../../../containers/UserPageLayout'
 
 const GetUserProblems = gql`
@@ -54,8 +53,7 @@ const Contests: React.FC<Props> = ({ user }) => {
         loadContests()
     }, [auth, user])
     return (
-        <UserPageLayout user={user}>
-            <Heading>{t`contest`}</Heading>
+        <UserPageLayout activeKey="contests" user={user}>
             {contests ? (
                 <Table responsive bordered striped hover>
                     <thead>
