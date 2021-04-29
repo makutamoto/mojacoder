@@ -2,7 +2,7 @@
 #set($startTime = $util.time.parseISO8601ToEpochMilliSeconds($context.source.startDatetime) / 1000)
 #set($end = $startTime + $context.source.duration)
 #set($joined = !$util.isNull($context.result))
-#if(($startTime <= $now && $joined) || $context.source.userID == $context.identity.sub || $now > $end)
+#if(($startTime <= $now && $joined) || $context.source.user.userID == $context.identity.sub || $now > $end)
 $util.toJson({ "joined": $joined, "contestID": $context.source.id, "problems": $context.source.problems })
 #else
 $util.toJson({ "joined": $joined })
