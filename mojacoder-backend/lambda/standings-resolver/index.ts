@@ -85,9 +85,9 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
             score: 0,
             penalty: 0,
             secondsFromStart: 0,
-            submissions: new Array<ContestSubmission>(source.problems.length).fill({
+            submissions: Array.from<undefined, ContestSubmission>({ length: source.problems.length }, () => ({
                 penalty: 0,
-            }),
+            })),
         })
     }
     const submissions = (await dynamodb.query({
