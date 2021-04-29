@@ -103,7 +103,8 @@ const ContestStandings: React.FC<Props> = ({ contest }) => {
                                 <th className="text-nowrap text-center">{t`rank`}</th>
                                 <th className="text-nowrap">{t`user`}</th>
                                 <th className="text-nowrap text-center">{t`sum`}</th>
-                                {new Array(contest.numberOfTasks).map(
+                                {Array.from(
+                                    { length: contest.numberOfTasks },
                                     (_, i) => (
                                         <th
                                             key={i}
