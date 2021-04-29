@@ -14,6 +14,7 @@ import { Contest, ContestDetail } from '../../../../../lib/backend_types'
 import Auth from '../../../../../lib/auth'
 import Title from '../../../../../components/Title'
 import Layout from '../../../../../components/Layout'
+import Markdown from '../../../../../components/Markdown'
 import ContestTop from '../../../../../containers/ContestTop'
 
 const JoinContest = gql`
@@ -121,7 +122,7 @@ const ContestPage: React.FC<Props> = ({ contest }) => {
                         </div>
                     </Alert>
                 )}
-                <div>{contest.description}</div>
+                <Markdown source={contest.description} />
             </Layout>
         </>
     )
