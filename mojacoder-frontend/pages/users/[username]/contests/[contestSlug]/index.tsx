@@ -47,21 +47,9 @@ const ContestPage: React.FC<Props> = ({ contest }) => {
         query: { username, contestSlug },
     } = useRouter()
     const [detail, setDetail] = useState<ContestDetail | null>(null)
-    const now = new Date().toISOString()
-    const joinContest = useCallback(
-        (join: boolean) => {
-            const joinContestMutation = async () => {
-                await invokeMutation(JoinContest, {
-                    input: {
-                        contestID: contest.id,
-                        join,
-                    },
-                })
-                await loadDetail()
-            }
-            joinContestMutation()
-        },
-        [contest.id]
+    const now = Math.floor(Date.now() / 1000)
+    const startDatetime = Math.floor(
+        new Date(contest.startDatetime).getTime() / 1000
     )
     const loadDetail = useCallback(async () => {
         if (!auth) return
@@ -75,6 +63,21 @@ const ContestPage: React.FC<Props> = ({ contest }) => {
         })
         setDetail(detail)
     }, [auth, username, contestSlug])
+    const joinContest = useCallback(
+        (join: boolean) => {
+            const joinContestMutation = async () => {
+                await invokeMutation(JoinContest, {
+                    input: {
+                        contestID: contest.id,
+                        join,
+                    },
+                })
+                await loadDetail()
+            }
+            joinContestMutation()
+        },
+        [loadDetail, contest.id]
+    )
     useEffect(() => {
         loadDetail()
     }, [auth, username, contestSlug])
@@ -83,11 +86,13 @@ const ContestPage: React.FC<Props> = ({ contest }) => {
             <Title>{contest.name}</Title>
             <ContestTop activeKey="top" contest={contest} detail={detail} />
             <Layout>
-                {detail?.joined ? (
+                {startDatetime + contest.duration < now ? (
+                    <Alert variant="danger">{t`contestOver`}</Alert>
+                ) : detail?.joined ? (
                     <Alert variant="success">
                         <Alert.Heading>{t`contestJoined`}</Alert.Heading>
                         <p>{t`contestJoinedMessage`}</p>
-                        {now < contest.startDatetime && (
+                        {now < startDatetime && (
                             <>
                                 <hr />
                                 <div className="text-right">

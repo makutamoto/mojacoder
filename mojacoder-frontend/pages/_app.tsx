@@ -92,6 +92,7 @@ const languages = {
             contestNotJoinedMessage:
                 '問題をみたり解いたりするには参加する必要があります。',
             join: '参加',
+            contestOver: 'このコンテストは終了しました。',
         },
         contestTop: {
             top: 'トップ',
@@ -244,6 +245,7 @@ const languages = {
             contestNotJoinedMessage:
                 'You must join the contest to view and solve tasks.',
             join: 'Join',
+            contestOver: 'This contest is over.',
         },
         contestTop: {
             top: 'Top',

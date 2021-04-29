@@ -122,7 +122,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
         const problem = problems.get(submission.problemID.S!)
         if(!problem) continue
         const resultSubmission = result.submissions[problem.index]
-        if(submission.score !== undefined) continue
+        if(resultSubmission.score !== undefined) continue
         for(let testcase of submission.testcases.L!) {
             const { status } = testcase.M!
             if(status.S !== 'AC') {
@@ -137,7 +137,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
         result.secondsFromStart = Math.max(result.secondsFromStart, resultSubmission.secondsFromStart + penaltySeconds * resultSubmission.penalty)
     }
     const standings = Array.from(results.values())
-    standings.sort((a, b) => a.score - b.score || b.secondsFromStart - a.secondsFromStart)
+    standings.sort((a, b) => b.score - a.score || a.secondsFromStart - b.secondsFromStart)
     let rank = 1;
     let prevScore = standings[0].score
     let prevSecondsFromStart = standings[0].secondsFromStart
