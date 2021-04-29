@@ -10,7 +10,8 @@ import Auth from '../lib/auth'
 import Top from '../components/Top'
 import IconWithText from '../components/IconWithText'
 import Username from '../components/Username'
-import { ClockIcon } from '@primer/octicons-react'
+import DateTime from '../components/DateTime'
+import { CalendarIcon, ClockIcon } from '@primer/octicons-react'
 
 export interface ContestTopProps {
     activeKey?: 'top' | 'tasks' | 'standings' | 'submissions' | 'edit'
@@ -38,9 +39,15 @@ const ContestTop: React.FC<ContestTopProps> = ({
                 <h1>{contest.name}</h1>
                 <div className="my-2">
                     <div>
+                        <IconWithText icon={<CalendarIcon />}>
+                            <DateTime>{contest.startDatetime}</DateTime>
+                        </IconWithText>
+                    </div>
+                    <div>
                         <IconWithText icon={<ClockIcon />}>
-                            {contest.duration} secs
-                        </IconWithText>{' '}
+                            {Math.floor(contest.duration / 60)} minutes{' '}
+                            {contest.duration % 60} secs
+                        </IconWithText>
                     </div>
                     <div>
                         <Username>{contest.user.detail}</Username>

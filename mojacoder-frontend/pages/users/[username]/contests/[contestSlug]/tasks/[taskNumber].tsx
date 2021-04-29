@@ -41,6 +41,7 @@ const GetContestTask = gql`
             contest(slug: $contestSlug) {
                 id
                 detail {
+                    contestID
                     problem(index: $taskNumber) {
                         problem {
                             detail {
@@ -144,6 +145,7 @@ const GetContestOverview = gql`
                 id
                 name
                 duration
+                startDatetime
                 user {
                     detail {
                         userID

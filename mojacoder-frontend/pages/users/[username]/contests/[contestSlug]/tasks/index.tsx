@@ -132,6 +132,7 @@ const GetContestOverview = gql`
                 id
                 name
                 duration
+                startDatetime
                 user {
                     detail {
                         userID
