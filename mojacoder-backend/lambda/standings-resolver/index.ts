@@ -138,7 +138,6 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
     }
     const standings = Array.from(results.values())
     standings.sort((a, b) => b.score - a.score || a.secondsFromStart - b.secondsFromStart)
-    console.log(standings)
     let rank = 1;
     let prevScore = standings[0].score
     let prevSecondsFromStart = standings[0].secondsFromStart
