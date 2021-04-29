@@ -149,6 +149,7 @@ export interface Contest {
 export interface Query {
     user: UserDetail | null
     newProblems: ProblemDetail[]
+    newContests: Contest[]
 }
 
 export interface Mutation {

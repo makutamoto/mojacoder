@@ -47,6 +47,11 @@ const Appbar: React.FC = () => {
                                 active={pathname === '/problems/post'}
                             >{t`postProblem`}</Nav.Link>
                         </Link>
+                        <Link href="/contests" passHref>
+                            <Nav.Link
+                                active={pathname === '/contests'}
+                            >{t`contests`}</Nav.Link>
+                        </Link>
                     </Nav>
                     <Nav>
                         <Link href={asPath} locale="en" passHref>
