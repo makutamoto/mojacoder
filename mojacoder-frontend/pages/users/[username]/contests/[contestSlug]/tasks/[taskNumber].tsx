@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import { Alert, Spinner } from 'react-bootstrap'
@@ -107,14 +106,7 @@ const ContestTask: React.FC<Props> = ({ contest }) => {
                 ) : status === Status.Done ? (
                     <>
                         <div className="p-4 mb-4 bg-light border rounded">
-                            <Link
-                                href={`/users/${problem.user.detail.screenName}/problems/${problem.slug}`}
-                                passHref
-                            >
-                                <a>
-                                    <h2>{problem.title}</h2>
-                                </a>
-                            </Link>
+                            <h2>{problem.title}</h2>
                             <Username>{problem.user.detail}</Username>
                         </div>
                         <Markdown source={problem.statement} />
