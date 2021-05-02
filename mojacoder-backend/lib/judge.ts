@@ -3,7 +3,7 @@ import { Queue } from '@aws-cdk/aws-sqs';
 import { CfnAccessKey, PolicyStatement, User } from '@aws-cdk/aws-iam';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
-import { AwsLogDriver, Cluster, ContainerImage, FargateService, FargateTaskDefinition } from '@aws-cdk/aws-ecs';
+import { AwsLogDriver, Cluster, ContainerImage, FargateService, FargateTaskDefinition, LinuxParameters } from '@aws-cdk/aws-ecs';
 import { Bucket } from '@aws-cdk/aws-s3'
 import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { join } from 'path';
@@ -106,6 +106,9 @@ export class Judge extends cdk.Construct {
             healthCheck: {
                 command: ['CMD-SHELL', 'curl -f http://localhost:3000/health || exit 1'],
             },
+            linuxParameters: new LinuxParameters(this, 'linux-parameters', {
+                initProcessEnabled: true,
+            }),
             environment: {
                 AWS_ACCESS_KEY_ID: accessKey.ref,
                 AWS_SECRET_ACCESS_KEY: accessKey.attrSecretAccessKey,
