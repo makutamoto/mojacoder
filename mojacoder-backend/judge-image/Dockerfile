@@ -22,7 +22,7 @@ RUN curl -s https://get.sdkman.io | bash && source ~/.sdkman/bin/sdkman-init.sh 
 RUN wget https://github.com/atcoder/ac-library/archive/master.zip
 RUN unzip ./master.zip
 RUN mv ./ac-library-master/atcoder /usr/local/include/
-RUN wget https://dl.bintray.com/boostorg/release/1.75.0/source/boost_1_75_0.zip
+RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.zip
 RUN unzip ./boost_1_75_0.zip
 RUN mv ./boost_1_75_0/boost /usr/local/include/
 
