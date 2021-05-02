@@ -42,4 +42,4 @@ RUN cargo build --release
 RUN apt install -y curl
 
 WORKDIR /usr/src/app
-ENTRYPOINT ["bash", "-c", "./judge"]
+ENTRYPOINT ./judge
