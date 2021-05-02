@@ -23,8 +23,8 @@ RUN wget https://github.com/atcoder/ac-library/archive/master.zip
 RUN unzip ./master.zip
 RUN mv ./ac-library-master/atcoder /usr/local/include/
 RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.zip
-RUN unzip ./boost_1_75_0.zip
-RUN mv ./boost_1_75_0/boost /usr/local/include/
+RUN unzip ./boost_1_76_0.zip
+RUN mv ./boost_1_76_0/boost /usr/local/include/
 
 RUN apt install -y python3-pip
 RUN pip3 install numpy
