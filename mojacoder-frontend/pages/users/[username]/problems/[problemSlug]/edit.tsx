@@ -67,7 +67,8 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                 })
                 for (const [path, file] of testcaseNames) {
                     const outTestcaseFile = outTestcases.file(path)
-                    if (outTestcaseFile === null || outTestcaseFile.dir) return
+                    if (outTestcaseFile === null || outTestcaseFile.dir)
+                        continue
                     const input = await file.async('string')
                     const output = await outTestcaseFile.async('string')
                     testcaseArray.push([path, { input, output }])
