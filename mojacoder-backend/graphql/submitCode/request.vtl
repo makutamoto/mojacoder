@@ -1,6 +1,9 @@
 #if($context.arguments.input.code.length() == 0)
 $util.error("Empty submissions are not allowed.")
 #end
+#if($util.isNull($context.identity.sub) && !$util.isNull($context.arguments.input.contestID))
+$util.error("Guest user can't submit to Contest tasks.")
+#end
 #set($submissionID = $util.autoId())
 $util.qr($context.stash.put("submissionID", $submissionID))
 $util.toJson(null)
