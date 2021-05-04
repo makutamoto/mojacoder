@@ -243,8 +243,8 @@ type Query @aws_cognito_user_pools @aws_api_key {
   newContests: [Contest]!
 }
 
-type Subscription @aws_cognito_user_pools {
-  onResponsePlayground(sessionID: ID!, userID: ID): ResponsePlayground  @aws_subscribe(mutations : ["responsePlayground"])
+type Subscription {
+  onResponsePlayground(sessionID: ID!, userID: ID): ResponsePlayground  @aws_subscribe(mutations : ["responsePlayground"]) @aws_cognito_user_pools @aws_api_key
 }
 
 input ResponsePlaygroundInput {
