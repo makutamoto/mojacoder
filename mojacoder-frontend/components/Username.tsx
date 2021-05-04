@@ -14,7 +14,7 @@ const Username: React.FC<UsernameProps> = ({ children }) => {
     return (
         <span>
             <UserIcon size={24}>{children}</UserIcon>{' '}
-            {(children === null ? (
+            {children === null ? (
                 <span className={styles['align-super']}>Guest</span>
             ) : (
                 <Link href={`/users/${children?.screenName}`} passHref>
@@ -22,7 +22,7 @@ const Username: React.FC<UsernameProps> = ({ children }) => {
                         {children?.screenName}
                     </a>
                 </Link>
-            ))}
+            )}
         </span>
     )
 }

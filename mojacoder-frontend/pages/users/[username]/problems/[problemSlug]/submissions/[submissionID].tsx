@@ -85,7 +85,9 @@ const Submissions: React.FC<Props> = ({ problem }) => {
     }, [])
     return (
         <>
-            <Title>{`'${problem.title}'の${submission.user.detail?.screenName || 'Guest'}さんの提出`}</Title>
+            <Title>{`'${problem.title}'の${
+                submission.user.detail?.screenName || 'Guest'
+            }さんの提出`}</Title>
             <ProblemTop activeKey="submissions" problem={problem} />
             <Layout>
                 <SubmissionPage submission={submission} />

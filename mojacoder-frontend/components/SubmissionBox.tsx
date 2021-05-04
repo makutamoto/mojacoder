@@ -66,21 +66,21 @@ const SubmissionBox: React.FC<SubmissionBoxProps> = ({
                 problemID,
             },
         }
-        if(auth) {
+        if (auth) {
             invokeMutation(SubmitCode, args).then(() => {
                 router.push(join(router.asPath, redirect))
             })
         } else {
-            invokeMutationWithApiKey(SubmitCode, args).then(({ submitCode: { id }}) => {
-                router.push(join(router.asPath, join(redirect, id)))
-            })
+            invokeMutationWithApiKey(SubmitCode, args).then(
+                ({ submitCode: { id } }) => {
+                    router.push(join(router.asPath, join(redirect, id)))
+                }
+            )
         }
     }, [auth, lang, code, contestID, problemID])
     return (
         <>
-            {!auth && (
-                <Alert variant="primary">登録なしで提出できます。</Alert>
-            )}
+            {!auth && <Alert variant="primary">登録なしで提出できます。</Alert>}
             {status === Status.EmptySubmission && (
                 <Alert variant="danger">コードが空です。</Alert>
             )}
