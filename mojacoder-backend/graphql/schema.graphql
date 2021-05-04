@@ -244,7 +244,7 @@ type Query @aws_cognito_user_pools @aws_api_key {
 }
 
 type Subscription @aws_cognito_user_pools {
-  onResponsePlayground(sessionID: ID!): ResponsePlayground  @aws_subscribe(mutations : ["responsePlayground"])
+  onResponsePlayground(sessionID: ID!, userID: ID): ResponsePlayground  @aws_subscribe(mutations : ["responsePlayground"])
 }
 
 input ResponsePlaygroundInput {
