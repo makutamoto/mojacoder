@@ -6,7 +6,7 @@ import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
-import { invokeMutation } from '../lib/backend'
+import { invokeMutation, invokeMutationWithApiKey } from '../lib/backend'
 import { useLocalStorage } from '../lib/localstorage'
 import ButtonWithSpinner from './ButtonWithSpinner'
 import CodeEditor, { Code } from './CodeEditor'
@@ -58,19 +58,29 @@ const SubmissionBox: React.FC<SubmissionBoxProps> = ({
             return
         }
         setStatus(Status.Submitting)
-        invokeMutation(SubmitCode, {
+        const args = {
             input: {
                 lang,
                 code,
                 contestID,
                 problemID,
             },
-        }).then(() => {
-            router.push(join(router.asPath, redirect))
-        })
-    }, [lang, code, contestID, problemID])
-    return auth ? (
+        }
+        if(auth) {
+            invokeMutation(SubmitCode, args).then(() => {
+                router.push(join(router.asPath, redirect))
+            })
+        } else {
+            invokeMutationWithApiKey(SubmitCode, args).then(({ submitCode: { id }}) => {
+                router.push(join(router.asPath, join(redirect, id)))
+            })
+        }
+    }, [auth, lang, code, contestID, problemID])
+    return (
         <>
+            {!auth && (
+                <Alert variant="primary">登録なしで提出できます。</Alert>
+            )}
             {status === Status.EmptySubmission && (
                 <Alert variant="danger">コードが空です。</Alert>
             )}
@@ -84,8 +94,6 @@ const SubmissionBox: React.FC<SubmissionBoxProps> = ({
                 onClick={onSubmit}
             >{t`submit`}</ButtonWithSpinner>
         </>
-    ) : (
-        <Alert variant="danger">{t`signInRequired`}</Alert>
     )
 }
 

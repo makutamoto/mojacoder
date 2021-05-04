@@ -10,15 +10,19 @@ export interface UsernameProps {
     children?: UserDetail
 }
 
-const Username: React.FC<UsernameProps> = (props) => {
+const Username: React.FC<UsernameProps> = ({ children }) => {
     return (
         <span>
-            <UserIcon size={24}>{props.children}</UserIcon>{' '}
-            <Link href={`/users/${props.children?.screenName}`} passHref>
-                <a className={styles['align-super']}>
-                    {props.children?.screenName}
-                </a>
-            </Link>
+            <UserIcon size={24}>{children}</UserIcon>{' '}
+            {(children === null ? (
+                <span className={styles['align-super']}>Guest</span>
+            ) : (
+                <Link href={`/users/${children?.screenName}`} passHref>
+                    <a className={styles['align-super']}>
+                        {children?.screenName}
+                    </a>
+                </Link>
+            ))}
         </span>
     )
 }

@@ -54,6 +54,10 @@ export async function invokeMutation<V>(mutation: DocumentNode, variables: V) {
     return (await client.mutate<Mutation>({ mutation, variables })).data
 }
 
+export async function invokeMutationWithApiKey<V>(mutation: DocumentNode, variables: V) {
+    return (await clientWithApiKey.mutate<Mutation>({ mutation, variables })).data
+}
+
 export async function invokeQuery<V>(query: DocumentNode, variables: V) {
     return (
         await client.query<Query>({

@@ -157,4 +157,5 @@ export interface Mutation {
     postReply: Reply
     issueProblemUploadUrl: string
     issueProblemDownloadUrl: string
+    submitCode: Submission
 }
