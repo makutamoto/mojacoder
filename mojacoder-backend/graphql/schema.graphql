@@ -4,7 +4,7 @@
   subscription: Subscription
 }
 
-type Playground @aws_cognito_user_pools {
+type Playground @aws_cognito_user_pools @aws_api_key {
   code: String!
   lang: String!
   sessionID: ID!
