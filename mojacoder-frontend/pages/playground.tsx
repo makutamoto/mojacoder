@@ -4,7 +4,11 @@ import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
-import { useSubscription, invokeMutation } from '../lib/backend'
+import {
+    useSubscription,
+    invokeMutation,
+    invokeMutationWithApiKey,
+} from '../lib/backend'
 import { useLocalStorage } from '../lib/localstorage'
 import Title from '../components/Title'
 import CodeEditor, { Code } from '../components/CodeEditor'
@@ -27,6 +31,18 @@ type Status = typeof Status[keyof typeof Status]
 const SUBSCRIPTION_DOCUMENT = gql`
     subscription onResponsePlayground($sessionID: ID!, $userID: ID!) {
         onResponsePlayground(sessionID: $sessionID, userID: $userID) {
+            exitCode
+            time
+            memory
+            stderr
+            stdout
+        }
+    }
+`
+
+const SUBSCRIPTION_WITHOUT_AUTH_DOCUMENT = gql`
+    subscription onResponsePlayground($sessionID: ID!) {
+        onResponsePlayground(sessionID: $sessionID) {
             exitCode
             time
             memory
@@ -84,21 +100,26 @@ const Playground: React.FC = () => {
             return
         }
         setStatus(Status.Waiting)
-        invokeMutation(MUTATION_DOCUMENT, {
+        const args = {
             input: {
                 sessionID: session.id,
                 lang,
                 code,
                 stdin,
             },
-        })
-    }, [lang, code, stdin, session.id, setStatus])
+        }
+        if (auth) {
+            invokeMutation(MUTATION_DOCUMENT, args)
+        } else {
+            invokeMutationWithApiKey(MUTATION_DOCUMENT, args)
+        }
+    }, [auth, lang, code, stdin, session.id, setStatus])
     useSubscription(
-        SUBSCRIPTION_DOCUMENT,
+        auth ? SUBSCRIPTION_DOCUMENT : SUBSCRIPTION_WITHOUT_AUTH_DOCUMENT,
         useMemo(
             () => ({
                 sessionID: session.id,
-                userID: auth === null ? '' : auth.userID,
+                userID: auth && auth.userID,
             }),
             [session.id, auth]
         ),
@@ -121,74 +142,62 @@ const Playground: React.FC = () => {
             </Top>
             <Layout>
                 <Alert variant="primary">{t`description`}</Alert>
-                {auth ? (
-                    <>
-                        {status === Status.EmptySubmission && (
-                            <Alert variant="danger">コードが空です。</Alert>
-                        )}
-                        <div className="mb-2">
-                            <CodeEditor
-                                id="playground-code-editor"
-                                value={{ lang, code }}
-                                onChange={onCodeEditorChange}
-                            />
-                            <Heading>{t`stdin`}</Heading>
-                            <Editor value={stdin} onChange={setStdin} />
-                            <Button
-                                variant="primary"
-                                onClick={onRun}
-                                disabled={status === Status.Waiting}
-                            >
-                                {t`run`}
-                            </Button>
-                        </div>
-                        <AlertWithSpinner
-                            show={status === Status.Waiting}
-                            className="my-4"
-                            variant="primary"
-                        >
-                            {t`runningCode`}
-                        </AlertWithSpinner>
-                        {status === Status.Received && (
-                            <Table
-                                className="my-4"
-                                responsive
-                                bordered
-                                striped
-                                hover
-                            >
-                                <tbody>
-                                    <tr>
-                                        <td className="text-nowrap">{t`exitCode`}</td>
-                                        <td className="text-nowrap">
-                                            {result.exitCode}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="text-nowrap">{t`time`}</td>
-                                        <td className="text-nowrap">
-                                            {result.time} ms
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="text-nowrap">{t`memory`}</td>
-                                        <td className="text-nowrap">
-                                            {result.memory} kb
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        )}
-                        <div>
-                            <Heading>{t`stdout`}</Heading>
-                            <Editor value={result.stdout} readOnly />
-                            <Heading>{t`stderr`}</Heading>
-                            <Editor value={result.stderr} readOnly />
-                        </div>
-                    </>
-                ) : (
-                    <Alert variant="danger">{t`signInRequired`}</Alert>
+                {status === Status.EmptySubmission && (
+                    <Alert variant="danger">コードが空です。</Alert>
                 )}
+                <div className="mb-2">
+                    <CodeEditor
+                        id="playground-code-editor"
+                        value={{ lang, code }}
+                        onChange={onCodeEditorChange}
+                    />
+                    <Heading>{t`stdin`}</Heading>
+                    <Editor value={stdin} onChange={setStdin} />
+                    <Button
+                        variant="primary"
+                        onClick={onRun}
+                        disabled={status === Status.Waiting}
+                    >
+                        {t`run`}
+                    </Button>
+                </div>
+                <AlertWithSpinner
+                    show={status === Status.Waiting}
+                    className="my-4"
+                    variant="primary"
+                >
+                    {t`runningCode`}
+                </AlertWithSpinner>
+                {status === Status.Received && (
+                    <Table className="my-4" responsive bordered striped hover>
+                        <tbody>
+                            <tr>
+                                <td className="text-nowrap">{t`exitCode`}</td>
+                                <td className="text-nowrap">
+                                    {result.exitCode}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="text-nowrap">{t`time`}</td>
+                                <td className="text-nowrap">
+                                    {result.time} ms
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="text-nowrap">{t`memory`}</td>
+                                <td className="text-nowrap">
+                                    {result.memory} kb
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                )}
+                <div>
+                    <Heading>{t`stdout`}</Heading>
+                    <Editor value={result.stdout} readOnly />
+                    <Heading>{t`stderr`}</Heading>
+                    <Editor value={result.stderr} readOnly />
+                </div>
             </Layout>
         </>
     )

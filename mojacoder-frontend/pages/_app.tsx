@@ -54,7 +54,6 @@ const languages = {
             title: 'Playground',
             description:
                 'PlaygroundではMojaCoderのジャッジ上でコードの動作を確認することができます。',
-            signInRequired: 'Playgroundを実行するにはサインインして下さい。',
             stdin: '標準入力',
             run: '実行',
             runningCode: 'コードを実行中です。しばらくお待ち下さい。',
@@ -208,7 +207,6 @@ const languages = {
             title: 'Playground',
             description:
                 "You can test your code on the Mojacoder's Judge in the Playground page.",
-            signInRequired: 'Signing in is required to run your code.',
             stdin: 'Standard Input',
             run: 'Run',
             runningCode: 'Running your code...',
