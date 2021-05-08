@@ -41,6 +41,10 @@ export class Users extends cdk.Construct {
             userVerification: {
                 emailStyle: VerificationEmailStyle.LINK,
             },
+            passwordPolicy: {
+                requireSymbols: false,
+                requireUppercase: false,
+            },
         });
         this.pool.addClient("frontend", {
             refreshTokenValidity: Duration.days(365),
