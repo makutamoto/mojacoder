@@ -12,7 +12,7 @@ export default (({ ...inputProps }) => {
             label={t`password`}
             type="password"
             placeholder="password..."
-            pattern="^(?=.*?[!-\/:-@\[-`{-~])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])[!-~]{8,128}$"
+            pattern="^(?=.*?[a-z])(?=.*?[0-9])[!-~]{8,128}$"
             message={t`passwordConstraintsMessage`}
             invalidFeedback={t`passwordConstraintsMessage`}
             {...inputProps}

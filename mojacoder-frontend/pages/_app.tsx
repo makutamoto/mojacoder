@@ -119,7 +119,7 @@ const languages = {
         passwordControl: {
             password: 'パスワード',
             passwordConstraintsMessage:
-                'パスワードは半角英文字大文字小文字・数字・記号をそれぞれ一文字以上かつ８文字以上128文字以内である必要があります。',
+                'パスワードは半角英文字小文字・数字をそれぞれ一文字以上含んでいて、８文字以上128文字以内である必要があります。',
         },
         forgot: {
             title: 'パスワードのリセット',
@@ -272,7 +272,7 @@ const languages = {
         passwordControl: {
             password: 'Password',
             passwordConstraintsMessage:
-                'Your password must contain at least one upper and lower case letter, number, and symbol each, and must be at least 8 but no more than 128 characters long.',
+                'Your password must contain at least one lower case letter and number each, and must be at least 8 but no more than 128 characters long.',
         },
         forgot: {
             title: 'Forgot Password',
