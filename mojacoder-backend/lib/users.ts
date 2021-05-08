@@ -42,6 +42,8 @@ export class Users extends cdk.Construct {
                 emailStyle: VerificationEmailStyle.LINK,
             },
             passwordPolicy: {
+                requireDigits: true,
+                requireLowercase: true,
                 requireSymbols: false,
                 requireUppercase: false,
             },
