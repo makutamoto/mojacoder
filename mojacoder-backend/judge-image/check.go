@@ -18,7 +18,17 @@ func compareValue(answer string, solution string, accuracy float64) bool {
 	numberC, err := strconv.ParseFloat(solution, 64)
 	if err == nil {
 		numberA, err := strconv.ParseFloat(answer, 64)
-		return err == nil && math.Abs((numberC-numberA)/numberC) <= accuracy
+		if err == nil {
+			if math.IsInf(numberC, 0) {
+				return (math.IsInf(numberA, 1) && math.IsInf(numberC, 1)) || (math.IsInf(numberA, -1) && math.IsInf(numberC, -1))
+			} else if math.IsNaN(numberC) {
+				return math.IsNaN(numberA)
+			} else {
+				return math.Abs(numberC-numberA) <= math.Abs(accuracy*numberC)
+			}
+		} else {
+			return false
+		}
 	}
 	return answer == solution
 }
@@ -44,7 +54,7 @@ func check(answer, solution io.Reader, accuracy float64) (bool, error) {
 				return false, fmt.Errorf(errorMessage, err)
 			}
 			break
-		} else if !compareValue(solutionScanner.Text(), answerScanner.Text(), accuracy) {
+		} else if !compareValue(answerScanner.Text(), solutionScanner.Text(), accuracy) {
 			return false, nil
 		}
 	}
