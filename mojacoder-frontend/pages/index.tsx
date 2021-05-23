@@ -120,6 +120,16 @@ export const Index: React.FC = () => {
                         これはCookieをユーザーのアクセス履歴に基づいて適切な広告を表示するために使用します。
                         <br />
                         ユーザーは広告設定でパーソナライズ広告を無効化することができます。
+                        <br />
+                        このサービスから収集された情報をGoogleが使用する方法については
+                        <a
+                            href="https://policies.google.com/technologies/partner-sites?hl=ja"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            こちら
+                        </a>
+                        を参照してください。
                     </p>
                 </Layout>
             </div>

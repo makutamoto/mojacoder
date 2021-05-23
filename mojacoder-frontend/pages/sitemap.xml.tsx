@@ -30,13 +30,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
             <loc>${process.env.ORIGIN}</loc>
         </url>
         <url>
-            <loc>${process.env.ORIGIN}/playground</loc>
-        </url>
-        <url>
             <loc>${process.env.ORIGIN}/problems</loc>
-        </url>
-        <url>
-            <loc>${process.env.ORIGIN}/problems/post</loc>
         </url>
     `
     newProblems.forEach((problem) => {
