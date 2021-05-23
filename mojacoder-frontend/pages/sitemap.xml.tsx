@@ -28,8 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
         <url>
             <loc>${process.env.ORIGIN}</loc>
-        
-            </url>
+        </url>
         <url>
             <loc>${process.env.ORIGIN}/problems</loc>
         </url>
