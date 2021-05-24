@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import AdSense from 'react-adsense'
 import gql from 'graphql-tag'
 
 import { useI18n } from '../../../../../lib/i18n'
@@ -31,6 +32,16 @@ const ProblemPage: React.FC<Props> = (props) => {
             <ProblemTop activeKey="problem" problem={user.problem} />
             <Layout>
                 <Markdown source={user.problem.statement} />
+                <AdSense.Google
+                    style={{
+                        display: 'block',
+                        textAlign: 'center',
+                    }}
+                    client="ca-pub-1558648672247263"
+                    slot="8232681143"
+                    format="fluid"
+                    layout="in-article"
+                />
                 <div>
                     <Heading>{t`submit`}</Heading>
                     <SubmissionBox
