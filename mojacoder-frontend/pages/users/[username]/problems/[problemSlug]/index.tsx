@@ -50,16 +50,6 @@ const ProblemPage: React.FC<Props> = (props) => {
                         redirect="submissions"
                     />
                 </div>
-                <AdSense.Google
-                    style={{
-                        display: 'block',
-                        textAlign: 'center',
-                    }}
-                    client="ca-pub-1558648672247263"
-                    slot="8232681143"
-                    format="fluid"
-                    layout="in-article"
-                />
             </Layout>
         </>
     )
