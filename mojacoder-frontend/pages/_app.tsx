@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Amplify } from 'aws-amplify'
+import AdSense from 'react-adsense'
 
 import { I18nProvider } from '../lib/i18n'
 import Auth from '../lib/auth'
@@ -350,6 +351,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                     </Head>
                     <Appbar />
                     <Component {...pageProps} />
+                    <AdSense.Google
+                        style={{
+                            display: 'block',
+                            textAlign: 'center',
+                        }}
+                        client="ca-pub-1558648672247263"
+                        slot="8841155425"
+                        format="fluid"
+                        layout="in-article"
+                    />
                 </Session.Provider>
             </Auth.Provider>
         </I18nProvider>
