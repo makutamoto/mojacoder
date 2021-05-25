@@ -42,7 +42,7 @@ const ProblemPage: React.FC<Props> = (props) => {
                     format="fluid"
                     layout="in-article"
                 />
-                <div>
+                <div className="py-4">
                     <Heading>{t`submit`}</Heading>
                     <SubmissionBox
                         id="problem-code-editor"
@@ -50,6 +50,16 @@ const ProblemPage: React.FC<Props> = (props) => {
                         redirect="submissions"
                     />
                 </div>
+                <AdSense.Google
+                    style={{
+                        display: 'block',
+                        textAlign: 'center',
+                    }}
+                    client="ca-pub-1558648672247263"
+                    slot="8232681143"
+                    format="fluid"
+                    layout="in-article"
+                />
             </Layout>
         </>
     )
