@@ -9,6 +9,7 @@ import { I18nProvider } from '../lib/i18n'
 import Auth from '../lib/auth'
 import Session from '../lib/session'
 import Appbar from '../containers/Appbar'
+import Layout from '../components/Layout'
 import Authenticate from '../containers/Authenticate'
 
 import 'nprogress/nprogress.css'
@@ -351,16 +352,18 @@ const App = ({ Component, pageProps }: AppProps) => {
                     </Head>
                     <Appbar />
                     <Component {...pageProps} />
-                    <AdSense.Google
-                        style={{
-                            display: 'block',
-                            textAlign: 'center',
-                        }}
-                        client="ca-pub-1558648672247263"
-                        slot="8841155425"
-                        format="fluid"
-                        layout="in-article"
-                    />
+                    <Layout>
+                        <AdSense.Google
+                            style={{
+                                display: 'block',
+                                textAlign: 'center',
+                            }}
+                            client="ca-pub-1558648672247263"
+                            slot="8841155425"
+                            format="fluid"
+                            layout="in-article"
+                        />
+                    </Layout>
                 </Session.Provider>
             </Auth.Provider>
         </I18nProvider>
