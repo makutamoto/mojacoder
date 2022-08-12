@@ -144,6 +144,8 @@ export class Contest extends cdk.Construct {
         props.api.addLambdaDataSource('standingsLambda', new NodejsFunction(this, 'standings', {
             entry: join(__dirname, '../lambda/standings-resolver/index.ts'),
             handler: 'handler',
+            memorySize: 1024,
+            timeout: cdk.Duration.seconds(10),
             environment: {
                 CONTESTANT_TABLE: contestantTable.tableName,
                 SUBMISSION_TABLE: props.submissionTable.tableName,
