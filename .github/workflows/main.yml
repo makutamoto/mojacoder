@@ -1,6 +1,7 @@
 on:
   push:
     paths:
+      - .github/workflows/main.yml
       - mojacoder-backend/**
     branches:
       - master
