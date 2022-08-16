@@ -8,6 +8,11 @@ const common = {
     images: {
         domains: ['icon.mojacoder.app'],
     },
+    webpack: (config) => {
+        config.optimization.splitChunks.cacheGroups = { }
+        config.optimization.minimize = true;
+        return config
+    },
 }
 
 module.exports = (phase) => {
