@@ -38,7 +38,7 @@ const SignUp: React.FC = () => {
             username: email,
             password,
             attributes: {
-                // eslint-disable-next-line @typescript-eslint/camelcase
+                // eslint-disable-next-line camelcase
                 preferred_username: username,
             },
         })
