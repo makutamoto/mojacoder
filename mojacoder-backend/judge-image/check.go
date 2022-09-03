@@ -24,7 +24,8 @@ func compareValue(answer string, solution string, accuracy float64) bool {
 			} else if math.IsNaN(numberC) {
 				return math.IsNaN(numberA)
 			} else {
-				return math.Abs(numberC-numberA) <= math.Abs(accuracy*numberC)
+				// 相対誤差もしくは絶対誤差が accuracy 以下なら AC
+				return math.Abs(numberC-numberA) <= math.Abs(accuracy*numberC) || math.Abs(numberC-numberA) <= accuracy
 			}
 		} else {
 			return false
