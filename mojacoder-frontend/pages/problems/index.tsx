@@ -15,6 +15,7 @@ import Title from '../../components/Title'
 
 interface Props {
     newProblems: ProblemDetail[]
+    nextToken: string | null
 }
 
 export const Post: React.FC<Props> = ({ newProblems }) => {
@@ -74,20 +75,23 @@ export default Post
 const GetNewProblems = gql`
     query GetNewProblems {
         newProblems {
-            id
-            slug
-            title
-            datetime
-            likeCount
-            hasDifficulty
-            difficulty
-            user {
-                detail {
-                    userID
-                    icon
-                    screenName
+            items {
+                id
+                slug
+                title
+                datetime
+                likeCount
+                hasDifficulty
+                difficulty
+                user {
+                    detail {
+                        userID
+                        icon
+                        screenName
+                    }
                 }
             }
+            nextToken
         }
     }
 `
@@ -95,7 +99,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     const res = await invokeQueryWithApiKey(GetNewProblems)
     return {
         props: {
-            newProblems: res.newProblems,
+            newProblems: res.newProblems.items,
+            nextToken: res.newProblems.nextToken,
         },
         revalidate: 1,
     }

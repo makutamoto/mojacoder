@@ -239,7 +239,7 @@ type ResponsePlayground @aws_cognito_user_pools @aws_iam {
 
 type Query @aws_cognito_user_pools @aws_api_key {
   user(userID: ID, username: String): UserDetail
-  newProblems: [ProblemDetail]!
+  newProblems(nextToken: String): ProblemConnection!
   newContests: [Contest]!
 }
 

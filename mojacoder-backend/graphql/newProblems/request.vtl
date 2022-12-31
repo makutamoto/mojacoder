@@ -11,5 +11,6 @@
         }
     },
     "index" : "status-index",
-    "scanIndexForward": false
+    "scanIndexForward": false,
+    "nextToken": $util.toJson($util.defaultIfNullOrEmpty($context.arguments.nextToken, null))
 }

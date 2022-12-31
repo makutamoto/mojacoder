@@ -2,7 +2,7 @@ import { JudgeStatusDetail } from '../lib/JudgeStatus'
 
 export interface Connection<T> {
     items: T[]
-    nextToken: string
+    nextToken: string | null
 }
 
 export interface Reply {
@@ -148,7 +148,7 @@ export interface Contest {
 
 export interface Query {
     user: UserDetail | null
-    newProblems: ProblemDetail[]
+    newProblems: Connection<Problem>
     newContests: Contest[]
 }
 
