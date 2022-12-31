@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
-import { Table } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { ProblemDetail } from '../../lib/backend_types'
@@ -18,7 +18,38 @@ interface Props {
     nextToken: string | null
 }
 
-export const Post: React.FC<Props> = ({ newProblems }) => {
+const GetMoreNewProblems = gql`
+    query GetNewProblems($token: String!) {
+        newProblems(nextToken: $token) {
+            items {
+                id
+                slug
+                title
+                datetime
+                likeCount
+                hasDifficulty
+                difficulty
+                user {
+                    detail {
+                        userID
+                        icon
+                        screenName
+                    }
+                }
+            }
+            nextToken
+        }
+    }
+`
+
+export const Post: React.FC<Props> = ({ newProblems, nextToken }) => {
+    const [token, setToken] = useState(nextToken)
+    const [problems, setProblems] = useState(newProblems)
+    const loadMore = useCallback(async () => {
+        const res = await invokeQueryWithApiKey(GetMoreNewProblems, { token })
+        setToken(res.newProblems.nextToken)
+        setProblems([...problems, ...res.newProblems.items])
+    }, [token, problems])
     return (
         <>
             <Title>新規問題一覧</Title>
@@ -36,7 +67,7 @@ export const Post: React.FC<Props> = ({ newProblems }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {newProblems?.map((item) => (
+                        {problems?.map((item) => (
                             <tr key={item.id}>
                                 <td className="text-nowrap">
                                     <DateTime>{item.datetime}</DateTime>
@@ -65,6 +96,16 @@ export const Post: React.FC<Props> = ({ newProblems }) => {
                         ))}
                     </tbody>
                 </Table>
+                {token && (
+                    <Button
+                        variant="primary"
+                        size="lg"
+                        block
+                        onClick={loadMore}
+                    >
+                        もっと見る
+                    </Button>
+                )}
             </Layout>
         </>
     )
