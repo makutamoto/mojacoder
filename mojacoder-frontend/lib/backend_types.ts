@@ -148,7 +148,7 @@ export interface Contest {
 
 export interface Query {
     user: UserDetail | null
-    newProblems: Connection<Problem>
+    newProblems: Connection<ProblemDetail>
     newContests: Contest[]
 }
 
