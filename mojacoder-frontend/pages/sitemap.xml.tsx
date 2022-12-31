@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
             <loc>${process.env.ORIGIN}/problems</loc>
         </url>
     `
-    newProblems.forEach((problem) => {
+    newProblems.items.forEach((problem) => {
         sitemap += `
         <url>
             <loc>${process.env.ORIGIN}/users/${problem.user.detail.screenName}/problems/${problem.slug}</loc>
