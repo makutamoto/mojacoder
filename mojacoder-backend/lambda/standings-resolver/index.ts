@@ -1,5 +1,6 @@
 import { AppSyncResolverHandler } from 'aws-lambda'
 import { DynamoDB } from 'aws-sdk'
+import { ItemList, Key, QueryOutput } from 'aws-sdk/clients/dynamodb';
 
 const CONTESTANT_TABLE = process.env.CONTESTANT_TABLE as string;
 if(CONTESTANT_TABLE === undefined) throw "CONTESTANT_TABLE is not defined.";
@@ -47,6 +48,65 @@ interface Standing {
     submissions: ContestSubmission[]
 }
 
+async function getContestants(contestID: string) {
+    const contestants: ItemList = []
+    let lastEvaluatedKey: Key | undefined = undefined
+    do {
+        const partial_contestants = (await dynamodb.query({
+            TableName: CONTESTANT_TABLE,
+            ExpressionAttributeNames: {
+                '#contestID': 'contestID',
+                '#userID': 'userID',
+            },
+            ExpressionAttributeValues: {
+                ':contestID': {
+                    S: contestID,
+                },
+            },
+            KeyConditionExpression: "#contestID = :contestID",
+            ProjectionExpression: "#userID",
+            ExclusiveStartKey: lastEvaluatedKey,
+        }).promise()) as QueryOutput
+        contestants.concat(partial_contestants.Items!)
+        lastEvaluatedKey = partial_contestants.LastEvaluatedKey
+    } while(lastEvaluatedKey)
+    return contestants
+}
+
+async function getSubmissions(contestID: string) {
+    const submissions: ItemList = []
+    let lastEvaluatedKey: Key | undefined = undefined
+    do {
+        const partial_submissions = (await dynamodb.query({
+            TableName: SUBMISSION_TABLE,
+            IndexName: 'submission-contestID-index',
+            ExpressionAttributeNames: {
+                '#contestID': 'contestID',
+                '#userID': 'userID',
+                '#datetime': 'datetime',
+                '#problemID': 'problemID',
+                '#status': 'status',
+                '#testcases': 'testcases',
+            },
+            ExpressionAttributeValues: {
+                ':contestID': {
+                    S: contestID,
+                },
+                ':status': {
+                    S: 'JUDGED',
+                },
+            }, 
+            KeyConditionExpression: "#contestID = :contestID",
+            FilterExpression: '#status = :status',
+            ProjectionExpression: "#userID, #datetime, #problemID, #status, #testcases",
+            ExclusiveStartKey: lastEvaluatedKey,
+        }).promise()) as QueryOutput
+        submissions.concat(partial_submissions.Items!)
+        lastEvaluatedKey = partial_submissions.LastEvaluatedKey
+    } while(lastEvaluatedKey)
+    return submissions
+}
+
 export const handler: AppSyncResolverHandler<{ input: { problemName: string } }, Standing[]> = async (event) => {
     const { startDatetime, duration, penaltySeconds, ...source } = event.source as Source
     const contestID = source.id
@@ -59,20 +119,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
             point: point,
         })
     }
-    const contestants = (await dynamodb.query({
-        TableName: CONTESTANT_TABLE,
-        ExpressionAttributeNames: {
-            '#contestID': 'contestID',
-            '#userID': 'userID',
-        },
-        ExpressionAttributeValues: {
-            ':contestID': {
-                S: contestID,
-            },
-        },
-        KeyConditionExpression: "#contestID = :contestID",
-        ProjectionExpression: "#userID",
-    }).promise()).Items!
+    const contestants = await getContestants(contestID)
     if(contestants.length == 0) return []
     const results = new Map<string, Standing>()
     for(let contestant of contestants) {
@@ -90,29 +137,7 @@ export const handler: AppSyncResolverHandler<{ input: { problemName: string } },
             })),
         })
     }
-    const submissions = (await dynamodb.query({
-        TableName: SUBMISSION_TABLE,
-        IndexName: 'submission-contestID-index',
-        ExpressionAttributeNames: {
-            '#contestID': 'contestID',
-            '#userID': 'userID',
-            '#datetime': 'datetime',
-            '#problemID': 'problemID',
-            '#status': 'status',
-            '#testcases': 'testcases',
-        },
-        ExpressionAttributeValues: {
-            ':contestID': {
-                S: contestID,
-            },
-            ':status': {
-                S: 'JUDGED',
-            },
-        }, 
-        KeyConditionExpression: "#contestID = :contestID",
-        FilterExpression: '#status = :status',
-        ProjectionExpression: "#userID, #datetime, #problemID, #status, #testcases",
-    }).promise()).Items!
+    const submissions = await getSubmissions(contestID)
     submissionLoop: for(const submission of submissions) {
         const secondsFromStart = Math.floor((new Date(submission.datetime.S!).getTime() - startEpoch) / 1000)
         if(secondsFromStart < 0 || secondsFromStart > duration) continue
