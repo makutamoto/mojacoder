@@ -49,7 +49,7 @@ interface Standing {
 }
 
 async function getContestants(contestID: string) {
-    const contestants: ItemList = []
+    let contestants: ItemList = []
     let lastEvaluatedKey: Key | undefined = undefined
     do {
         const partial_contestants = (await dynamodb.query({
@@ -67,14 +67,14 @@ async function getContestants(contestID: string) {
             ProjectionExpression: "#userID",
             ExclusiveStartKey: lastEvaluatedKey,
         }).promise()) as QueryOutput
-        contestants.concat(partial_contestants.Items!)
+        contestants = contestants.concat(partial_contestants.Items!)
         lastEvaluatedKey = partial_contestants.LastEvaluatedKey
     } while(lastEvaluatedKey)
     return contestants
 }
 
 async function getSubmissions(contestID: string) {
-    const submissions: ItemList = []
+    let submissions: ItemList = []
     let lastEvaluatedKey: Key | undefined = undefined
     do {
         const partial_submissions = (await dynamodb.query({
@@ -101,7 +101,7 @@ async function getSubmissions(contestID: string) {
             ProjectionExpression: "#userID, #datetime, #problemID, #status, #testcases",
             ExclusiveStartKey: lastEvaluatedKey,
         }).promise()) as QueryOutput
-        submissions.concat(partial_submissions.Items!)
+        submissions = submissions.concat(partial_submissions.Items!)
         lastEvaluatedKey = partial_submissions.LastEvaluatedKey
     } while(lastEvaluatedKey)
     return submissions
