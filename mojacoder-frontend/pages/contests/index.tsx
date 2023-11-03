@@ -1,22 +1,25 @@
 import React from 'react'
 import { GetStaticProps } from 'next'
-import Link from 'next/link'
-import { Table } from 'react-bootstrap'
 import gql from 'graphql-tag'
 
 import { Contest } from '../../lib/backend_types'
 import { invokeQueryWithApiKey } from '../../lib/backend'
-import DateTime from '../../components/DateTime'
-import Username from '../../components/Username'
 import Layout from '../../components/Layout'
 import Top from '../../components/Top'
 import Title from '../../components/Title'
+import ContestsTable from '../../components/ContestsTable'
 
 interface Props {
-    newContests: Contest[]
+    pastContests: Contest[]
+    currentContests: Contest[]
+    upcomingContests: Contest[]
 }
 
-export const Post: React.FC<Props> = ({ newContests }) => {
+export const Post: React.FC<Props> = ({
+    pastContests,
+    currentContests,
+    upcomingContests,
+}) => {
     return (
         <>
             <Title>新規コンテスト一覧</Title>
@@ -24,40 +27,14 @@ export const Post: React.FC<Props> = ({ newContests }) => {
                 <h1 className="text-center">新規コンテスト一覧</h1>
             </Top>
             <Layout>
-                <Table responsive bordered striped hover>
-                    <thead>
-                        <tr>
-                            <th className="text-nowrap">開催日時</th>
-                            <th className="text-nowrap">主催者</th>
-                            <th className="text-nowrap">コンテスト名</th>
-                            <th className="text-nowrap">時間(秒)</th>
-                            <th className="text-nowrap">問題数</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {newContests?.map((item) => (
-                            <tr key={item.id}>
-                                <td className="text-nowrap">
-                                    <DateTime>{item.startDatetime}</DateTime>
-                                </td>
-                                <td className="text-nowrap">
-                                    <Username>{item.user.detail}</Username>
-                                </td>
-                                <td className="text-nowrap">
-                                    <Link
-                                        href={`/users/${item.user.detail.screenName}/contests/${item.slug}`}
-                                    >
-                                        <a>{item.name}</a>
-                                    </Link>
-                                </td>
-                                <td className="text-nowrap">{item.duration}</td>
-                                <td className="text-nowrap">
-                                    {item.numberOfTasks}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <h3>開催中のコンテスト</h3>
+                <ContestsTable contests={currentContests} />
+
+                <h3>予定されたコンテスト</h3>
+                <ContestsTable contests={upcomingContests} />
+
+                <h3>過去のコンテスト</h3>
+                <ContestsTable contests={pastContests} />
             </Layout>
         </>
     )
@@ -86,9 +63,39 @@ const GetNewContests = gql`
 `
 export const getStaticProps: GetStaticProps<Props> = async () => {
     const res = await invokeQueryWithApiKey(GetNewContests)
+    const newContests = res.newContests
+
+    newContests.sort(
+        (a, b) =>
+            new Date(b.startDatetime).getTime() -
+            new Date(a.startDatetime).getTime()
+    )
+
+    const nowUTC = Date.now()
+    let upcommingIdx = 0
+    let currentIdx = 0
+    for (let i = 0; i < newContests.length; ++i) {
+        const start = new Date(newContests[i].startDatetime).getTime()
+        const end = start + newContests[i].duration * 1000 // s -> ms
+        if (start >= nowUTC) {
+            upcommingIdx = i + 1
+            currentIdx = i + 1
+        } else if (start <= nowUTC && nowUTC <= end) {
+            currentIdx = i + 1
+        } else {
+            break
+        }
+    }
+
+    const pastContests = newContests.slice(currentIdx, newContests.length)
+    const currentContests = newContests.slice(upcommingIdx, currentIdx)
+    const upcomingContests = newContests.slice(0, upcommingIdx)
+
     return {
         props: {
-            newContests: res.newContests,
+            currentContests: currentContests,
+            pastContests: pastContests,
+            upcomingContests: upcomingContests,
         },
         revalidate: 1,
     }
