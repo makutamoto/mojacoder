@@ -4,37 +4,48 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"math"
+	"math/big"
+	"regexp"
 	"strconv"
 )
 
 const CHECK_SCANNER_BUFFER_SIZE = 1024 * 1024
 
-func compareValue(answer string, solution string, accuracy float64) bool {
+func isValidDecimal(s string) bool {
+	re := regexp.MustCompile(`^\d+(\.\d+)?$`)
+	return re.MatchString(s)
+}
+
+func compareValue(answer string, solution string, accuracy *big.Float, precision uint) bool {
 	_, err := strconv.Atoi(solution)
 	if err == nil || err.(*strconv.NumError).Err == strconv.ErrRange {
 		return answer == solution
 	}
-	numberC, err := strconv.ParseFloat(solution, 64)
-	if err == nil {
-		numberA, err := strconv.ParseFloat(answer, 64)
-		if err == nil {
-			if math.IsInf(numberC, 0) {
-				return (math.IsInf(numberA, 1) && math.IsInf(numberC, 1)) || (math.IsInf(numberA, -1) && math.IsInf(numberC, -1))
-			} else if math.IsNaN(numberC) {
-				return math.IsNaN(numberA)
-			} else {
-				// 相対誤差もしくは絶対誤差が accuracy 以下なら AC
-				return math.Abs(numberC-numberA) <= math.Abs(accuracy*numberC) || math.Abs(numberC-numberA) <= accuracy
-			}
-		} else {
-			return false
-		}
+
+	if !isValidDecimal(solution) {
+		return answer == solution
 	}
-	return answer == solution
+
+	if !isValidDecimal(answer) {
+		return false
+	}
+
+	numberS, _, _ := big.ParseFloat(solution, 10, precision, big.ToNearestEven)
+	numberA, _, _ := big.ParseFloat(answer, 10, precision, big.ToNearestEven)
+
+	diff := new(big.Float).Sub(numberS, numberA)
+	absDiff := new(big.Float).Abs(diff)
+
+	accuracyTimesS := new(big.Float).Mul(accuracy, numberS)
+	absAccuracyTimesS := new(big.Float).Abs(accuracyTimesS)
+
+	isOkAbsolute := absDiff.Cmp(accuracy) <= 0
+	isOkRelative := absDiff.Cmp(absAccuracyTimesS) <= 0
+
+	return isOkAbsolute || isOkRelative
 }
 
-func check(answer, solution io.Reader, accuracy float64) (bool, error) {
+func check(answer, solution io.Reader, accuracy *big.Float, precision uint) (bool, error) {
 	const errorMessage = "Failed to check an answer: %v"
 	var err error
 	var testScan, answerScan bool
@@ -55,7 +66,7 @@ func check(answer, solution io.Reader, accuracy float64) (bool, error) {
 				return false, fmt.Errorf(errorMessage, err)
 			}
 			break
-		} else if !compareValue(answerScanner.Text(), solutionScanner.Text(), accuracy) {
+		} else if !compareValue(answerScanner.Text(), solutionScanner.Text(), accuracy, precision) {
 			return false, nil
 		}
 	}
