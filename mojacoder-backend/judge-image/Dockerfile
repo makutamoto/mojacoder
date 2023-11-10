@@ -9,8 +9,12 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E03280
 RUN echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list
 RUN apt update
 
-RUN apt install -y golang-1.14
-ENV PATH $PATH:/usr/lib/go-1.14/bin/
+RUN apt install -y software-properties-common
+RUN add-apt-repository ppa:longsleep/golang-backports
+RUN apt update
+RUN apt install -y golang-1.21-go
+ENV PATH $PATH:/usr/lib/go-1.21/bin
+
 RUN apt install -y python3.8 build-essential mono-devel bf cargo pypy3 ruby2.7 default-jdk sbcl
 
 WORKDIR /tmp
