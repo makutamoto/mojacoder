@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/big"
 	"os"
 	"path/filepath"
 	"strings"
 )
+
+const PRECISION = 128
 
 type TestcaseResultInput struct {
 	Name   string `json:"name"`
@@ -111,7 +114,8 @@ func judge(definition LanguageDefinition, data JudgeQueueData) error {
 			continue
 		}
 		stdoutReader := strings.NewReader(stdoutWriter.String())
-		checkResult, err := check(stdoutReader, outTestcaseFile, 0.000001)
+		accuracy, _, _ := big.ParseFloat("0.000001", 10, PRECISION, big.ToNearestEven)
+		checkResult, err := check(stdoutReader, outTestcaseFile, accuracy, PRECISION)
 		if err != nil {
 			return fmt.Errorf(errorMessage, err)
 		}
