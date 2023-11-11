@@ -124,34 +124,34 @@ export class Judge extends cdk.Construct {
             resources: ['*'],
             actions: ['logs:CreateLogStream', 'logs:PutLogEvents'],
         }))
-        // const judgeService = new FargateService(this, 'judge-service', {
-        //     cluster: judgeCluster,
-        //     taskDefinition: judgeTask,
-        //     assignPublicIp: true,
-        //     capacityProviderStrategies: [
-        //         {
-        //             capacityProvider: "FARGATE_SPOT",
-        //             base: 1,
-        //             weight: 1,
-        //         },
-        //     ],
-        // });
-        // const judgeScale = judgeService.autoScaleTaskCount({
-        //     maxCapacity: 2,
-        // });
-        // judgeScale.scaleOnMetric('judge-scale-by-queue', {
-        //     metric: approximateNumberOfMessagesVisible,
-        //     scalingSteps: [
-        //         {
-        //             upper: 0,
-        //             change: -1,
-        //         },
-        //         {
-        //             lower: 100,
-        //             change: 1,
-        //         },
-        //     ],
-        // });
+        const judgeService = new FargateService(this, 'judge-service', {
+            cluster: judgeCluster,
+            taskDefinition: judgeTask,
+            assignPublicIp: true,
+            capacityProviderStrategies: [
+                {
+                    capacityProvider: "FARGATE_SPOT",
+                    base: 1,
+                    weight: 1,
+                },
+            ],
+        });
+        const judgeScale = judgeService.autoScaleTaskCount({
+            maxCapacity: 2,
+        });
+        judgeScale.scaleOnMetric('judge-scale-by-queue', {
+            metric: approximateNumberOfMessagesVisible,
+            scalingSteps: [
+                {
+                    upper: 0,
+                    change: -1,
+                },
+                {
+                    lower: 100,
+                    change: 1,
+                },
+            ],
+        });
         const judgeQueueDatasource = props.api.addHttpDataSource('judgeQueue', 'https://ap-northeast-1.queue.amazonaws.com', {
             authorizationConfig: {
                 signingRegion: 'ap-northeast-1',
