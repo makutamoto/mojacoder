@@ -14,6 +14,7 @@ import { S3Origin } from '@aws-cdk/aws-cloudfront-origins'
 import { Certificate } from '@aws-cdk/aws-certificatemanager'
 import { ARecord, PublicHostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { CloudFrontTarget } from '@aws-cdk/aws-route53-targets'
+import * as lambda from '@aws-cdk/aws-lambda';
 
 export interface UsersProps {
     zone: PublicHostedZone
@@ -76,6 +77,7 @@ export class Users extends cdk.Construct {
         const updateApiKeyLambda = new NodejsFunction(this, 'update-api-key', {
             entry: join(__dirname, '../lambda/update-api-key/index.ts'),
             handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
             environment: {
                 APPSYNC_API_ID: this.api.apiId,
                 APPSYNC_API_KEY: this.api.apiKey!,
@@ -113,6 +115,7 @@ export class Users extends cdk.Construct {
         });
         const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
             entry: join(__dirname, '../lambda/cognito-pre-signup-trigger/index.ts'),
+            runtime: lambda.Runtime.NODEJS_16_X,
             handler: 'handler',
             environment: {
                 USERNAME_TABLE_NAME: usernameTable.tableName,
@@ -125,6 +128,7 @@ export class Users extends cdk.Construct {
         }));
         const postConfirmationTrigger = new NodejsFunction(this, 'post-confirmation-trigger', {
             entry: join(__dirname, '../lambda/cognito-post-confirmation-trigger/index.ts'),
+            runtime: lambda.Runtime.NODEJS_16_X,
             handler: 'handler',
             environment: {
                 TABLE_NAME: this.userTable.tableName,
@@ -153,6 +157,7 @@ export class Users extends cdk.Construct {
         });
         const setUserIconLambda = new NodejsFunction(this, 'setUserIcon', {
             entry: join(__dirname, '../lambda/set-user-icon/index.ts'),
+            runtime: lambda.Runtime.NODEJS_16_X,
             handler: 'handler',
             timeout: Duration.seconds(10),
             environment: {

@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core'
 import { join } from 'path';
 import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
+import * as lambda from '@aws-cdk/aws-lambda';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { Bucket, HttpMethods } from '@aws-cdk/aws-s3'
@@ -148,6 +149,7 @@ export class Problems extends cdk.Construct {
         const postedProblemsCreatedNotification = new NodejsFunction(this, 'postedProblemsCreatedNotification', {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
             memorySize: 512,
             timeout: Duration.minutes(15),
             environment: {
@@ -168,6 +170,7 @@ export class Problems extends cdk.Construct {
         const issueProblemUploadUrlLambda = new NodejsFunction(this, 'issueProblemUploadUrl', {
             entry: join(__dirname, '../lambda/issue-problem-upload-url-resolver/index.ts'),
             handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
             environment: {
                 POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
             },
@@ -184,6 +187,7 @@ export class Problems extends cdk.Construct {
         const issueProblemDownloadUrlLambda = new NodejsFunction(this, 'issueProblemDownloadUrl', {
             entry: join(__dirname, '../lambda/issue-problem-download-url-resolver/index.ts'),
             handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
             environment: {
                 POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
             },
@@ -206,6 +210,7 @@ export class Problems extends cdk.Construct {
         props.api.addLambdaDataSource('testcaseInUrlLambda', new NodejsFunction(this, 'testcaseInUrl', {
             entry: join(__dirname, '../lambda/in-url-resolver/index.ts'),
             handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
             environment: {
                 TESTCASES_FOR_VIEW: testcasesForView.bucketName,
             },
@@ -222,6 +227,7 @@ export class Problems extends cdk.Construct {
         props.api.addLambdaDataSource('testcaseOutUrlLambda', new NodejsFunction(this, 'testcaseOutUrl', {
             entry: join(__dirname, '../lambda/out-url-resolver/index.ts'),
             handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
             environment: {
                 TESTCASES_FOR_VIEW: testcasesForView.bucketName,
             },

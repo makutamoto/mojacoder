@@ -4,6 +4,7 @@ import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
+import * as lambda from '@aws-cdk/aws-lambda';
 
 export interface ContestProps {
     api: GraphqlApi
@@ -144,6 +145,7 @@ export class Contest extends cdk.Construct {
         props.api.addLambdaDataSource('standingsLambda', new NodejsFunction(this, 'standings', {
             entry: join(__dirname, '../lambda/standings-resolver/index.ts'),
             handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
             memorySize: 1024,
             timeout: cdk.Duration.seconds(10),
             environment: {
