@@ -90,10 +90,10 @@ export class Judge extends cdk.Construct {
             userName: JudgeUser.userName,
         });
         const approximateNumberOfMessagesVisible = JudgeQueue.metricApproximateNumberOfMessagesVisible();
-        const judgeCluster = new Cluster(this, 'judge-cluster', {
-            capacityProviders: ["FARGATE_SPOT"],
-            vpc,
-        });
+        // const judgeCluster = new Cluster(this, 'judge-cluster', {
+        //     capacityProviders: ["FARGATE_SPOT"],
+        //     vpc,
+        // });
         const judgeTask = new FargateTaskDefinition(this, 'judge-task', {
             cpu: 1024,
             memoryLimitMiB: 2048,
