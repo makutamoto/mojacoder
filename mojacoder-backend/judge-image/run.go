@@ -28,7 +28,7 @@ func run(definition LanguageDefinition, stdin io.Reader, stdout io.Writer, stder
 	var result RunResult
 	var err error
 	additional_memory := 5 * 1024
-	command := fmt.Sprintf("ulimit -u 32 -v %d && timeout --preserve-status -sSIGKILL %d %s; EXIT_CODE=$?; kill -SIGKILL -1; wait; exit $EXIT_CODE", memoryLimit+additional_memory, timeLimit, definition.RunCommand)
+	command := fmt.Sprintf("ulimit -u 32 -m %d && timeout --preserve-status -sSIGKILL %d %s; EXIT_CODE=$?; kill -SIGKILL -1; wait; exit $EXIT_CODE", memoryLimit+additional_memory, timeLimit, definition.RunCommand)
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Env = []string{}
 	cmd.Dir = TEMP_DIR
