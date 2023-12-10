@@ -102,9 +102,7 @@ const ContestTasks: React.FC<Props> = ({ contest }) => {
                                             <Link
                                                 href={`/users/${username}/contests/${contestSlug}/tasks/${index}`}
                                             >
-                                                <a>
-                                                    {item.problem.detail.title}
-                                                </a>
+                                                {item.problem.detail.title}
                                             </Link>
                                         </td>
                                         <td className="text-nowrap">

@@ -73,7 +73,7 @@ const UserPage: React.FC<Props> = ({ user }) => {
                                     <Link
                                         href={`/users/${user.screenName}/problems/${item.slug}`}
                                     >
-                                        <a>{item.title}</a>
+                                        {item.title}
                                     </Link>
                                 </td>
                                 <td className="text-nowrap">

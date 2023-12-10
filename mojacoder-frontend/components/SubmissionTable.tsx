@@ -60,9 +60,8 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
                             id,
                         },
                     }}
-                    passHref
                 >
-                    <a>詳細</a>
+                    詳細
                 </Link>
             </td>
         </tr>

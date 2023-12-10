@@ -147,11 +147,8 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                                         </Button>
                                     }
                                 >
-                                    <Link
-                                        href={join(basePath, 'likers')}
-                                        passHref
-                                    >
-                                        <a>{likeCount}</a>
+                                    <Link href={join(basePath, 'likers')}>
+                                        {likeCount}
                                     </Link>
                                 </IconWithText>{' '}
                             </>
@@ -160,19 +157,14 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                             <>
                                 <IconWithText
                                     icon={
-                                        <Link
-                                            href={join(basePath, 'comments')}
-                                            passHref
-                                        >
-                                            <a>
-                                                <Button
-                                                    variant="light"
-                                                    size="sm"
-                                                    style={circleButtonStyles}
-                                                >
-                                                    <CommentDiscussionIcon />
-                                                </Button>
-                                            </a>
+                                        <Link href={join(basePath, 'comments')}>
+                                            <Button
+                                                variant="light"
+                                                size="sm"
+                                                style={circleButtonStyles}
+                                            >
+                                                <CommentDiscussionIcon />
+                                            </Button>
                                         </Link>
                                     }
                                 >
@@ -199,30 +191,46 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                     activeKey={activeKey}
                 >
                     <Nav.Item>
-                        <Link passHref href={basePath}>
+                        <Link legacyBehavior passHref href={basePath}>
                             <Nav.Link eventKey="problem">{t`problem`}</Nav.Link>
                         </Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Link passHref href={join(basePath, 'submissions')}>
+                        <Link
+                            legacyBehavior
+                            passHref
+                            href={join(basePath, 'submissions')}
+                        >
                             <Nav.Link eventKey="submissions">{t`submissions`}</Nav.Link>
                         </Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Link passHref href={join(basePath, 'testcases')}>
+                        <Link
+                            legacyBehavior
+                            passHref
+                            href={join(basePath, 'testcases')}
+                        >
                             <Nav.Link eventKey="testcases">{t`testcases`}</Nav.Link>
                         </Link>
                     </Nav.Item>
                     {problem?.hasEditorial && (
                         <Nav.Item>
-                            <Link passHref href={join(basePath, 'editorial')}>
+                            <Link
+                                legacyBehavior
+                                passHref
+                                href={join(basePath, 'editorial')}
+                            >
                                 <Nav.Link eventKey="editorial">{t`editorial`}</Nav.Link>
                             </Link>
                         </Nav.Item>
                     )}
                     {auth && auth.userID === problem?.user.detail.userID && (
                         <Nav.Item>
-                            <Link passHref href={join(basePath, 'edit')}>
+                            <Link
+                                legacyBehavior
+                                passHref
+                                href={join(basePath, 'edit')}
+                            >
                                 <Nav.Link eventKey="edit">{t`edit`}</Nav.Link>
                             </Link>
                         </Nav.Item>

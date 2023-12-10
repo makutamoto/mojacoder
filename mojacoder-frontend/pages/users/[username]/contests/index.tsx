@@ -71,7 +71,7 @@ const Contests: React.FC<Props> = ({ user }) => {
                                     <Link
                                         href={`/users/${user.screenName}/contests/${item.slug}`}
                                     >
-                                        <a>{item.name}</a>
+                                        {item.name}
                                     </Link>
                                 </td>
                                 {auth && auth.userID === user.userID && (

@@ -107,6 +107,7 @@ const Submissions: React.FC<Props> = ({ problem }) => {
                                 },
                             }}
                             passHref
+                            legacyBehavior
                         >
                             <Nav.Link eventKey="me">自分の提出</Nav.Link>
                         </Link>
@@ -121,6 +122,7 @@ const Submissions: React.FC<Props> = ({ problem }) => {
                                 },
                             }}
                             passHref
+                            legacyBehavior
                         >
                             <Nav.Link eventKey="all">すべての提出</Nav.Link>
                         </Link>

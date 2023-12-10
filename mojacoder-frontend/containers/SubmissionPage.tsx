@@ -113,7 +113,7 @@ const SubmissionPage: React.FC<SubmissionPageProps> = ({ submission }) => {
                                         },
                                     }}
                                 >
-                                    <a>{testcase.name}</a>
+                                    {testcase.name}
                                 </Link>
                             </td>
                             <td className="text-nowrap">

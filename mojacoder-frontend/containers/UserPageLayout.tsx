@@ -56,12 +56,16 @@ const UserPage: React.FC<Props> = ({ user, activeKey, children }) => {
             <Layout>
                 <Nav variant="pills" activeKey={activeKey}>
                     <Nav.Item>
-                        <Link passHref href={basePath}>
+                        <Link legacyBehavior passHref href={basePath}>
                             <Nav.Link eventKey="problems">{t`problems`}</Nav.Link>
                         </Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Link passHref href={join(basePath, 'contests')}>
+                        <Link
+                            legacyBehavior
+                            passHref
+                            href={join(basePath, 'contests')}
+                        >
                             <Nav.Link eventKey="contests">{t`contests`}</Nav.Link>
                         </Link>
                     </Nav.Item>

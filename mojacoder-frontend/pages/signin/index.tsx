@@ -106,7 +106,7 @@ const SignIn: React.FC = () => {
                     />
                     <Form.Group>
                         <Link href="/signin/forgot" passHref>
-                            <a>{t`forgotPassword`}</a>
+                            {t`forgotPassword`}
                         </Link>
                     </Form.Group>
                     <ButtonWithSpinner

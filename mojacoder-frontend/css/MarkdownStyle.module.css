@@ -1,0 +1,10 @@
+.markdownContainer > h1,
+.markdownContainer > h2,
+.markdownContainer > h3,
+.markdownContainer > h4,
+.markdownContainer > h5,
+.markdownContainer > h6 {
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    padding-bottom: .3rem;
+    margin-bottom: 1rem;
+}

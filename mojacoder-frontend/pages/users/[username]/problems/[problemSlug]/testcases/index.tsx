@@ -49,7 +49,7 @@ const Submissions: React.FC<Props> = ({ problem }) => {
                                                 },
                                             }}
                                         >
-                                            <a>{name}</a>
+                                            {name}
                                         </Link>
                                     </td>
                                 </tr>
