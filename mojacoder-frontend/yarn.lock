@@ -7171,11 +7171,6 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-react-adsense@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-adsense/-/react-adsense-0.1.0.tgz#f170007a9ab05ee2cd1c915cdc9788624658e3c1"
-  integrity sha512-VzGMH9qA7bBKAveK1joFWphhB7e2Y1ToSGzUa8b7eit3+VSkg/2MSvKxe5d/r4mcmkOHu6CHNJW0nn6RQC3IZA==
-
 react-bootstrap@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-1.3.0.tgz#d9dde4ad554e9cd21d1465e8b5e5ef6679cae6a1"
