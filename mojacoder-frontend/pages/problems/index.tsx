@@ -86,7 +86,7 @@ export const Post: React.FC<Props> = ({ newProblems, nextToken }) => {
                                     <Link
                                         href={`/users/${item.user.detail.screenName}/problems/${item.slug}`}
                                     >
-                                        <a>{item.title}</a>
+                                        {item.title}
                                     </Link>
                                 </td>
                                 <td className="text-nowrap">

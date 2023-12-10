@@ -35,7 +35,7 @@ export const ContestsTable: React.FC<Props> = ({ contests }) => {
                             <Link
                                 href={`/users/${item.user.detail.screenName}/contests/${item.slug}`}
                             >
-                                <a>{item.name}</a>
+                                {item.name}
                             </Link>
                         </td>
                         <td className="text-nowrap">{item.duration}</td>

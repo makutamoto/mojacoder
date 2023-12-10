@@ -12,6 +12,7 @@ const Error: React.FC = () => {
             <Title>ページが存在しません</Title>
             <Top className="text-center">
                 <Image
+                    alt="404 image"
                     width={512}
                     height={256}
                     src="/illustrations/undraw_page_not_found_su7k.svg"

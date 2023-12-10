@@ -19,7 +19,7 @@ const Appbar: React.FC = () => {
                 variant="dark"
                 expand="sm"
             >
-                <Link href="/" passHref>
+                <Link href="/">
                     <Navbar.Brand>
                         <Image
                             className="align-top"
@@ -32,41 +32,45 @@ const Appbar: React.FC = () => {
                 <Navbar.Toggle />
                 <Navbar.Collapse>
                     <Nav className="mr-auto">
-                        <Link href="/playground" passHref>
+                        <Link href="/playground" passHref legacyBehavior>
                             <Nav.Link
                                 active={pathname === '/playground'}
                             >{t`playground`}</Nav.Link>
                         </Link>
-                        <Link href="/problems" passHref>
+                        <Link href="/problems" passHref legacyBehavior>
                             <Nav.Link
                                 active={pathname === '/problems'}
                             >{t`problems`}</Nav.Link>
                         </Link>
-                        <Link href="/problems/post" passHref>
+                        <Link href="/problems/post" passHref legacyBehavior>
                             <Nav.Link
                                 active={pathname === '/problems/post'}
                             >{t`postProblem`}</Nav.Link>
                         </Link>
-                        <Link href="/contests" passHref>
+                        <Link href="/contests" passHref legacyBehavior>
                             <Nav.Link
                                 active={pathname === '/contests'}
                             >{t`contests`}</Nav.Link>
                         </Link>
-                        <Link href="/contests/create" passHref>
+                        <Link href="/contests/create" passHref legacyBehavior>
                             <Nav.Link
                                 active={pathname === '/contests/create'}
                             >{t`createContest`}</Nav.Link>
                         </Link>
                     </Nav>
                     <Nav>
-                        <Link href={asPath} locale="en" passHref>
+                        <Link href={asPath} locale="en" passHref legacyBehavior>
                             <Nav.Link active={locale === 'en'}>EN</Nav.Link>
                         </Link>
-                        <Link href={asPath} locale="ja" passHref>
+                        <Link href={asPath} locale="ja" passHref legacyBehavior>
                             <Nav.Link active={locale === 'ja'}>JA</Nav.Link>
                         </Link>
                         {auth ? (
-                            <Link href={`/users/${auth.screenName}`} passHref>
+                            <Link
+                                href={`/users/${auth.screenName}`}
+                                passHref
+                                legacyBehavior
+                            >
                                 <Nav.Link
                                     active={pathname === '/users/[username]'}
                                 >
@@ -80,6 +84,7 @@ const Appbar: React.FC = () => {
                                         asPath
                                     )}`}
                                     passHref
+                                    legacyBehavior
                                 >
                                     <Nav.Link
                                         active={pathname === '/signup'}
@@ -90,6 +95,7 @@ const Appbar: React.FC = () => {
                                         asPath
                                     )}`}
                                     passHref
+                                    legacyBehavior
                                 >
                                     <Nav.Link
                                         active={pathname === '/signin'}

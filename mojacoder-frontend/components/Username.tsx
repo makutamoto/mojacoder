@@ -4,8 +4,6 @@ import Link from 'next/link'
 import { UserDetail } from '../lib/backend_types'
 import UserIcon from './UserIcon'
 
-import styles from '../css/align.module.css'
-
 export interface UsernameProps {
     children?: UserDetail
 }
@@ -15,12 +13,10 @@ const Username: React.FC<UsernameProps> = ({ children }) => {
         <span>
             <UserIcon size={24}>{children}</UserIcon>{' '}
             {children === null ? (
-                <span className={styles['align-super']}>Guest</span>
+                <span>Guest</span>
             ) : (
-                <Link href={`/users/${children?.screenName}`} passHref>
-                    <a className={styles['align-super']}>
-                        {children?.screenName}
-                    </a>
+                <Link href={`/users/${children?.screenName}`}>
+                    {children?.screenName}
                 </Link>
             )}
         </span>

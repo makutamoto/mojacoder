@@ -72,32 +72,48 @@ const ContestTop: React.FC<ContestTopProps> = ({
                     activeKey={activeKey}
                 >
                     <Nav.Item>
-                        <Link passHref href={basePath}>
+                        <Link legacyBehavior passHref href={basePath}>
                             <Nav.Link eventKey="top">{t`top`}</Nav.Link>
                         </Link>
                     </Nav.Item>
                     {detail?.contestID && (
                         <Nav.Item>
-                            <Link passHref href={join(basePath, 'tasks')}>
+                            <Link
+                                legacyBehavior
+                                passHref
+                                href={join(basePath, 'tasks')}
+                            >
                                 <Nav.Link eventKey="tasks">{t`tasks`}</Nav.Link>
                             </Link>
                         </Nav.Item>
                     )}
                     <Nav.Item>
-                        <Link passHref href={join(basePath, 'standings')}>
+                        <Link
+                            legacyBehavior
+                            passHref
+                            href={join(basePath, 'standings')}
+                        >
                             <Nav.Link eventKey="standings">{t`standings`}</Nav.Link>
                         </Link>
                     </Nav.Item>
                     {detail?.contestID && (
                         <Nav.Item>
-                            <Link passHref href={join(basePath, 'submissions')}>
+                            <Link
+                                legacyBehavior
+                                passHref
+                                href={join(basePath, 'submissions')}
+                            >
                                 <Nav.Link eventKey="submissions">{t`submissions`}</Nav.Link>
                             </Link>
                         </Nav.Item>
                     )}
                     {auth && auth.userID === contest.user.detail.userID && (
                         <Nav.Item>
-                            <Link passHref href={join(basePath, 'edit')}>
+                            <Link
+                                legacyBehavior
+                                passHref
+                                href={join(basePath, 'edit')}
+                            >
                                 <Nav.Link eventKey="edit">{t`edit`}</Nav.Link>
                             </Link>
                         </Nav.Item>
