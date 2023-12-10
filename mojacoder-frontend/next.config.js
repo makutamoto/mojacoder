@@ -9,8 +9,8 @@ const common = {
         domains: ['icon.mojacoder.app'],
     },
     webpack: (config) => {
-        config.optimization.splitChunks.cacheGroups = { }
-        config.optimization.minimize = true;
+        config.optimization.splitChunks.cacheGroups = {}
+        config.optimization.minimize = true
         return config
     },
 }
