@@ -17,6 +17,7 @@ export class MojacoderBackendStack extends cdk.Stack {
         const judge = new Judge(this, 'judge', {
             api: users.api,
             testcases: problems.testcases,
+            judgeCodes: problems.judgeCodes
         })
         new Contest(this, 'contest', {
             api: users.api,

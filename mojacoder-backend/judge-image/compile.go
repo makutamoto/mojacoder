@@ -3,16 +3,10 @@ package main
 import (
 	"os"
 	"os/exec"
-	"path/filepath"
 )
 
-func compile(definition LanguageDefinition, bucket, key string) (bool, string, error) {
+func compile(definition LanguageDefinition, dir string) (bool, string, error) {
 	var err error
-	codePath := filepath.Join(TEMP_DIR, definition.Filename)
-	err = downloadFromStorage(codePath, bucket, key)
-	if err != nil {
-		return false, "", err
-	}
 	if definition.CompileCommand == "" {
 		return true, "", nil
 	}
@@ -21,7 +15,7 @@ func compile(definition LanguageDefinition, bucket, key string) (bool, string, e
 		"PATH=" + os.Getenv("PATH"),
 		"HOME=" + os.Getenv("HOME"),
 	}
-	cmd.Dir = TEMP_DIR
+	cmd.Dir = dir
 	_, err = cmd.Output()
 	res, exist := err.(*exec.ExitError)
 	if exist {

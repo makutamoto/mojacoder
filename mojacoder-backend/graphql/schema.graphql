@@ -81,7 +81,12 @@ type Problem @aws_cognito_user_pools @aws_api_key {
   detail: ProblemDetail
 }
 
-type ProblemDetail @aws_cognito_user_pools @aws_api_key {
+enum JudgeTypes {
+  NORMAL
+  SPECIAL
+}
+
+type ProblemDetail @aws_cognito_user_pools @aws_api_key @aws_iam {
   id: ID!
   slug: String!
   user: User!
@@ -102,6 +107,9 @@ type ProblemDetail @aws_cognito_user_pools @aws_api_key {
   testcaseNames: [String]!
   submission(id: ID!): Submission
   submissions(nextToken: String, userID: ID): SubmissionConnection!
+  judgeType: JudgeTypes!
+  judgeLang: String
+  judgeCodeUrl: AWSURL
 }
 
 type SubmissionConnection @aws_cognito_user_pools @aws_api_key {
@@ -116,6 +124,8 @@ enum TestcaseResultStatus {
   TLE
   MLE
   RE
+  JTLE
+  JMLE
 }
 
 type TestcaseResult @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -130,6 +140,7 @@ enum SubmissionStatus {
   CE
   JUDGED
   IE
+  JCE
 }
 
 type Submission @aws_cognito_user_pools @aws_api_key {
@@ -237,10 +248,11 @@ type ResponsePlayground @aws_cognito_user_pools @aws_iam {
   userID: ID! 
 }
 
-type Query @aws_cognito_user_pools @aws_api_key {
-  user(userID: ID, username: String): UserDetail
-  newProblems(nextToken: String): ProblemConnection!
-  newContests: [Contest]!
+type Query {
+  user(userID: ID, username: String): UserDetail @aws_cognito_user_pools @aws_api_key
+  newProblems(nextToken: String): ProblemConnection! @aws_cognito_user_pools @aws_api_key
+  newContests: [Contest]!  @aws_cognito_user_pools @aws_api_key
+  problem(id: ID!): ProblemDetail @aws_iam
 }
 
 type Subscription {

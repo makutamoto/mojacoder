@@ -62,7 +62,13 @@ const circleButtonStyles: React.CSSProperties = {
 }
 
 export interface ProblemTopProps {
-    activeKey?: 'problem' | 'submissions' | 'testcases' | 'editorial' | 'edit'
+    activeKey?:
+        | 'problem'
+        | 'submissions'
+        | 'testcases'
+        | 'editorial'
+        | 'edit'
+        | 'judgecode'
     problem?: ProblemDetail
 }
 
@@ -221,6 +227,19 @@ const ProblemTop: React.FC<ProblemTopProps> = (props) => {
                                 href={join(basePath, 'editorial')}
                             >
                                 <Nav.Link eventKey="editorial">{t`editorial`}</Nav.Link>
+                            </Link>
+                        </Nav.Item>
+                    )}
+                    {problem.judgeType === 'SPECIAL' && (
+                        <Nav.Item>
+                            <Link
+                                legacyBehavior
+                                passHref
+                                href={join(basePath, 'judgecode')}
+                            >
+                                <Nav.Link eventKey="judgecode">
+                                    ジャッジコード
+                                </Nav.Link>
                             </Link>
                         </Nav.Item>
                     )}

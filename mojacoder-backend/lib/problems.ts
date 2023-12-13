@@ -13,8 +13,11 @@ export interface ProblemsProps {
     api: GraphqlApi
 }
 
+const S3_ALLOW_ORIGIN: string[] = ['https://mojacoder.app', 'http://localhost:3000']
+
 export class Problems extends cdk.Construct {
     public readonly testcases: Bucket
+    public readonly judgeCodes: Bucket
 
     constructor(scope: cdk.Construct, id: string, props: ProblemsProps) {
         super(scope, id);
@@ -131,7 +134,7 @@ export class Problems extends cdk.Construct {
             cors: [
                 {
                     allowedMethods: [HttpMethods.GET, HttpMethods.PUT],
-                    allowedOrigins: ['https://mojacoder.app', 'http://localhost:3000'],
+                    allowedOrigins: S3_ALLOW_ORIGIN,
                     allowedHeaders: ['content-type'],
                 }
             ]
@@ -141,7 +144,16 @@ export class Problems extends cdk.Construct {
             cors: [
                 {
                     allowedMethods: [HttpMethods.GET],
-                    allowedOrigins: ['https://mojacoder.app', 'http://localhost:3000'],
+                    allowedOrigins: S3_ALLOW_ORIGIN,
+                    allowedHeaders: ['content-type'],
+                }
+            ],
+        });
+        this.judgeCodes = new Bucket(this, 'judge-codes', {
+            cors: [
+                {
+                    allowedMethods: [HttpMethods.GET],
+                    allowedOrigins: S3_ALLOW_ORIGIN,
                     allowedHeaders: ['content-type'],
                 }
             ],
@@ -158,11 +170,12 @@ export class Problems extends cdk.Construct {
                 POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
                 TESTCASES_BUCKET_NAME: this.testcases.bucketName,
                 TESTCASES_FOR_VIEW_BUCKET_NAME: testcasesForView.bucketName,
+                JUDGECODES_BUCKET_NAME: this.judgeCodes.bucketName,
             },
         });
         postedProblemsCreatedNotification.addToRolePolicy(new PolicyStatement({
             actions: ['s3:GetObject', 's3:PutObject', 'dynamodb:PutItem', 'dynamodb:UpdateItem', 'dynamodb:GetItem'],
-            resources: [postedProblems.bucketArn + '/*', this.testcases.bucketArn + '/*', testcasesForView.bucketArn + '/*', problemTable.tableArn, slugTable.tableArn],
+            resources: [postedProblems.bucketArn + '/*', this.testcases.bucketArn + '/*', testcasesForView.bucketArn + '/*', this.judgeCodes.bucketArn + '/*', problemTable.tableArn, slugTable.tableArn],
         }))
         postedProblems.addObjectCreatedNotification(new LambdaDestination(postedProblemsCreatedNotification), {
             suffix: '.zip'
@@ -241,6 +254,23 @@ export class Problems extends cdk.Construct {
             typeName: 'Testcase',
             fieldName: 'outUrl',
         });
+        props.api.addLambdaDataSource('judgeCodeUrlLambda', new NodejsFunction(this, 'judgeCodeUrl', {
+            entry: join(__dirname, '../lambda/judgecode-url-resolver/index.ts'),
+            handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
+            environment: {
+                JUDGECODES_BUCKET_NAME: this.judgeCodes.bucketName,
+            },
+            initialPolicy: [
+                new PolicyStatement({
+                    actions: ['s3:GetObject'],
+                    resources: [this.judgeCodes.bucketArn + '/*'],
+                }),
+            ],
+        })).createResolver({
+            typeName: 'ProblemDetail',
+            fieldName: 'judgeCodeUrl',
+        });
         const problemTableDataSource = props.api.addDynamoDbDataSource('problem_table', problemTable);
         problemTableDataSource.createResolver({
             typeName: 'UserDetail',
@@ -265,6 +295,12 @@ export class Problems extends cdk.Construct {
             fieldName: 'newProblems',
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/newProblems/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/newProblems/response.vtl')),
+        });
+        problemTableDataSource.createResolver({
+            typeName: 'Query',
+            fieldName: 'problem',
+            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/request.vtl')),
+            responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/problem/response.vtl')),
         });
         const likeProblemDatasource = props.api.addDynamoDbDataSource('likeProblem', likersTable);
         likeProblemDatasource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({

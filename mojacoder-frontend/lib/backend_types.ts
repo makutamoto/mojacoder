@@ -36,7 +36,7 @@ export interface Problem {
     problemID: string
     detail: ProblemDetail
 }
-
+export type JudgeType = 'NORMAL' | 'SPECIAL'
 export interface ProblemDetail {
     id: string
     slug: string
@@ -58,6 +58,9 @@ export interface ProblemDetail {
     testcaseNames: string[]
     submission: Submission | null
     submissions: Connection<Submission>
+    judgeType: JudgeType
+    judgeLang: string
+    judgeCodeUrl: string | null
 }
 
 export const SubmissionStatus = {
@@ -65,6 +68,7 @@ export const SubmissionStatus = {
     CE: 'CE',
     JUDGED: 'JUDGED',
     IE: 'IE',
+    JCE: 'JCE',
 } as const
 export type SubmissionStatus = typeof SubmissionStatus[keyof typeof SubmissionStatus]
 

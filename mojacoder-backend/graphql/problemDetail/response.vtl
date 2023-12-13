@@ -1,5 +1,28 @@
 #if($util.isNull($context.arguments.slug))
-    #set($result = {"id": $context.result.id, "slug": $context.result.slug, "user": { "userID": $context.result.userID }, "datetime": $context.result.datetime, "status": $context.result.status, "title": $context.result.title, "likeCount": $context.result.likeCount, "commentCount": $context.result.commentCount, "statement": $context.result.statement, "hasEditorial": $context.result.hasEditorial, "editorial": $context.result.editorial, "hasDifficulty": $context.result.hasDifficulty, "difficulty": $context.result.difficulty, "testcaseNames": $context.result.testcaseNames, "submission": $context.result.submission, "submissions": $context.result.submissions})
+    #if($util.isNull($context.result.judgeType))
+        #set($context.result.judgeType = "NORMAL")
+    #end
+    #set($result = { 
+            "id": $context.result.id, 
+            "slug": $context.result.slug, 
+            "user": { "userID": $context.result.userID },
+            "datetime": $context.result.datetime, 
+            "status": $context.result.status, 
+            "title": $context.result.title, 
+            "likeCount": $context.result.likeCount, 
+            "commentCount": $context.result.commentCount,
+            "statement": $context.result.statement, 
+            "hasEditorial": $context.result.hasEditorial, 
+            "editorial": $context.result.editorial, 
+            "hasDifficulty": $context.result.hasDifficulty, 
+            "difficulty": $context.result.difficulty, 
+            "testcaseNames": $context.result.testcaseNames, 
+            "submission": $context.result.submission, 
+            "submissions": $context.result.submissions, 
+            "judgeType": $context.result.judgeType, 
+            "judgeLang": $context.result.judgeLang
+        }
+    )
     #if($util.isNull($context.arguments.id))
         $util.toJson($result)
     #else
@@ -14,6 +37,29 @@
         null
     #else
         #set($item = $context.result.items[0])
-        $util.toJson({"id": $item.id, "slug": $item.slug, "user": { "userID": $item.userID }, "datetime": $item.datetime, "status": $item.status, "title": $item.title, "likeCount": $item.likeCount, "commentCount": $item.commentCount, "statement": $item.statement, "hasEditorial": $item.hasEditorial, "editorial": $item.editorial, "hasDifficulty": "$item.hasDifficulty", "difficulty": $item.difficulty, "testcaseNames": $item.testcaseNames, "submission": $item.submission, "submissions": $item.submissions})
+        #if($util.isNull($item.judgeType))
+            #set($item.judgeType = "NORMAL")
+        #end
+        $util.toJson({
+                "id": $item.id, 
+                "slug": $item.slug, 
+                "user": { "userID": $item.userID }, 
+                "datetime": $item.datetime, 
+                "status": $item.status, 
+                "title": $item.title, 
+                "likeCount": $item.likeCount, 
+                "commentCount": $item.commentCount, 
+                "statement": $item.statement, 
+                "hasEditorial": $item.hasEditorial, 
+                "editorial": $item.editorial, 
+                "hasDifficulty": "$item.hasDifficulty", 
+                "difficulty": $item.difficulty, 
+                "testcaseNames": $item.testcaseNames, 
+                "submission": $item.submission, 
+                "submissions": $item.submissions,
+                "judgeType": $item.judgeType,
+                "judgeLang": $item.judgeLang
+            }
+        )
     #end
 #end

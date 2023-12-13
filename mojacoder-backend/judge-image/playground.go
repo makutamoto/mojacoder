@@ -8,7 +8,16 @@ const PLAYGROUND_MEMORY_LIMIT = 131072 // 128 MB
 func testCode(definition LanguageDefinition, data JudgeQueueData) error {
 	var err error
 	var stdout, stderr strings.Builder
-	result, err := run(definition, strings.NewReader(data.Stdin), &stdout, &stderr, PLAYGROUND_TIME_LIMIT, PLAYGROUND_MEMORY_LIMIT)
+	config := RunConfig{
+		stdin:          strings.NewReader(data.Stdin),
+		stdout:         &stdout,
+		stderr:         &stderr,
+		timeLimit:      PLAYGROUND_TIME_LIMIT,
+		memoryLimit:    PLAYGROUND_MEMORY_LIMIT,
+		dir:            TEMP_DIR,
+		runCommandArgs: []string{},
+	}
+	result, err := run(definition, config)
 	if err != nil {
 		return err
 	}

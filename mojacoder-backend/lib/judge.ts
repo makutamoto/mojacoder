@@ -11,6 +11,7 @@ import { join } from 'path';
 export interface JudgeProps {
     api: GraphqlApi
     testcases: Bucket
+    judgeCodes: Bucket
 }
 
 export class Judge extends cdk.Construct {
@@ -83,7 +84,7 @@ export class Judge extends cdk.Construct {
             actions: ['s3:GetObject', 's3:DeleteObject'],
         }));
         JudgeUser.addToPolicy(new PolicyStatement({
-            resources: [submittedCodeBucket.bucketArn + '/*', props.testcases.bucketArn + '/*'],
+            resources: [submittedCodeBucket.bucketArn + '/*', props.testcases.bucketArn + '/*', props.judgeCodes.bucketArn + '/*'],
             actions: ['s3:GetObject'],
         }));
         const accessKey = new CfnAccessKey(this, 'JudgeUserAccessKey', {
@@ -118,6 +119,7 @@ export class Judge extends cdk.Construct {
                 PLAYGROUND_CODE_BUCKET_NAME: playgroundCodeBucket.bucketName,
                 SUBMITTED_CODE_BUCKET_NAME: submittedCodeBucket.bucketName,
                 TESTCASES_BUCKET_NAME: props.testcases.bucketName,
+                JUDGECODES_BUCKET_NAME: props.judgeCodes.bucketName,
             },
         });
         judgeTask.addToExecutionRolePolicy(new PolicyStatement({

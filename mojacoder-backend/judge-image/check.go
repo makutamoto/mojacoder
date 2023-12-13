@@ -11,6 +11,10 @@ import (
 
 const CHECK_SCANNER_BUFFER_SIZE = 1024 * 1024
 
+type NormalJudge struct{}
+
+func (n NormalJudge) isJudgeType() {}
+
 func isValidDecimal(s string) bool {
 	re := regexp.MustCompile(`^\d+(\.\d+)?$`)
 	return re.MatchString(s)
@@ -45,7 +49,7 @@ func compareValue(answer string, solution string, accuracy *big.Float, precision
 	return isOkAbsolute || isOkRelative
 }
 
-func check(answer, solution io.Reader, accuracy *big.Float, precision uint) (bool, error) {
+func (n NormalJudge) check(answer, solution io.Reader, accuracy *big.Float, precision uint) (bool, error) {
 	const errorMessage = "Failed to check an answer: %v"
 	var err error
 	var testScan, answerScan bool

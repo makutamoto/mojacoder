@@ -53,9 +53,15 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                 const statement = await jszip.file('README.md').async('string')
                 const editorial =
                     (await jszip.file('EDITORIAL.md')?.async('string')) || ''
-                const { title, notListed, difficulty } = JSON.parse(
-                    await jszip.file('problem.json').async('string')
-                )
+                const {
+                    title,
+                    notListed,
+                    difficulty,
+                    judgeType,
+                    judgeLang,
+                } = JSON.parse(await jszip.file('problem.json').async('string'))
+                const judgeCode =
+                    (await jszip.file('judgeCode')?.async('string')) || ''
                 const testcaseArray: [string, Testcase][] = []
                 const testcasesDir = jszip.folder('testcases')
                 const inTestcases = testcasesDir.folder('in')
@@ -84,6 +90,9 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                         editorial,
                         difficulty,
                         testcases,
+                        judgeType: judgeType || 'NORMAL',
+                        judgeLang: judgeLang || '',
+                        judgeCode: judgeCode,
                     },
                 })
             }
