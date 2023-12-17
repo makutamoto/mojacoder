@@ -45,7 +45,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
         if(tempParentPaths.length === 1) {
             parentPathFlag = false;
             break;
-        };
+        }
         const tempParentPath = tempParentPaths[0]
         if(parentPath === null) {
             parentPath = tempParentPath;

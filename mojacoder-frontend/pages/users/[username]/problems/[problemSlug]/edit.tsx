@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 import axios from 'axios'
 import JSZip from 'jszip'
 import { OrderedMap } from 'immutable'
+import { sep } from 'path'
 
 import Auth from '../../../../../lib/auth'
 import {
@@ -49,7 +50,28 @@ const ProblemPage: React.FC<Props> = ({ user }) => {
                 const { data } = await axios.get(issueProblemDownloadUrl, {
                     responseType: 'blob',
                 })
-                const jszip = await JSZip.loadAsync(data)
+                let jszip = await JSZip.loadAsync(data)
+                let parentPath: string | null = null
+                let parentPathFlag = true
+                for (const relativePath of Object.keys(jszip.files)) {
+                    const tempParentPaths = relativePath.split(sep)
+                    if (tempParentPaths.length === 1) {
+                        parentPathFlag = false
+                        break
+                    }
+                    const tempParentPath = tempParentPaths[0]
+                    if (parentPath === null) {
+                        parentPath = tempParentPath
+                    } else if (parentPath !== tempParentPath) {
+                        parentPathFlag = false
+                        break
+                    }
+                }
+                if (parentPathFlag && parentPath !== null) {
+                    const newZip = jszip.folder(parentPath)
+                    if (newZip === null) throw 'Parent directory not found.'
+                    jszip = newZip
+                }
                 const statement = await jszip.file('README.md').async('string')
                 const editorial =
                     (await jszip.file('EDITORIAL.md')?.async('string')) || ''
