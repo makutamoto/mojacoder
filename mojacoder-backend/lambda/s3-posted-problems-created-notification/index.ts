@@ -2,7 +2,7 @@ import { S3Handler } from 'aws-lambda'
 import { DynamoDB, S3 } from 'aws-sdk'
 import * as JSZip from 'jszip'
 import join from 'url-join'
-import { posix } from 'path'
+import { posix, sep } from 'path'
 import { v4 as uuid } from 'uuid'
 
 const PROBLEM_TABLE_NAME = process.env.PROBLEM_TABLE_NAME as string;
@@ -37,7 +37,28 @@ interface Problem {
 }
 
 async function parseZip(data: Buffer): Promise<Problem> {
-    const zip = await JSZip.loadAsync(data);
+    let zip = await JSZip.loadAsync(data);
+    let parentPath: string | null = null;
+    let parentPathFlag = true;
+    for(const relativePath of Object.keys(zip.files)) {
+        const tempParentPaths = relativePath.split(sep);
+        if(tempParentPaths.length === 1) {
+            parentPathFlag = false;
+            break;
+        };
+        const tempParentPath = tempParentPaths[0]
+        if(parentPath === null) {
+            parentPath = tempParentPath;
+        } else if(parentPath !== tempParentPath){
+            parentPathFlag = false;
+            break;
+        }
+    }
+    if(parentPathFlag && parentPath !== null) {
+        const newZip = zip.folder(parentPath);
+        if(newZip === null) throw "Parent directory not found.";
+        zip = newZip;
+    }
     const configFile = zip.file('problem.json');
     if(configFile === null) throw "Config not fonud.";
     const { title, notListed, difficulty } = JSON.parse(await configFile.async("string")) as Config;
