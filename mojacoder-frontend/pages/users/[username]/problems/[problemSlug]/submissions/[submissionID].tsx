@@ -25,6 +25,7 @@ const GetSubmission = gql`
                 id
                 title
                 hasEditorial
+                judgeType
                 user {
                     detail {
                         userID

@@ -15,6 +15,8 @@ import Markdown from '../components/Markdown'
 import ButtonWithSpinner from '../components/ButtonWithSpinner'
 import ORSeparator from '../components/ORSeparator'
 import DifficultySelector from '../components/DifficultySelector'
+import Selector, { SelectorOptionsType } from '../components/Selector'
+import { JudgeType } from '../lib/backend_types'
 
 const IssueUrl = gql`
     mutation IssueUrl($input: IssueProblemUploadUrlInput!) {
@@ -145,7 +147,22 @@ export interface WebEditorData {
     editorial: string
     difficulty: string
     testcases: OrderedMap<string, Testcase>
+    judgeType: JudgeType
+    judgeLang: string
+    judgeCode: string
 }
+const SpecialJudgeLangs: SelectorOptionsType = [
+    { value: 'go', label: 'Go' },
+    { value: 'python', label: 'Python3' },
+    { value: 'pypy', label: 'PyPy3' },
+    { value: 'cpp', label: 'C++' },
+    { value: 'java', label: 'Java' },
+    { value: 'rust', label: 'Rust' },
+]
+const judgeTypeOptions = [
+    { value: 'NORMAL', label: '通常' },
+    { value: 'SPECIAL', label: 'スペシャル' },
+]
 interface WebEditorProps {
     data?: WebEditorData
     setZip: (zip: Blob) => void
@@ -172,6 +189,15 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
     const [testcases, setTestcases] = useState(
         data?.testcases || OrderedMap<string, Testcase>()
     )
+    const [judgeType, setJudgeType] = useState<JudgeType>(
+        data?.judgeType || 'NORMAL'
+    )
+    const [judgeLang, setJudgeLang] = useState(data?.judgeLang || 'rust')
+    const [judgeCode, setJudgeCode] = useState(data?.judgeCode || '')
+    const handleJudgeTypeChange = (newValue: string) => {
+        setJudgeType(newValue as JudgeType)
+    }
+
     const [currentTestcase, setCurrentTestcase] = useState<string | null>(null)
     const [testcaseName, setTestcaseName] = useState('')
     const [testcaseInput, setTestcaseInput] = useState('')
@@ -274,6 +300,10 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
             setStatus(WebEditorStatus.SlugNotSpecified)
             return
         }
+        if (judgeType !== 'NORMAL' && judgeCode.length === 0) {
+            window.alert('ジャッジコードが空です。')
+            return
+        }
         setStatus(WebEditorStatus.Posting)
         const zip = new JSZip()
         zip.file(
@@ -283,10 +313,13 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                 notListed: problemNotListed,
                 difficulty:
                     problemDifficulty == 'none' ? undefined : problemDifficulty,
+                judgeType: judgeType,
+                judgeLang: judgeLang,
             })
         )
         zip.file('README.md', problemStatement)
         if (problemEditorial) zip.file('EDITORIAL.md', problemEditorial)
+        if (judgeType !== 'NORMAL') zip.file('judgeCode', judgeCode)
         const testcasesDirectory = zip.folder('testcases')
         const inDirectory = testcasesDirectory.folder('in')
         const outDirectory = testcasesDirectory.folder('out')
@@ -311,6 +344,9 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
         currentTestcase,
         testcaseInput,
         testcaseOutput,
+        judgeType,
+        judgeLang,
+        judgeCode,
     ])
     const onDelete = useCallback(async () => {
         if (!window.confirm('削除してよろしいですか？')) return
@@ -484,6 +520,35 @@ const WebEditor: React.FC<WebEditorProps> = ({ data, setZip }) => {
                     />
                     <h6>解説(プレビュー)</h6>
                     <Markdown source={problemEditorial} />
+                </Tab>
+                <Tab
+                    className="py-3"
+                    eventKey="judgeSetting"
+                    title="ジャッジ設定"
+                >
+                    <h6>ジャッジ設定</h6>
+                    <Selector
+                        id="judge-type-selector"
+                        value={judgeType}
+                        onChange={handleJudgeTypeChange}
+                        options={judgeTypeOptions}
+                    />
+                    {judgeType !== 'NORMAL' && (
+                        <>
+                            <Selector
+                                id="spj-selector"
+                                value={judgeLang}
+                                onChange={setJudgeLang}
+                                options={SpecialJudgeLangs}
+                            />
+                            <Editor
+                                lang={judgeLang}
+                                lineNumbers
+                                value={judgeCode}
+                                onChange={setJudgeCode}
+                            />
+                        </>
+                    )}
                 </Tab>
             </Tabs>
             <hr />

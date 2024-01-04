@@ -11,6 +11,9 @@ export const JudgeStatus = {
     RE: 'RE',
     CC: 'CC',
     IE: 'IE',
+    JCE: 'JCE',
+    JMLE: 'JMLE',
+    JTLE: 'JTLE',
 } as const
 export type JudgeStatus = typeof JudgeStatus[keyof typeof JudgeStatus]
 
@@ -31,12 +34,22 @@ export const JudgeStatusToText = {
     RE: '実行時エラー',
     CC: 'ジャッジ中止',
     IE: '内部エラー',
+    JCE: 'ジャッジコンパイルエラー',
+    JMLE: 'ジャッジメモリ制限超過',
+    JTLE: 'ジャッジ実行時間制限超過',
+}
+
+type WholeJudgeStatus = {
+    wholeStatus: JudgeStatus
+    progress: JudgeStatusBadgeProgress | null
+    time?: number
+    memory?: number
 }
 
 export function getJudgeStatusFromTestcases(
     status: SubmissionStatus,
     testcases: JudgeStatusDetail[]
-) {
+): WholeJudgeStatus {
     if (status === SubmissionStatus.IE) {
         return { wholeStatus: JudgeStatus.IE, progress: null }
     }
@@ -45,6 +58,9 @@ export function getJudgeStatusFromTestcases(
     }
     if (status === SubmissionStatus.WJ && testcases.length === 0) {
         return { wholeStatus: JudgeStatus.WJ, progress: null }
+    }
+    if (status === SubmissionStatus.JCE) {
+        return { wholeStatus: JudgeStatus.JCE, progress: null }
     }
     let wholeStatus: JudgeStatus = JudgeStatus.AC
     let time = -1,
@@ -55,23 +71,11 @@ export function getJudgeStatusFromTestcases(
     }
     for (const testcase of testcases) {
         if (testcase.status !== JudgeStatus.WJ) progress.current++
-        if (testcase.status === JudgeStatus.WA) {
-            wholeStatus = JudgeStatus.WA
-        } else if (
-            wholeStatus === JudgeStatus.AC &&
-            testcase.status === JudgeStatus.TLE
+        if (
+            testcase.status !== JudgeStatus.WJ &&
+            testcase.status !== JudgeStatus.AC
         ) {
-            wholeStatus = JudgeStatus.TLE
-        } else if (
-            wholeStatus === JudgeStatus.AC &&
-            testcase.status === JudgeStatus.MLE
-        ) {
-            wholeStatus = JudgeStatus.MLE
-        } else if (
-            wholeStatus === JudgeStatus.AC &&
-            testcase.status === JudgeStatus.RE
-        ) {
-            wholeStatus = JudgeStatus.RE
+            wholeStatus = testcase.status
         }
         time = Math.max(time, testcase.time)
         memory = Math.max(memory, testcase.memory)

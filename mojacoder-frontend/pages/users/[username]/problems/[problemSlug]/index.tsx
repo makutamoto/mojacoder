@@ -53,6 +53,7 @@ const GetProblem = gql`
                 title
                 statement
                 hasEditorial
+                judgeType
                 user {
                     detail {
                         userID

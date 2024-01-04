@@ -23,6 +23,9 @@ export const JudgeStatusColors = {
     RE: 'warning',
     CC: 'dark',
     IE: 'danger',
+    JCE: 'warning',
+    JTLE: 'warning',
+    JMLE: 'warning',
 }
 
 const JudgeStatusBadge: React.FC<JudgeStatusBadgeProps> = (props) => {

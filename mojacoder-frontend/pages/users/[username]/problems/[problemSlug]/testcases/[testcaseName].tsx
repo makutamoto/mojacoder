@@ -86,6 +86,7 @@ const GetProblemOverview = gql`
                 title
                 id
                 hasEditorial
+                judgeType
                 user {
                     detail {
                         userID

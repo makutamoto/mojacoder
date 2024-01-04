@@ -42,7 +42,7 @@ type GraphQLResponse struct {
 
 var signer *v4.Signer
 
-func requestGraphql(query string, variables map[string]interface{}, responseData ...interface{}) error {
+func requestGraphql(query string, variables map[string]interface{}, responseData interface{}) error {
 	var err error
 	var response GraphQLResponse
 	client := &http.Client{}
@@ -61,16 +61,26 @@ func requestGraphql(query string, variables map[string]interface{}, responseData
 	if err != nil {
 		return err
 	}
+	defer res.Body.Close()
 	bodyData, err := ioutil.ReadAll(res.Body)
-	if len(responseData) > 0 {
-		response.Data = responseData
-	}
+
 	err = json.Unmarshal(bodyData, &response)
 	if err != nil {
 		return err
 	}
 	if len(response.Errors) > 0 {
 		return &response.Errors
+	}
+
+	if responseData != nil {
+		dataBytes, err := json.Marshal(response.Data)
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(dataBytes, responseData)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -101,6 +111,6 @@ func responsePlayground(sessionID string, userID string, exitCode int, time, mem
 		}
 	`
 	variables["input"] = ResponsePlaygroundInput{sessionID, userID, exitCode, time, memory, stdout, stderr}
-	err := requestGraphql(query, variables)
+	err := requestGraphql(query, variables, nil)
 	return err
 }

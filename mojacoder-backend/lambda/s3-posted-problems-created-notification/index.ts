@@ -15,14 +15,19 @@ const TESTCASES_BUCKET_NAME = process.env.TESTCASES_BUCKET_NAME as string;
 if(TESTCASES_BUCKET_NAME === undefined) throw "TESTCASES_BUCKET_NAME is not defined.";
 const TESTCASES_FOR_VIEW_BUCKET_NAME = process.env.TESTCASES_FOR_VIEW_BUCKET_NAME as string;
 if(TESTCASES_FOR_VIEW_BUCKET_NAME === undefined) throw "TESTCASES_FOR_VIEW_BUCKET_NAME is not defined.";
+const JUDGECODES_BUCKET_NAME = process.env.JUDGECODES_BUCKET_NAME as string;
+if(JUDGECODES_BUCKET_NAME === undefined) throw "JUDGECODES_BUCKET_NAME is not defined.";
 
 const dynamodb = new DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new S3({apiVersion: '2006-03-01'});
 
+type JudgeType = "NORMAL" | "SPECIAL";
 interface Config {
     title: string,
     notListed?: boolean,
     difficulty?: string,
+    judgeType?: JudgeType
+    judgeLang?: string
 }
 
 interface Problem {
@@ -34,6 +39,9 @@ interface Problem {
     testcases: Buffer
     testcasesDir: JSZip
     testcaseNames: string[]
+    judgeType: JudgeType
+    judgeLang: string
+    judgeCode: string | null
 }
 
 async function parseZip(data: Buffer): Promise<Problem> {
@@ -61,7 +69,7 @@ async function parseZip(data: Buffer): Promise<Problem> {
     }
     const configFile = zip.file('problem.json');
     if(configFile === null) throw "Config not fonud.";
-    const { title, notListed, difficulty } = JSON.parse(await configFile.async("string")) as Config;
+    const { title, notListed, difficulty, judgeType, judgeLang } = JSON.parse(await configFile.async("string")) as Config;
     const statementFile = zip.file('README.md');
     if(statementFile === null) throw "Statement not found.";
     const statement = await statementFile.async("string");
@@ -69,6 +77,11 @@ async function parseZip(data: Buffer): Promise<Problem> {
     let editorial: string | null;
     if(editorialFile) editorial = await editorialFile.async("string");
     else editorial = null;
+    const judgeCodeFile = zip.file("judgeCode");
+    let judgeCode: string | null;
+    if(judgeCodeFile) judgeCode = await judgeCodeFile.async("string");
+    else judgeCode = null;
+    if(judgeType && judgeType !== "NORMAL"  && judgeCode === null) throw "Judge code is required for special judge."
     const testcasesDir = zip.folder('testcases');
     if(testcasesDir === null) throw "Testcases not found.";
     const testcases = await testcasesDir.generateAsync({
@@ -98,10 +111,13 @@ async function parseZip(data: Buffer): Promise<Problem> {
         testcases,
         testcasesDir,
         testcaseNames,
+        judgeType: judgeType || "NORMAL",
+        judgeLang: judgeLang || "",
+        judgeCode
     }
 }
 
-async function uploadToS3(problemID: string, testcases: Buffer, testcasesDir: JSZip) {
+async function uploadToS3(problemID: string, testcases: Buffer, testcasesDir: JSZip, judgeCode: string | null) {
     await s3.putObject({ Bucket: TESTCASES_BUCKET_NAME, Key: problemID + '.zip', Body: testcases }).promise()
     const inTestcases = testcasesDir.folder('in')!
     const outTestcases = testcasesDir.folder('out')!
@@ -114,6 +130,9 @@ async function uploadToS3(problemID: string, testcases: Buffer, testcasesDir: JS
         await s3.putObject({ Bucket: TESTCASES_FOR_VIEW_BUCKET_NAME, Key: join(problemID, 'in', base), Body: inTestcaseBuffer }).promise()
         const outTestcaseBuffer = await outTestcaseFile.async("nodebuffer")
         await s3.putObject({ Bucket: TESTCASES_FOR_VIEW_BUCKET_NAME, Key: join(problemID, 'out', base), Body: outTestcaseBuffer }).promise()
+    }
+    if(judgeCode){
+        await s3.putObject({ Bucket: JUDGECODES_BUCKET_NAME, Key: problemID, Body: judgeCode }).promise()
     }
 }
 
@@ -176,8 +195,14 @@ async function deployProblem(key: string): Promise<void> {
                 ":testcaseNames": {
                     L: problem.testcaseNames.map((name) => ({ S: name })),
                 },
+                ":judgeType": {
+                    S: problem.judgeType
+                },
+                ":judgeLang": {
+                    S: problem.judgeLang
+                }
             },
-            UpdateExpression: "SET title = :title, #status = :status, statement = :statement, hasEditorial = :hasEditorial, editorial = :editorial, hasDifficulty = :hasDifficulty, difficulty = :difficulty, testcaseNames = :testcaseNames",
+            UpdateExpression: "SET title = :title, #status = :status, statement = :statement, hasEditorial = :hasEditorial, editorial = :editorial, hasDifficulty = :hasDifficulty, difficulty = :difficulty, testcaseNames = :testcaseNames, judgeType = :judgeType, judgeLang = :judgeLang",
         }).promise();
     } else {
         problemID = uuid();
@@ -249,6 +274,12 @@ async function deployProblem(key: string): Promise<void> {
                             testcaseNames: {
                                 L: problem.testcaseNames.map((name) => ({ S: name })),
                             },
+                            judgeType: {
+                                S: problem.judgeType
+                            },
+                            judgeLang: {
+                                S: problem.judgeLang
+                            },
                         },
                         ConditionExpression: 'attribute_not_exists(#id)',
                         ExpressionAttributeNames: {
@@ -259,7 +290,7 @@ async function deployProblem(key: string): Promise<void> {
             ],
         }).promise();
     }
-    await uploadToS3(problemID, problem.testcases, problem.testcasesDir);
+    await uploadToS3(problemID, problem.testcases, problem.testcasesDir, problem.judgeCode);
 }
 
 export const handler: S3Handler = async (event) => {
