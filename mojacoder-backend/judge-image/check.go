@@ -16,7 +16,7 @@ type NormalJudge struct{}
 func (n NormalJudge) isJudgeType() {}
 
 func isValidDecimal(s string) bool {
-	re := regexp.MustCompile(`^\d+(\.\d+)?$`)
+	re := regexp.MustCompile(`^-?\d+(\.\d+)?$`)
 	return re.MatchString(s)
 }
 
