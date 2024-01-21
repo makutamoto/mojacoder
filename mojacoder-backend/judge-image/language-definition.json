@@ -1,73 +1,77 @@
 {
-    "go-1.14": {
-        "name": "Go (1.14)",
+    "go-1.21": {
+        "name": "Go (1.21)",
         "filename": "main.go",
         "compileCommand": "go build main.go",
         "runCommand": "./main"
     },
-    "python3.8": {
-        "name": "Python 3.8",
+    "python3.11": {
+        "name": "Python 3.11",
         "filename": "main.py",
-        "runCommand": "python3.8 ./main.py"
+        "compileCommand": "python3.11 -m py_compile main.py",
+        "runCommand": "python3.11 ./main.py"
     },
-    "gcc-9.3.0": {
+    "gcc-12.3": {
         "filename": "main.c",
-        "compileCommand": "gcc -std=gnu11 -O2 -DONLINE_JUDGE -lm main.c",
+        "compileCommand": "gcc-12 -std=gnu17 -O2 -DONLINE_JUDGE -lm main.c",
         "runCommand": "./a.out"
     },
-    "g++-9.3.0": {
+    "g++-12.3": {
         "filename": "main.cpp",
-        "compileCommand": "g++ -std=gnu++17 -Wall -Wextra -O2 -DONLINE_JUDGE main.cpp",
+        "compileCommand": "g++-12 -std=gnu++23 -Wall -Wextra -O2 -DONLINE_JUDGE main.cpp",
         "runCommand": "./a.out"
     },
-    "csharp-mono-csc-3.6.0": {
+    "csharp-mono-csc-3.9.0": {
         "filename": "main.cs",
         "compileCommand": "csc main.cs",
         "runCommand": "mono main.exe"
     },
-    "csharp-mono-mcs-6.12.0.107": {
+    "csharp-mono-mcs-6.12.0": {
         "filename": "main.cs",
         "compileCommand": "mcs main.cs",
         "runCommand": "mono main.exe"
     },
     "bf-20041219": {
         "filename": "main.bf",
-        "runCommand": "bf main.bf"
+        "runCommand": "bf -c999999999 main.bf"
     },
     "cat": {
         "filename": "main.txt",
         "runCommand": "cat main.txt"
     },
-    "rust-1.43.0": {
+    "rust-1.74.0": {
         "filename": "main.rs",
-        "compileCommand": "RUST_LIB=/usr/src/app/rust/target/release/deps/ rustc --edition=2018 -C opt-level=3 $(/usr/src/app/rust/rustc-dep-option-generator --manifest-path /usr/src/app/rust/Cargo.toml) main.rs",
+        "compileCommand": "mv main.rs /usr/src/app/rust/src/main.rs && ( cd /usr/src/app/rust && cargo build --release --offline && rm src/main.rs ) && cp /usr/src/app/rust/target/release/rust main",
         "runCommand": "./main"
     },
-    "pypy3-7.3.1": {
+    "pypy3-7.3.13": {
         "filename": "main.py",
-        "runCommand": "pypy3 main.py"
+        "runCommand": "pypy3 main.py",
+        "compileCommand": "pypy3 -m py_compile main.py"
     },
-    "ruby-2.7": {
+    "ruby-3.2.2": {
         "filename": "main.rb",
-        "runCommand": "ruby main.rb"
+        "runCommand": "ruby main.rb",
+        "compileCommand": "ruby -c main.rb"
     },
-    "java-11": {
+    "java-21": {
         "filename": "Main.java",
-        "compileCommand": "javac Main.java",
-        "runCommand": "java Main"
+        "compileCommand": "javac -cp /usr/local/ac-library-java/ac_library.jar Main.java",
+        "runCommand": "java -cp /usr/local/ac-library-java/ac_library.jar: Main"
     },
-    "j-902": {
-        "filename": "main.ijs",
-        "runCommand": "ijconsole main.ijs"
-    },
-    "kotlin-1.4": {
+    "kotlin-1.9.21": {
         "filename": "main.kt",
         "compileCommand": "~root/.sdkman/candidates/kotlin/current/bin/kotlinc main.kt -include-runtime -d main.jar",
         "runCommand": "java -jar main.jar"
     },
-    "commonlisp-2.0": {
+    "commonlisp-2.1.11": {
         "filename": "main.lisp",
         "compileCommand": "sbcl --noinform --eval \"(compile-file \\\"main.lisp\\\")\" --quit",
         "runCommand": "sbcl --script main.fasl"
+    },
+    "nim-1.6.16": {
+        "filename": "Main.nim",
+        "compileCommand": "nim cpp -d:release --opt:speed --multimethods:on --warning[SmallLshouldNotBeUsed]:off --hints:off -o:a.out Main.nim ",
+        "runCommand": "./a.out"
     }
 }
