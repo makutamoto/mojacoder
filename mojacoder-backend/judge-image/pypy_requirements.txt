@@ -1,0 +1,11 @@
+numpy==1.26.2
+networkx==3.2.1
+sympy==1.12
+sortedcontainers==2.4.0 
+more-itertools==10.1.0
+shapely==2.0.2
+bitarray==2.8.3
+mpmath==1.3.0
+z3-solver==4.12.2.0
+cppyy==3.1.2
+git+https://github.com/not522/ac-library-python

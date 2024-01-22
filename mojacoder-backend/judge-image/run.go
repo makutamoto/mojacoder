@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"syscall"
@@ -42,7 +43,9 @@ func run(definition LanguageDefinition, config RunConfig) (RunResult, error) {
 	args := strings.Join(config.runCommandArgs, " ")
 	command := fmt.Sprintf("ulimit -u 32 -m %d && timeout --preserve-status -sSIGKILL %d %s %s; EXIT_CODE=$?; kill -SIGKILL -1; wait; exit $EXIT_CODE", config.memoryLimit+additional_memory, config.timeLimit, definition.RunCommand, args)
 	cmd := exec.Command("bash", "-c", command)
-	cmd.Env = []string{}
+	cmd.Env = []string{
+		"PATH=" + os.Getenv("PATH"),
+	}
 	cmd.Dir = config.dir
 	cmd.Stdin = config.stdin
 	cmd.Stdout = config.stdout

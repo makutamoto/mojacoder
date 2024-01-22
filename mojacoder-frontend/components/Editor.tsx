@@ -60,6 +60,36 @@ export const LANGUAGE_TO_MODE: { [index: string]: string } = {
     commonlisp: 'text/x-common-lisp',
 }
 
+const LangAlias = {
+    'text/x-markdown': ['markdown'],
+    'text/x-go': [/go/],
+    python: [/py/],
+    'text/x-csrc': [/gcc/, 'c'],
+    'text/x-c++src': [/g\+\+/, 'cpp'],
+    'text/x-csharp': [/csharp/, 'cs'],
+    'text/x-brainfuck': ['bf-20041219', 'bf'],
+    'text/plain': ['cat', 'txt', 'text'],
+    'text/x-rustsrc': [/rust/, 'rs'],
+    'text/x-ruby': [/ruby/, 'rb'],
+    'text/x-java': [/java/],
+    'text/x-kotlin': [/kotlin/],
+    'text/x-common-lisp': [/lisp/],
+}
+
+function toCodemirrorMode(value) {
+    for (const [key, aliases] of Object.entries(LangAlias)) {
+        for (const alias of aliases) {
+            if (
+                (alias instanceof RegExp && alias.test(value)) ||
+                alias === value
+            ) {
+                return key
+            }
+        }
+    }
+    return 'text/plain'
+}
+
 export interface EditorProps {
     lang?: string
     lineNumbers?: boolean
@@ -79,7 +109,7 @@ const Editor: React.FC<EditorProps> = (props) => {
                     value={props.value}
                     options={{
                         autoRefresh: true,
-                        mode: LANGUAGE_TO_MODE[props.lang] || props.lang,
+                        mode: toCodemirrorMode(props.lang),
                         lineNumbers: props.lineNumbers,
                         readOnly: props.readOnly,
                     }}
