@@ -47,7 +47,7 @@ RUN apt install -y build-essential libbz2-dev libdb-dev git \
     wget https://www.python.org/ftp/python/3.11.6/Python-3.11.6.tar.xz && \
     tar -xf Python-3.11.6.tar.xz && \
     cd Python-3.11.6 && \
-    ./configure --enable-optimizations --with-lto && \
+    ./configure --enable-optimizations && \
     make -j4 && \
     make altinstall && \
     cd /tmp && \
