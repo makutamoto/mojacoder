@@ -18,7 +18,7 @@
     },
     "g++-12.3": {
         "filename": "main.cpp",
-        "compileCommand": "g++-12 -std=gnu++23 -Wall -Wextra -O2 -DONLINE_JUDGE main.cpp",
+        "compileCommand": "g++-12 -std=gnu++23 -Wall -Wextra -O2 -DONLINE_JUDGE main.cpp -lgmpxx -lgmp",
         "runCommand": "./a.out"
     },
     "csharp-mono-csc-3.9.0": {

@@ -13,44 +13,35 @@ RUN apt install -y software-properties-common && \
     apt install -y golang-1.21-go
 ENV PATH $PATH:/usr/lib/go-1.21/bin
 
-# C/C++ GCC12 Boost(1.84.0) Eigen(3.4.0) GMP(6.3.0) AC-Library(1.5.1)
-RUN apt install -y g++-12 gcc-12 build-essential m4 wget unzip && \
-    wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz && \
-    tar -zxf boost_1_84_0.tar.gz && \
-    cd boost_1_84_0 && \
+# C/C++ GCC12 Boost(1.84.0) Eigen(3.4.0) GMP(6.2.0) AC-Library(1.5.1)
+RUN apt install -y g++-12 gcc-12 build-essential m4 wget unzip libgmp-dev  && \
+    wget https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.gz && \
+    wget https://github.com/atcoder/ac-library/releases/download/v1.5.1/ac-library.zip && \ 
+    wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz && \
+    tar -zxf boost-1.84.0.tar.gz && \
+    cd boost-1.84.0 && \
     ./bootstrap.sh --without-libraries=mpi,graph_parallel && \
     ./b2 -j4 toolset=gcc variant=release link=static runtime-link=static cxxflags="-std=gnu++23" stage && \
     ./b2 -j4 toolset=gcc variant=release link=static runtime-link=static cxxflags="-std=gnu++23" install && \
     cd /tmp && \
-    wget https://github.com/atcoder/ac-library/releases/download/v1.5.1/ac-library.zip && \ 
     mkdir ac-library && \
     unzip ./ac-library.zip -d ./ac-library && \
     mv ./ac-library/atcoder /usr/local/include/ && \
-    wget https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz && \
-    tar -xf gmp-6.3.0.tar.xz && \
-    cd gmp-6.3.0 && \
-    ./configure && \
-    make && \
-    make install && \
     cd /tmp && \
-    wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz && \
     tar -zxf eigen-3.4.0.tar.gz && \
     mv ./eigen-3.4.0/Eigen /usr/local/include/ && \
     rm -rf /tmp/*
 
 # Python 3.11
 COPY python_requirements.txt .
-RUN apt install -y build-essential libbz2-dev libdb-dev git \
-    libreadline-dev libffi-dev libgdbm-dev liblzma-dev \
-    libncursesw5-dev libsqlite3-dev libssl-dev \
-    zlib1g-dev uuid-dev && \
-    wget https://www.python.org/ftp/python/3.11.6/Python-3.11.6.tar.xz && \
-    tar -xf Python-3.11.6.tar.xz && \
-    cd Python-3.11.6 && \
-    ./configure --enable-optimizations && \
-    make -j4 && \
-    make altinstall && \
-    cd /tmp && \
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Tokyo
+RUN apt update && apt install -y tzdata
+RUN add-apt-repository ppa:deadsnakes/ppa && \
+    apt update && \
+    apt install -y python3.11 python3.11-dev git && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
+    python3.11 get-pip.py && \
     python3.11 -m pip install -r python_requirements.txt && \
     rm -rf /tmp/*
 
@@ -105,7 +96,8 @@ RUN curl https://nim-lang.org/choosenim/init.sh -sSf -o init.sh && \
 ENV PATH $PATH:/root/.nimble/bin
 
 # Rust 1.75.0
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  && \
+RUN apt install -y  libssl-dev && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  && \
     /root/.cargo/bin/rustup default 1.75.0 && \
     export PATH=$PATH:/root/.cargo/bin && \
     cargo install --git https://github.com/rust-lang-ja/atcoder-rustc-dep-option-generator.git && \
