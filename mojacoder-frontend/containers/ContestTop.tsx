@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Nav } from 'react-bootstrap'
@@ -11,7 +11,7 @@ import Top from '../components/Top'
 import IconWithText from '../components/IconWithText'
 import Username from '../components/Username'
 import DateTime from '../components/DateTime'
-import { CalendarIcon, ClockIcon } from '@primer/octicons-react'
+import { CalendarIcon, ClockIcon, StopwatchIcon } from '@primer/octicons-react'
 
 export interface ContestTopProps {
     activeKey?: 'top' | 'tasks' | 'standings' | 'submissions' | 'edit'
@@ -33,6 +33,44 @@ const ContestTop: React.FC<ContestTopProps> = ({
         'contests',
         (query.contestSlug || '') as string
     )
+    const start = new Date(contest.startDatetime).getTime()
+    const end = start + contest.duration * 1000 // s -> ms
+    const contestEndtime = new Date(end).toISOString()
+    const [contestTimerString, setContestTimerString] = useState('')
+
+    useEffect(() => {
+        const id = setInterval(() => {
+            const nowUTC = Date.now()
+            if (end <= nowUTC) {
+                setContestTimerString('')
+                return
+            }
+            let diff
+            if (nowUTC < start) {
+                diff = Math.floor((start - nowUTC) / 1000)
+            } else {
+                diff = Math.floor((end - nowUTC) / 1000)
+            }
+            const days = Math.floor(diff / 86400)
+            const hours = Math.floor((diff % 86400) / 3600)
+            const minutes = Math.floor((diff % 3600) / 60)
+            const seconds = Math.floor(diff % 60)
+            let timerString = `${String(hours).padStart(2, '0')}:${String(
+                minutes
+            ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+            if (days > 0) {
+                timerString = `${days}日${timerString}`
+            }
+            if (nowUTC < start) {
+                timerString = `開始まで ${timerString}`
+            } else {
+                timerString = `終了まで ${timerString}`
+            }
+            setContestTimerString(timerString)
+        }, 1000)
+        return () => clearInterval(id)
+    }, [])
+
     return (
         <Top>
             <div className="text-center">
@@ -40,7 +78,8 @@ const ContestTop: React.FC<ContestTopProps> = ({
                 <div className="my-2">
                     <div>
                         <IconWithText icon={<CalendarIcon />}>
-                            <DateTime>{contest.startDatetime}</DateTime>
+                            <DateTime>{contest.startDatetime}</DateTime>～
+                            <DateTime>{contestEndtime}</DateTime>
                         </IconWithText>
                     </div>
                     <div>
@@ -49,6 +88,13 @@ const ContestTop: React.FC<ContestTopProps> = ({
                             {contest.duration % 60} secs
                         </IconWithText>
                     </div>
+                    {contestTimerString !== '' && (
+                        <div>
+                            <IconWithText icon={<StopwatchIcon />}>
+                                {contestTimerString}
+                            </IconWithText>
+                        </div>
+                    )}
                     <div>
                         <Username>{contest.user.detail}</Username>
                     </div>
