@@ -138,3 +138,4 @@ RUN apt install -y curl
 
 WORKDIR /usr/src/app
 ENTRYPOINT ./judge
+
