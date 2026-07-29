@@ -9,6 +9,7 @@ import Auth from '../lib/auth'
 import Session from '../lib/session'
 import Appbar from '../containers/Appbar'
 import Authenticate from '../containers/Authenticate'
+import ServiceTerminationAlert from '../components/ServiceTerminationAlert'
 
 import 'nprogress/nprogress.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -42,6 +43,10 @@ const languages = {
             createContest: 'コンテストを作成',
             signUp: '登録',
             signIn: 'サインイン',
+        },
+        serviceTermination: {
+            notice:
+                'MojaCoderは2026年12月31日をもってサービスを終了し、ジャッジシステムを停止します。',
         },
         notFound: {
             notFound: '存在しないページです。',
@@ -194,6 +199,10 @@ const languages = {
             createContest: 'Create Contest',
             signUp: 'Sign up',
             signIn: 'Sign in',
+        },
+        serviceTermination: {
+            notice:
+                'MojaCoder will discontinue its service and shut down the judging system on December 31, 2026.',
         },
         notFound: {
             notFound: 'Page not Found.',
@@ -349,6 +358,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                         />
                     </Head>
                     <Appbar />
+                    <ServiceTerminationAlert />
                     <Component {...pageProps} />
                 </Session.Provider>
             </Auth.Provider>
