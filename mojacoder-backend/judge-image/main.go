@@ -30,22 +30,10 @@ const LANGUAGE_DEFINITION_FILE = "./language-definition.json"
 const SPECIAL_JUDGE_LANGS_FILE = "./special-judge-langs.json"
 
 func initDirectory() error {
-	var err error
-	err = os.RemoveAll(TEMP_DIR)
-	if err != nil {
+	if err := resetSandboxDirectory(TEMP_DIR); err != nil {
 		return err
 	}
-	err = os.RemoveAll(SPECIAL_JUDGE_DIR)
-	if err != nil {
-		return err
-	}
-
-	err = os.MkdirAll(TEMP_DIR, 0755)
-	if err != nil {
-		return err
-	}
-	err = os.MkdirAll(SPECIAL_JUDGE_DIR, 0755)
-	if err != nil {
+	if err := os.RemoveAll(SPECIAL_JUDGE_DIR); err != nil {
 		return err
 	}
 	return nil
@@ -106,6 +94,10 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData,
 		if jt, ok := judgeType.(SpecialJudge); ok {
 			log.Printf("Downloading special judge code for submission: %s\n", data.SubmissionID)
 			lang := jt.lang
+			err = resetSandboxDirectory(SPECIAL_JUDGE_DIR)
+			if err != nil {
+				return fmt.Errorf(errorMessage, err)
+			}
 			err = downloadFromStorage(filepath.Join(SPECIAL_JUDGE_DIR, lang.Filename), JUDGECODES_BUCKET_NAME, data.ProblemID)
 			if err != nil {
 				return fmt.Errorf(errorMessage, err)

@@ -41,7 +41,7 @@
     },
     "rust-1.74.0": {
         "filename": "main.rs",
-        "compileCommand": "mv main.rs /usr/src/app/rust/src/main.rs && ( cd /usr/src/app/rust && cargo build --release --offline && rm src/main.rs ) && cp /usr/src/app/rust/target/release/rust main",
+        "compileCommand": "rustc --edition=2021 -C opt-level=3 $(cat /usr/src/app/rust/rustc-options) main.rs -o main",
         "runCommand": "./main"
     },
     "pypy3-7.3.13": {

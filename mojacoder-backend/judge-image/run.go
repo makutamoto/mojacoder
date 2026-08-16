@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"os"
 	"strings"
 	"syscall"
 	"time"
@@ -42,16 +41,11 @@ func run(definition LanguageDefinition, config RunConfig) (RunResult, error) {
 	args := strings.Join(config.runCommandArgs, " ")
 	command := fmt.Sprintf("ulimit -u 32 -m %d && timeout --preserve-status -sSIGKILL %d %s %s; EXIT_CODE=$?; kill -SIGKILL -1; wait; exit $EXIT_CODE", config.memoryLimit+additional_memory, config.timeLimit, definition.RunCommand, args)
 	cmd := sandboxedCommand("bash", "-c", command)
-	cmd.Env = []string{
-		"PATH=" + os.Getenv("PATH"),
-	}
+	configureSandboxedCommand(cmd, "")
 	cmd.Dir = config.dir
 	cmd.Stdin = config.stdin
 	cmd.Stdout = config.stdout
 	cmd.Stderr = config.stderr
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Credential: &syscall.Credential{Uid: CHILD_UID, Gid: CHILD_GID},
-	}
 	start := time.Now()
 	err = cmd.Start()
 	cmd.Wait()

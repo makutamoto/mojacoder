@@ -146,8 +146,17 @@ func judge(definition LanguageDefinition, data JudgeQueueData, jType JudgeType) 
 	var err error
 	testcasesPath := filepath.Join(TEMP_DIR, "testcases")
 	testcasesZipPath := testcasesPath + ".zip"
+	if err = os.RemoveAll(testcasesPath); err != nil {
+		return fmt.Errorf(errorMessage, err)
+	}
+	if err = os.Remove(testcasesZipPath); err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf(errorMessage, err)
+	}
 	err = downloadFromStorage(testcasesZipPath, TESTCASES_BUCKET_NAME, data.ProblemID+".zip")
 	if err != nil {
+		return fmt.Errorf(errorMessage, err)
+	}
+	if err = os.Chmod(testcasesZipPath, 0600); err != nil {
 		return fmt.Errorf(errorMessage, err)
 	}
 	err = unzip(testcasesZipPath, testcasesPath)

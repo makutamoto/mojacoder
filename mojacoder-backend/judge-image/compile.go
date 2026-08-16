@@ -1,26 +1,36 @@
 package main
 
 import (
-	"os"
 	"os/exec"
+	"path/filepath"
 )
 
-func compile(definition LanguageDefinition, dir string) (bool, string, error) {
-	var err error
+func compile(definition LanguageDefinition, dir string) (compiled bool, stderr string, err error) {
+	defer func() {
+		if sealErr := sealSandboxDirectory(dir); sealErr != nil && err == nil {
+			compiled = false
+			err = sealErr
+		}
+	}()
+
 	if definition.CompileCommand == "" {
 		return true, "", nil
 	}
-	cmd := exec.Command("bash", "-c", definition.CompileCommand)
-	cmd.Env = []string{
-		"PATH=" + os.Getenv("PATH"),
-		"HOME=" + os.Getenv("HOME"),
+	homeDir := filepath.Join(dir, ".home")
+	if err := createSandboxDirectory(homeDir); err != nil {
+		return false, "", err
 	}
+	command := definition.CompileCommand + "; EXIT_CODE=$?; kill -SIGKILL -1; wait; exit $EXIT_CODE"
+	cmd := sandboxedCommand("bash", "-c", command)
+	configureSandboxedCommand(cmd, homeDir)
 	cmd.Dir = dir
 	_, err = cmd.Output()
-	res, exist := err.(*exec.ExitError)
-	if exist {
+	if err == nil {
+		return true, "", nil
+	}
+	if res, ok := err.(*exec.ExitError); ok {
 		stderr := string(res.Stderr)
 		return false, stderr, nil
 	}
-	return true, "", nil
+	return false, "", err
 }

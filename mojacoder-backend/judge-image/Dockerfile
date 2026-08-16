@@ -93,15 +93,16 @@ RUN curl https://nim-lang.org/choosenim/init.sh -sSf -o init.sh && \
     nimble install https://github.com/zer0-star/Nim-ACL && \
     nimble install bignum -y && \
     rm -rf /tmp/*
+ENV NIMBLE_DIR /root/.nimble
 ENV PATH $PATH:/root/.nimble/bin
 
 # Rust 1.75.0
 RUN apt install -y  libssl-dev && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  && \
     /root/.cargo/bin/rustup default 1.75.0 && \
-    export PATH=$PATH:/root/.cargo/bin && \
-    cargo install --git https://github.com/rust-lang-ja/atcoder-rustc-dep-option-generator.git && \
     rm -rf /tmp/*
+ENV CARGO_HOME /root/.cargo
+ENV RUSTUP_HOME /root/.rustup
 ENV PATH $PATH:/root/.cargo/bin
 
 # Ruby 3.2.2
@@ -132,7 +133,11 @@ COPY . .
 RUN go build .
 
 WORKDIR /usr/src/app/rust
-RUN cargo build --release
+RUN cargo build --release && \
+    python3.11 rustc_dep_options.py --manifest-path Cargo.toml > rustc-options
+
+RUN chmod 0711 /root && \
+    chmod -R a+rX /root/.cargo /root/.choosenim /root/.nimble /root/.rustup /root/.sdkman /usr/src/app/rust
 
 RUN apt install -y curl libseccomp-dev
 
