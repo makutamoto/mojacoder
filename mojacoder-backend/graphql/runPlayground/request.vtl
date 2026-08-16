@@ -1,3 +1,6 @@
+#if($util.isNull($context.identity) || $util.isNull($context.identity.sub))
+$util.unauthorized()
+#end
 #if($context.arguments.input.code.length() == 0)
 $util.error("Empty submissions are not allowed.")
 #end
