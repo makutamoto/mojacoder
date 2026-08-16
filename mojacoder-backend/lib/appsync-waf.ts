@@ -2,12 +2,13 @@ import { IGraphqlApi } from '@aws-cdk/aws-appsync';
 import * as cdk from '@aws-cdk/core';
 import { CfnWebACL, CfnWebACLAssociation } from '@aws-cdk/aws-wafv2';
 
-export type RateLimitAction = 'count' | 'block';
+export type WafAction = 'count' | 'block';
 
 export interface AppSyncWafProps {
     api: IGraphqlApi
     rateLimit: number
-    rateLimitAction: RateLimitAction
+    rateLimitAction: WafAction
+    ipReputationAction: WafAction
 }
 
 export class AppSyncWaf extends cdk.Construct {
@@ -29,8 +30,10 @@ export class AppSyncWaf extends cdk.Construct {
                 {
                     name: 'AWSManagedRulesAmazonIpReputationList',
                     priority: 0,
-                    overrideAction: {
+                    overrideAction: props.ipReputationAction === 'block' ? {
                         none: {},
+                    } : {
+                        count: {},
                     },
                     statement: {
                         managedRuleGroupStatement: {

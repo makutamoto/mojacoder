@@ -1,10 +1,11 @@
 {
-  "app": "npx ts-node bin/mojacoder-backend.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/mojacoder-backend.ts",
   "context": {
     "@aws-cdk/core:enableStackNameDuplicates": "true",
     "aws-cdk:enableDiffNoFail": "true",
     "@aws-cdk/core:stackRelativeExports": "true",
     "appsyncWafRateLimit": 300,
-    "appsyncWafRateLimitAction": "count"
+    "appsyncWafRateLimitAction": "count",
+    "appsyncWafIpReputationAction": "count"
   }
 }

@@ -1,6 +1,6 @@
 import { GraphqlApi } from '@aws-cdk/aws-appsync';
 import * as cdk from '@aws-cdk/core';
-import { AppSyncWaf, RateLimitAction } from '../lib/appsync-waf';
+import { AppSyncWaf, WafAction } from '../lib/appsync-waf';
 
 interface CloudFormationResource {
     Type: string
@@ -9,7 +9,10 @@ interface CloudFormationResource {
     }
 }
 
-function synthesizeWaf(rateLimitAction: RateLimitAction): {[logicalId: string]: CloudFormationResource} {
+function synthesizeWaf(
+    rateLimitAction: WafAction,
+    ipReputationAction: WafAction = 'count',
+): {[logicalId: string]: CloudFormationResource} {
     const app = new cdk.App();
     const stack = new cdk.Stack(app, 'TestStack');
     const api = GraphqlApi.fromGraphqlApiAttributes(stack, 'api', {
@@ -20,6 +23,7 @@ function synthesizeWaf(rateLimitAction: RateLimitAction): {[logicalId: string]: 
         api,
         rateLimit: 300,
         rateLimitAction,
+        ipReputationAction,
     });
 
     return app.synth().getStackByName(stack.stackName).template.Resources;
@@ -36,7 +40,7 @@ function getResource(resources: {[logicalId: string]: CloudFormationResource}, t
 test.each([
     ['count', { Count: {} }],
     ['block', { Block: {} }],
-] as Array<[RateLimitAction, {[key: string]: any}]>)(
+] as Array<[WafAction, {[key: string]: any}]>)(
     'creates AppSync WAF with %s rate-limit action',
     (rateLimitAction, expectedAction) => {
         const resources = synthesizeWaf(rateLimitAction);
@@ -48,7 +52,7 @@ test.each([
         expect(webAcl.Properties.Rules).toEqual([
             expect.objectContaining({
                 Name: 'AWSManagedRulesAmazonIpReputationList',
-                OverrideAction: { None: {} },
+                OverrideAction: { Count: {} },
                 Priority: 0,
                 Statement: {
                     ManagedRuleGroupStatement: {
@@ -83,5 +87,21 @@ test.each([
         expect(association.Properties.WebACLArn).toEqual({
             'Fn::GetAtt': [expect.any(String), 'Arn'],
         });
+    },
+);
+
+test.each([
+    ['count', { Count: {} }],
+    ['block', { None: {} }],
+] as Array<[WafAction, {[key: string]: any}]>)(
+    'creates AppSync WAF with %s IP-reputation action',
+    (ipReputationAction, expectedOverrideAction) => {
+        const resources = synthesizeWaf('count', ipReputationAction);
+        const webAcl = getResource(resources, 'AWS::WAFv2::WebACL');
+        const ipReputationRule = webAcl.Properties.Rules.find(
+            (rule: {[key: string]: any}) => rule.Name === 'AWSManagedRulesAmazonIpReputationList',
+        );
+
+        expect(ipReputationRule.OverrideAction).toEqual(expectedOverrideAction);
     },
 );
