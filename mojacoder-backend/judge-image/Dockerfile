@@ -46,13 +46,13 @@ RUN add-apt-repository ppa:deadsnakes/ppa && \
     rm -rf /tmp/*
 
 # PyPy 3.10-v7.3.13
-COPY pypy_requirements.txt .
+COPY pypy_requirements.txt pypy_build_constraints.txt ./
 RUN apt install libgeos-dev -y && \
     wget https://downloads.python.org/pypy/pypy3.10-v7.3.13-linux64.tar.bz2 && \
     tar -xf pypy3.10-v7.3.13-linux64.tar.bz2 -C /usr/local && \
     /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m ensurepip && \
-    /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m pip install -U pip wheel && \
-    /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m pip install -r pypy_requirements.txt && \
+    /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m pip install --upgrade pip==26.2.1 wheel==0.48.0 && \
+    /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m pip install --build-constraint pypy_build_constraints.txt -r pypy_requirements.txt && \
     rm -rf /tmp/*
 ENV PATH $PATH:/usr/local/pypy3.10-v7.3.13-linux64/bin
 
