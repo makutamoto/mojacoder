@@ -1,2 +1,2 @@
-# Shapely 2.0.2 imports pkg_resources while building from source.
-setuptools<82
+# Shapely 2.0.2 and cppyy-backend 1.15.2 require the legacy build APIs.
+setuptools<70
