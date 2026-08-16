@@ -34,10 +34,12 @@ const clientWithApiKey = new AWSAppSyncClient({
 export function useSubscription<D, V>(
     query: DocumentNode,
     variables: V,
-    callback: (data: D) => void
+    callback: (data: D) => void,
+    skip = false
 ) {
     const { auth } = Auth.useContainer()
     useEffect(() => {
+        if (skip) return
         const subscription = (auth ? client : clientWithApiKey)
             .subscribe<SubscriptionPayload<D>>({ query, variables })
             .subscribe({
@@ -45,7 +47,7 @@ export function useSubscription<D, V>(
                 error: (err) => console.error(err),
             })
         return () => subscription.unsubscribe()
-    }, [auth, client, clientWithApiKey, query, variables, callback])
+    }, [auth, client, clientWithApiKey, query, variables, callback, skip])
 }
 
 export async function invokeMutation<V>(mutation: DocumentNode, variables: V) {

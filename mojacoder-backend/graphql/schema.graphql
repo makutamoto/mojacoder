@@ -221,7 +221,7 @@ type ContestConnection @aws_cognito_user_pools @aws_api_key {
 
 type Mutation {
   responsePlayground(input: ResponsePlaygroundInput!): ResponsePlayground! @aws_iam
-  runPlayground(input: RunPlaygroundInput!): Playground @aws_api_key @aws_cognito_user_pools
+  runPlayground(input: RunPlaygroundInput!): Playground @aws_cognito_user_pools
   submitCode(input: SubmitCodeInput!): Submission! @aws_api_key @aws_cognito_user_pools
   updateSubmission(input: UpdateSubmissionInput!): UpdateSubmissionOutput! @aws_iam
   likeProblem(input: LikeProblemInput!): Boolean! @aws_cognito_user_pools
@@ -256,7 +256,7 @@ type Query {
 }
 
 type Subscription {
-  onResponsePlayground(sessionID: ID!, userID: ID): ResponsePlayground  @aws_subscribe(mutations : ["responsePlayground"]) @aws_cognito_user_pools @aws_api_key
+  onResponsePlayground(sessionID: ID!, userID: ID!): ResponsePlayground  @aws_subscribe(mutations : ["responsePlayground"]) @aws_cognito_user_pools
 }
 
 input ResponsePlaygroundInput {

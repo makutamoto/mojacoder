@@ -4,11 +4,7 @@ import gql from 'graphql-tag'
 
 import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
-import {
-    useSubscription,
-    invokeMutation,
-    invokeMutationWithApiKey,
-} from '../lib/backend'
+import { useSubscription, invokeMutation } from '../lib/backend'
 import { useLocalStorage } from '../lib/localstorage'
 import Title from '../components/Title'
 import CodeEditor, { Code } from '../components/CodeEditor'
@@ -31,18 +27,6 @@ type Status = typeof Status[keyof typeof Status]
 const SUBSCRIPTION_DOCUMENT = gql`
     subscription onResponsePlayground($sessionID: ID!, $userID: ID!) {
         onResponsePlayground(sessionID: $sessionID, userID: $userID) {
-            exitCode
-            time
-            memory
-            stderr
-            stdout
-        }
-    }
-`
-
-const SUBSCRIPTION_WITHOUT_AUTH_DOCUMENT = gql`
-    subscription onResponsePlayground($sessionID: ID!) {
-        onResponsePlayground(sessionID: $sessionID) {
             exitCode
             time
             memory
@@ -95,6 +79,9 @@ const Playground: React.FC = () => {
         [setLang]
     )
     const onRun = useCallback(() => {
+        if (!auth) {
+            return
+        }
         if (code.length === 0) {
             setStatus(Status.EmptySubmission)
             return
@@ -108,14 +95,10 @@ const Playground: React.FC = () => {
                 stdin,
             },
         }
-        if (auth) {
-            invokeMutation(MUTATION_DOCUMENT, args)
-        } else {
-            invokeMutationWithApiKey(MUTATION_DOCUMENT, args)
-        }
+        invokeMutation(MUTATION_DOCUMENT, args)
     }, [auth, lang, code, stdin, session.id, setStatus])
     useSubscription(
-        auth ? SUBSCRIPTION_DOCUMENT : SUBSCRIPTION_WITHOUT_AUTH_DOCUMENT,
+        SUBSCRIPTION_DOCUMENT,
         useMemo(
             () => ({
                 sessionID: session.id,
@@ -132,7 +115,8 @@ const Playground: React.FC = () => {
                 stderr: onResponsePlayground.stderr,
             })
             setStatus(Status.Received)
-        }, [])
+        }, []),
+        !auth
     )
     return (
         <>
@@ -142,6 +126,7 @@ const Playground: React.FC = () => {
             </Top>
             <Layout>
                 <Alert variant="primary">{t`description`}</Alert>
+                {!auth && <Alert variant="danger">{t`signInRequired`}</Alert>}
                 {status === Status.EmptySubmission && (
                     <Alert variant="danger">コードが空です。</Alert>
                 )}
@@ -156,7 +141,7 @@ const Playground: React.FC = () => {
                     <Button
                         variant="primary"
                         onClick={onRun}
-                        disabled={status === Status.Waiting}
+                        disabled={!auth || status === Status.Waiting}
                     >
                         {t`run`}
                     </Button>
