@@ -94,7 +94,9 @@ RUN curl https://nim-lang.org/choosenim/init.sh -sSf -o init.sh && \
     nimble install bignum -y && \
     rm -rf /tmp/*
 ENV NIMBLE_DIR /root/.nimble
-ENV PATH $PATH:/root/.nimble/bin
+# Use the pinned compiler directly. The choosenim shim under .nimble/bin looks
+# up the active version in HOME, which is intentionally isolated per compile.
+ENV PATH /root/.choosenim/toolchains/nim-1.6.16/bin:$PATH:/root/.nimble/bin
 
 # Rust 1.75.0
 RUN apt install -y  libssl-dev && \
@@ -143,5 +145,7 @@ RUN apt install -y curl libseccomp-dev
 
 WORKDIR /usr/src/app
 RUN gcc -O2 -Wall -Wextra -Werror sandbox/sandbox.c -lseccomp -o /usr/local/bin/mojacoder-sandbox && \
-    /usr/local/bin/mojacoder-sandbox --self-test
+    /usr/local/bin/mojacoder-sandbox --self-test && \
+    env -i PATH="$PATH" HOME=/tmp/mojacoder-nim-home NIMBLE_DIR="$NIMBLE_DIR" nim --version | \
+    grep -F "Nim Compiler Version 1.6.16"
 ENTRYPOINT ./judge

@@ -24,13 +24,12 @@ func compile(definition LanguageDefinition, dir string) (compiled bool, stderr s
 	cmd := sandboxedCommand("bash", "-c", command)
 	configureSandboxedCommand(cmd, homeDir)
 	cmd.Dir = dir
-	_, err = cmd.Output()
+	output, err := cmd.CombinedOutput()
 	if err == nil {
 		return true, "", nil
 	}
-	if res, ok := err.(*exec.ExitError); ok {
-		stderr := string(res.Stderr)
-		return false, stderr, nil
+	if _, ok := err.(*exec.ExitError); ok {
+		return false, string(output), nil
 	}
 	return false, "", err
 }

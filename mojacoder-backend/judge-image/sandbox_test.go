@@ -153,6 +153,23 @@ func TestCompileUsesUnprivilegedCredentialFreeProcess(t *testing.T) {
 	assertSandboxDirectorySealed(t, dir)
 }
 
+func TestCompileReturnsStandardOutputOnFailure(t *testing.T) {
+	dir := sandboxIntegrationDirectory(t)
+
+	compiled, diagnostics, err := compile(LanguageDefinition{
+		CompileCommand: `printf 'compiler diagnostic\n'; exit 1`,
+	}, dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if compiled {
+		t.Fatal("failing compiler command unexpectedly succeeded")
+	}
+	if !strings.Contains(diagnostics, "compiler diagnostic") {
+		t.Fatalf("compiler stdout was not returned: %q", diagnostics)
+	}
+}
+
 func TestCompileWithoutCommandSealsDirectory(t *testing.T) {
 	dir := sandboxIntegrationDirectory(t)
 
