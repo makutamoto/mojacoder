@@ -134,8 +134,9 @@ RUN go build .
 WORKDIR /usr/src/app/rust
 RUN cargo build --release
 
-RUN apt install -y curl
+RUN apt install -y curl libseccomp-dev
 
 WORKDIR /usr/src/app
+RUN gcc -O2 -Wall -Wextra -Werror sandbox/sandbox.c -lseccomp -o /usr/local/bin/mojacoder-sandbox && \
+    /usr/local/bin/mojacoder-sandbox --self-test
 ENTRYPOINT ./judge
-

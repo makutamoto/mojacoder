@@ -137,6 +137,9 @@ func processCode(definitions map[string]LanguageDefinition, data JudgeQueueData,
 }
 
 func main() {
+	if err := verifySandbox(); err != nil {
+		log.Fatalln(err)
+	}
 	health()
 	session := session.New()
 	config := &aws.Config{Region: aws.String(AWS_REGION)}
