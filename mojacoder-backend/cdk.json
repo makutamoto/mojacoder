@@ -4,8 +4,8 @@
     "@aws-cdk/core:enableStackNameDuplicates": "true",
     "aws-cdk:enableDiffNoFail": "true",
     "@aws-cdk/core:stackRelativeExports": "true",
-    "appsyncWafRateLimit": 300,
-    "appsyncWafRateLimitAction": "count",
-    "appsyncWafIpReputationAction": "count"
+    "appsyncWafRateLimit": 100000,
+    "appsyncWafRateLimitAction": "block",
+    "appsyncWafIpReputationAction": "block"
   }
 }
