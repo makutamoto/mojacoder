@@ -9,7 +9,7 @@ name: Auto Deploy to AWS
 jobs:
   deploy:
     name: Auto Deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@master
       - name: Setup Node.js
@@ -19,7 +19,7 @@ jobs:
       - name: Install Dependencies
         working-directory: mojacoder-backend
         run: |
-          yarn global add aws-cdk
+          yarn global add aws-cdk@1.204.0
           yarn
           cd lambda
           for dir in ./*; do
