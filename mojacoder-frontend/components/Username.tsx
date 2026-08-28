@@ -13,7 +13,10 @@ const Username: React.FC<UsernameProps> = ({ children }) => {
             {children === null ? (
                 <span>Guest</span>
             ) : (
-                <Link href={`/users/${children?.screenName}`}>
+                <Link
+                    href={`/users/${children?.screenName}`}
+                    prefetch={false}
+                >
                     {children?.screenName}
                 </Link>
             )}

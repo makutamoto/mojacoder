@@ -48,6 +48,7 @@ const Submissions: React.FC<Props> = ({ problem }) => {
                                                     testcaseName: name,
                                                 },
                                             }}
+                                            prefetch={false}
                                         >
                                             {name}
                                         </Link>

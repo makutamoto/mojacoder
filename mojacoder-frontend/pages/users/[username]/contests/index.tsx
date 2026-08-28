@@ -70,6 +70,7 @@ const Contests: React.FC<Props> = ({ user }) => {
                                 <td className="text-nowrap">
                                     <Link
                                         href={`/users/${user.screenName}/contests/${item.slug}`}
+                                        prefetch={false}
                                     >
                                         {item.name}
                                     </Link>

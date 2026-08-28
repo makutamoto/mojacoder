@@ -85,6 +85,7 @@ export const Post: React.FC<Props> = ({ newProblems, nextToken }) => {
                                     )}
                                     <Link
                                         href={`/users/${item.user.detail.screenName}/problems/${item.slug}`}
+                                        prefetch={false}
                                     >
                                         {item.title}
                                     </Link>
