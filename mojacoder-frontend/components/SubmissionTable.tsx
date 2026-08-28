@@ -60,6 +60,7 @@ const SubmissionTableRow: React.FC<SubmissionTableRowProps> = (props) => {
                             id,
                         },
                     }}
+                    prefetch={false}
                 >
                     詳細
                 </Link>
