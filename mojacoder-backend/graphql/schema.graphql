@@ -61,8 +61,8 @@ type LikerConnection {
 type Testcase {
   problemID: ID
   name: String
-  inUrl: AWSURL
-  outUrl: AWSURL
+  inUrl: AWSURL @aws_cognito_user_pools
+  outUrl: AWSURL @aws_cognito_user_pools
 }
 
 enum ProblemStatus {
@@ -103,7 +103,7 @@ type ProblemDetail @aws_cognito_user_pools @aws_api_key @aws_iam {
   editorial: String
   hasDifficulty: Boolean
   difficulty: String
-  testcase(name: String!): Testcase
+  testcase(name: String!): Testcase @aws_cognito_user_pools
   testcaseNames: [String]!
   submission(id: ID!): Submission
   submissions(nextToken: String, userID: ID): SubmissionConnection!
