@@ -11,7 +11,6 @@ export const createRobotsTxt = (origin: string): string => `User-agent: *
 Disallow: /
 Allow: /sitemap.xml$
 Allow: /_next/static/
-Allow: /images/
 Allow: /users/*/problems/*$
 Disallow: /users/*/problems/*/*
 Allow: /en/users/*/problems/*$

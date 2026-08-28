@@ -62,15 +62,12 @@ describe('robots.txt', () => {
         '/users/alice/problems/a-plus-b/editorial',
         '/en/users/alice/problems/a-plus-b/submissions',
         '/users/alice/contests/spring/tasks/1',
+        '/images/logo.svg',
     ])('disallows crawling a non-problem-statement URL: %s', (pathname) => {
         expect(isCrawlAllowed(robotsTxt, pathname)).toBe(false)
     })
 
-    it.each([
-        '/sitemap.xml',
-        '/_next/static/chunks/main.js',
-        '/images/logo.svg',
-    ])(
+    it.each(['/sitemap.xml', '/_next/static/chunks/main.js'])(
         'allows a resource needed for discovery or rendering: %s',
         (pathname) => {
             expect(isCrawlAllowed(robotsTxt, pathname)).toBe(true)
