@@ -10,6 +10,7 @@ import Session from '../lib/session'
 import Appbar from '../containers/Appbar'
 import Authenticate from '../containers/Authenticate'
 import ServiceTerminationAlert from '../components/ServiceTerminationAlert'
+import SearchEnginePolicy from '../components/SearchEnginePolicy'
 
 import 'nprogress/nprogress.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -331,12 +332,13 @@ const languages = {
 }
 
 const App = ({ Component, pageProps }: AppProps) => {
-    const { locale } = useRouter()
+    const { locale, pathname } = useRouter()
     return (
         <I18nProvider defaultLanguage="ja" lang={locale} languages={languages}>
             <Auth.Provider>
                 <Authenticate />
                 <Session.Provider>
+                    <SearchEnginePolicy pathname={pathname} />
                     <Head>
                         <title>MojaCoder</title>
                         <link rel="manifest" href="/manifest.json" />
