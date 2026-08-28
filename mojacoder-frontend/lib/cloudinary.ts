@@ -1,5 +1,4 @@
 import { Cloudinary } from 'cloudinary-core'
-import join from 'url-join'
 
 import { ProblemDetail } from './backend_types'
 
@@ -20,14 +19,7 @@ export function generateProblemOGP(problem: ProblemDetail) {
                 y: -27,
             },
             {
-                overlay: `fetch:${
-                    problem.user.detail.icon
-                        ? join(
-                              process.env.ICON_STORAGE,
-                              `${problem.user.detail.userID}.png`
-                          )
-                        : 'https://mojacoder.app/images/avatar.png'
-                }`,
+                overlay: 'fetch:https://mojacoder.app/images/avatar.png',
                 gravity: 'south_west',
                 x: 30,
                 y: 10,

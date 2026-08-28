@@ -5,9 +5,6 @@ const common = {
         locales: ['en', 'ja'],
         defaultLocale: 'ja',
     },
-    images: {
-        domains: ['icon.mojacoder.app'],
-    },
     webpack: (config) => {
         config.optimization.splitChunks.cacheGroups = {}
         config.optimization.minimize = true
@@ -26,7 +23,6 @@ module.exports = (phase) => {
                     APPSYNC_ENDPOINT:
                         'https://e3qj5jz4cbezbkndppo5jb43wm.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-4utm5h73obduvbxmmgxdn3b4oe',
-                    ICON_STORAGE: 'https://icon.mojacoder.app',
                     COOKIE_DOMAIN: 'localhost',
                     ORIGIN: 'http://localhost:3000',
                 },
@@ -41,7 +37,6 @@ module.exports = (phase) => {
                     APPSYNC_ENDPOINT:
                         'https://e3qj5jz4cbezbkndppo5jb43wm.appsync-api.ap-northeast-1.amazonaws.com/graphql',
                     APPSYNC_APIKEY: 'da2-4utm5h73obduvbxmmgxdn3b4oe',
-                    ICON_STORAGE: 'https://icon.mojacoder.app',
                     COOKIE_DOMAIN: 'mojacoder.app',
                     ORIGIN: 'https://mojacoder.app',
                 },

@@ -10,7 +10,6 @@ import Auth from '../lib/auth'
 import { UserDetail } from '../lib/backend_types'
 import Layout from '../components/Layout'
 import Top from '../components/Top'
-import UserIcon from '../components/UserIcon'
 import Title from '../components/Title'
 
 interface Props {
@@ -34,7 +33,6 @@ const UserPage: React.FC<Props> = ({ user, activeKey, children }) => {
             <Title>{`${user.screenName}さんのユーザーページ`}</Title>
             <Top>
                 <div className="text-center">
-                    <UserIcon size={256}>{user}</UserIcon>
                     <h2>{user.screenName}</h2>
                     {auth && auth.userID === user.userID && (
                         <>
