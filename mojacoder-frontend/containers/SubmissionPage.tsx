@@ -112,6 +112,7 @@ const SubmissionPage: React.FC<SubmissionPageProps> = ({ submission }) => {
                                             testcaseName: testcase.name,
                                         },
                                     }}
+                                    prefetch={false}
                                 >
                                     {testcase.name}
                                 </Link>

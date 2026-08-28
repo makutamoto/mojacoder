@@ -72,6 +72,7 @@ const UserPage: React.FC<Props> = ({ user }) => {
                                 <td className="text-nowrap">
                                     <Link
                                         href={`/users/${user.screenName}/problems/${item.slug}`}
+                                        prefetch={false}
                                     >
                                         {item.title}
                                     </Link>
