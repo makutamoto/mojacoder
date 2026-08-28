@@ -3,9 +3,13 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import axios from 'axios'
-import { ProgressBar } from 'react-bootstrap'
+import { Alert, ProgressBar } from 'react-bootstrap'
 
-import { invokeQueryWithApiKey } from '../../../../../../lib/backend'
+import Auth from '../../../../../../lib/auth'
+import {
+    invokeQuery,
+    invokeQueryWithApiKey,
+} from '../../../../../../lib/backend'
 import { ProblemDetail } from '../../../../../../lib/backend_types'
 import Editor from '../../../../../../components/Editor'
 import Layout from '../../../../../../components/Layout'
@@ -34,45 +38,102 @@ const GetTestcase = gql`
 interface Props {
     problem: ProblemDetail
 }
+
+const Status = {
+    Loading: 'Loading',
+    Done: 'Done',
+    Error: 'Error',
+} as const
+type Status = typeof Status[keyof typeof Status]
+
 const Submissions: React.FC<Props> = ({ problem }) => {
+    const { auth } = Auth.useContainer()
     const { query } = useRouter()
     const { username, problemSlug, testcaseName } = query
     const [inTestcase, setInTestcase] = useState<string | null>(null)
     const [outTestcase, setOutTestcase] = useState<string | null>(null)
+    const [status, setStatus] = useState<Status>(Status.Loading)
     useEffect(() => {
-        invokeQueryWithApiKey(GetTestcase, {
-            authorUsername: username,
-            problemSlug: problemSlug,
-            testcaseName: testcaseName,
-        }).then(({ user }) => {
-            axios
-                .get(user.problem.testcase.inUrl, {
-                    transformResponse: (value) => value,
+        if (
+            !auth ||
+            typeof username !== 'string' ||
+            typeof problemSlug !== 'string' ||
+            typeof testcaseName !== 'string'
+        ) {
+            return
+        }
+
+        let active = true
+        setStatus(Status.Loading)
+        setInTestcase(null)
+        setOutTestcase(null)
+
+        const loadTestcase = async () => {
+            try {
+                const { user } = await invokeQuery(GetTestcase, {
+                    authorUsername: username,
+                    problemSlug,
+                    testcaseName,
                 })
-                .then(({ data }) => {
-                    setInTestcase(String(data))
-                })
-            axios
-                .get(user.problem.testcase.outUrl, {
-                    transformResponse: (value) => value,
-                })
-                .then(({ data }) => {
-                    setOutTestcase(String(data))
-                })
-        })
-    }, [query, setInTestcase, setOutTestcase])
+                const testcase = user?.problem?.testcase
+                if (!testcase) {
+                    throw new Error('Testcase not found')
+                }
+                const [inResponse, outResponse] = await Promise.all([
+                    axios.get(testcase.inUrl, {
+                        transformResponse: (value) => value,
+                    }),
+                    axios.get(testcase.outUrl, {
+                        transformResponse: (value) => value,
+                    }),
+                ])
+                if (!active) {
+                    return
+                }
+                setInTestcase(String(inResponse.data))
+                setOutTestcase(String(outResponse.data))
+                setStatus(Status.Done)
+            } catch (error) {
+                console.error(error)
+                if (active) {
+                    setStatus(Status.Error)
+                }
+            }
+        }
+        loadTestcase()
+
+        return () => {
+            active = false
+        }
+    }, [auth, username, problemSlug, testcaseName])
     return (
         <>
             <Title>{`'${problem.title}'のテストケース`}</Title>
             <ProblemTop activeKey="testcases" problem={problem} />
             <Layout>
                 <Heading>{testcaseName}</Heading>
-                <h3>入力</h3>
-                {!inTestcase && <ProgressBar animated now={100} />}
-                <Editor value={inTestcase || ''} readOnly />
-                <h3>出力</h3>
-                {!outTestcase && <ProgressBar animated now={100} />}
-                <Editor value={outTestcase || ''} readOnly />
+                {!auth ? (
+                    <Alert variant="danger">
+                        テストケースを閲覧するにはサインインしてください。
+                    </Alert>
+                ) : status === Status.Error ? (
+                    <Alert variant="danger">
+                        テストケースを取得できませんでした。
+                    </Alert>
+                ) : (
+                    <>
+                        <h3>入力</h3>
+                        {status === Status.Loading && (
+                            <ProgressBar animated now={100} />
+                        )}
+                        <Editor value={inTestcase || ''} readOnly />
+                        <h3>出力</h3>
+                        {status === Status.Loading && (
+                            <ProgressBar animated now={100} />
+                        )}
+                        <Editor value={outTestcase || ''} readOnly />
+                    </>
+                )}
             </Layout>
         </>
     )
