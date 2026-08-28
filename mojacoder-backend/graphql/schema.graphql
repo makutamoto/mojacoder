@@ -230,7 +230,6 @@ type Mutation {
   issueProblemUploadUrl(input: IssueProblemUploadUrlInput!): String! @aws_cognito_user_pools
   issueProblemDownloadUrl(input: IssueProblemDownloadUrlInput!): String! @aws_cognito_user_pools
   deleteProblem(input: DeleteProblemInput!): ID @aws_cognito_user_pools
-  setUserIcon(input: SetUserIconInput): String @aws_cognito_user_pools
   renameScreenName(screenName: String!): String! @aws_cognito_user_pools
   createContest(input: CreateContestInput!): Contest! @aws_cognito_user_pools
   updateContest(input: UpdateContestInput!): Contest! @aws_cognito_user_pools
@@ -323,10 +322,6 @@ input IssueProblemDownloadUrlInput @aws_cognito_user_pools {
 
 input DeleteProblemInput @aws_cognito_user_pools {
   slug: String!
-}
-
-input SetUserIconInput @aws_cognito_user_pools {
-  icon: String!
 }
 
 input ContestProblemInput @aws_cognito_user_pools {

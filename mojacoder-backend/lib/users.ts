@@ -8,12 +8,9 @@ import { Rule, Schedule } from '@aws-cdk/aws-events'
 import { LambdaFunction } from '@aws-cdk/aws-events-targets'
 import { join } from 'path';
 import { Duration } from '@aws-cdk/core';
-import { Bucket } from '@aws-cdk/aws-s3';
-import { CachePolicy, Distribution, ViewerProtocolPolicy } from '@aws-cdk/aws-cloudfront';
-import { S3Origin } from '@aws-cdk/aws-cloudfront-origins'
+import { BlockPublicAccess, Bucket } from '@aws-cdk/aws-s3';
 import { Certificate } from '@aws-cdk/aws-certificatemanager'
-import { ARecord, PublicHostedZone, RecordTarget } from '@aws-cdk/aws-route53';
-import { CloudFrontTarget } from '@aws-cdk/aws-route53-targets'
+import { PublicHostedZone } from '@aws-cdk/aws-route53';
 import * as lambda from '@aws-cdk/aws-lambda';
 
 export interface UsersProps {
@@ -152,28 +149,10 @@ export class Users extends cdk.Construct {
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/userDetail/response.vtl')),
         });
-        const userIconBucket = new Bucket(this, 'userIconBucket', {
-            publicReadAccess: true,
+        new Bucket(this, 'userIconBucket', {
+            blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+            removalPolicy: cdk.RemovalPolicy.RETAIN,
         });
-        const setUserIconLambda = new NodejsFunction(this, 'setUserIcon', {
-            entry: join(__dirname, '../lambda/set-user-icon/index.ts'),
-            runtime: lambda.Runtime.NODEJS_16_X,
-            handler: 'handler',
-            timeout: Duration.seconds(10),
-            environment: {
-                USER_ICON_BUCKET_NAME: userIconBucket.bucketName,
-                USER_TABLE_NAME: this.userTable.tableName,
-            },
-        });
-        setUserIconLambda.addToRolePolicy(new PolicyStatement({
-            actions: ['s3:PutObject', 's3:DeleteObject', 'dynamodb:UpdateItem', 'dynamodb:Query'],
-            resources: [userIconBucket.bucketArn + '/*', this.userTable.tableArn],
-        }));
-        const setUserIconLambdaDatasource = this.api.addLambdaDataSource('setUserIconLambda', setUserIconLambda);
-        setUserIconLambdaDatasource.createResolver({
-            typeName: 'Mutation',
-            fieldName: 'setUserIcon',
-        })
         const renameScreenNameDataSource = this.api.addDynamoDbDataSource('renameScreenName', this.userTable)
         renameScreenNameDataSource.grantPrincipal.addToPrincipalPolicy(new PolicyStatement({
             actions: ['dynamodb:DeleteItem', 'dynamodb:PutItem'],
@@ -200,21 +179,6 @@ export class Users extends cdk.Construct {
             ],
             requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/request.vtl')),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/renameScreenName/response.vtl')),
-        })
-
-        const userIconBucketDistribution = new Distribution(this, 'userIconBucketDistribution', {
-            defaultBehavior: {
-                origin: new S3Origin(userIconBucket),
-                cachePolicy: CachePolicy.CACHING_DISABLED,
-                viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-            },
-            domainNames: ['icon.mojacoder.app'],
-            certificate: props.certificate,
-        })
-        new ARecord(this, 'userIconBucketDistributionCname', {
-            target: RecordTarget.fromAlias(new CloudFrontTarget(userIconBucketDistribution)),
-            recordName: 'icon',
-            zone: props.zone,
         })
     }
 }
