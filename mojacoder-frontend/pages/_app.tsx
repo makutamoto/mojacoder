@@ -9,8 +9,11 @@ import Auth from '../lib/auth'
 import Session from '../lib/session'
 import Appbar from '../containers/Appbar'
 import Authenticate from '../containers/Authenticate'
+import AdSense from '../components/AdSense'
+import Layout from '../components/Layout'
 import ServiceTerminationAlert from '../components/ServiceTerminationAlert'
 import SearchEnginePolicy from '../components/SearchEnginePolicy'
+import { ADSENSE_SLOTS, shouldShowFooterAd } from '../lib/adsense'
 
 import 'nprogress/nprogress.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -332,7 +335,8 @@ const languages = {
 }
 
 const App = ({ Component, pageProps }: AppProps) => {
-    const { locale, pathname } = useRouter()
+    const { asPath, locale, pathname } = useRouter()
+    const adPageKey = asPath.split(/[?#]/)[0]
     return (
         <I18nProvider defaultLanguage="ja" lang={locale} languages={languages}>
             <Auth.Provider>
@@ -351,6 +355,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                     <Appbar />
                     <ServiceTerminationAlert />
                     <Component {...pageProps} />
+                    {shouldShowFooterAd(pathname) && (
+                        <Layout>
+                            <AdSense
+                                key={`footer-${adPageKey}`}
+                                slot={ADSENSE_SLOTS.footer}
+                                format="fluid"
+                                layout="in-article"
+                            />
+                        </Layout>
+                    )}
                 </Session.Provider>
             </Auth.Provider>
         </I18nProvider>

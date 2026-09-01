@@ -12,6 +12,8 @@ import Title from '../../../../../components/Title'
 import Heading from '../../../../../components/Heading'
 import ProblemTop from '../../../../../containers/ProblemTop'
 import SubmissionBox from '../../../../../components/SubmissionBox'
+import AdSense from '../../../../../components/AdSense'
+import { ADSENSE_SLOTS } from '../../../../../lib/adsense'
 
 interface Props {
     user: UserDetail | null
@@ -39,6 +41,12 @@ const ProblemPage: React.FC<Props> = (props) => {
                         redirect="submissions"
                     />
                 </div>
+                <AdSense
+                    key={user.problem.id}
+                    slot={ADSENSE_SLOTS.problem}
+                    format="fluid"
+                    layout="in-article"
+                />
             </Layout>
         </>
     )
