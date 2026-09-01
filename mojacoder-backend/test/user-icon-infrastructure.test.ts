@@ -15,9 +15,7 @@ jest.mock('@aws-cdk/aws-lambda-nodejs', () => {
     };
 });
 
-import { Certificate } from '@aws-cdk/aws-certificatemanager';
 import * as cdk from '@aws-cdk/core';
-import { PublicHostedZone } from '@aws-cdk/aws-route53';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Users } from '../lib/users';
@@ -34,17 +32,8 @@ interface CloudFormationResource {
 function synthesizeUsers(): {[logicalId: string]: CloudFormationResource} {
     const app = new cdk.App();
     const stack = new cdk.Stack(app, 'TestStack');
-    const certificate = Certificate.fromCertificateArn(
-        stack,
-        'certificate',
-        'arn:aws:acm:us-east-1:123456789012:certificate/00000000-0000-0000-0000-000000000000',
-    ) as Certificate;
-    const zone = PublicHostedZone.fromHostedZoneAttributes(stack, 'zone', {
-        hostedZoneId: 'Z0000000000000',
-        zoneName: 'mojacoder.app',
-    }) as PublicHostedZone;
 
-    new Users(stack, 'users', { certificate, zone });
+    new Users(stack, 'users');
 
     return app.synth().getStackByName(stack.stackName).template.Resources;
 }

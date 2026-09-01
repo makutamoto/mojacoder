@@ -9,21 +9,14 @@ import { LambdaFunction } from '@aws-cdk/aws-events-targets'
 import { join } from 'path';
 import { Duration } from '@aws-cdk/core';
 import { BlockPublicAccess, Bucket } from '@aws-cdk/aws-s3';
-import { Certificate } from '@aws-cdk/aws-certificatemanager'
-import { PublicHostedZone } from '@aws-cdk/aws-route53';
 import * as lambda from '@aws-cdk/aws-lambda';
-
-export interface UsersProps {
-    zone: PublicHostedZone
-    certificate: Certificate
-}
 
 export class Users extends cdk.Construct {
     public readonly pool: UserPool
     public readonly userTable: Table
     public readonly api: GraphqlApi
 
-    constructor(scope: cdk.Construct, id: string, props: UsersProps) {
+    constructor(scope: cdk.Construct, id: string) {
         super(scope, id);
         this.pool = new UserPool(this, 'user-pool', {
             selfSignUpEnabled: true,

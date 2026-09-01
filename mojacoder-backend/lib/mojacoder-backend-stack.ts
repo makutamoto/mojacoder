@@ -1,6 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 
-import { Zone } from './zone'
 import { Users } from './users'
 import { Problems } from './problems'
 import { Judge } from './judge'
@@ -16,8 +15,7 @@ export class MojacoderBackendStack extends cdk.Stack {
             appsyncWafRateLimitAction: this.node.tryGetContext('appsyncWafRateLimitAction'),
             appsyncWafIpReputationAction: this.node.tryGetContext('appsyncWafIpReputationAction'),
         })
-        const zone = new Zone(this, 'zone')
-        const users = new Users(this, 'users', { certificate: zone.certificate, zone: zone.zone  })
+        const users = new Users(this, 'users')
         new AppSyncWaf(this, 'appsync-waf', {
             api: users.api,
             ...wafConfig,

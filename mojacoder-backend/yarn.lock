@@ -127,7 +127,7 @@
     "@aws-cdk/core" "1.204.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-certificatemanager@1.204.0", "@aws-cdk/aws-certificatemanager@^1.204.0":
+"@aws-cdk/aws-certificatemanager@1.204.0":
   version "1.204.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-certificatemanager/-/aws-certificatemanager-1.204.0.tgz#66773cebe425538cd7c1396679f8455390aeef44"
   integrity sha512-ZLykfAOb5Zbg/MFtzA+eHhMAK1xL32+oHKSK6tAYrgvv2aS42wJE4zSBV6jGCjnCkhcliUd5pwnACEl3ib0KLw==
@@ -153,20 +153,7 @@
     "@aws-cdk/cx-api" "1.204.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-cloudfront-origins@^1.204.0":
-  version "1.204.0"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cloudfront-origins/-/aws-cloudfront-origins-1.204.0.tgz#4e9fb1fbdf87e385ca2fd40dadbc1825be327468"
-  integrity sha512-kHbdQ6GUr1D1Hziv/RxeN5AcFvf/ndHaqSUz5toFCPxb5zfzClB+GWSvlNTSQL/QwSmAT3h/IQrCRJ5VU/uWSA==
-  dependencies:
-    "@aws-cdk/aws-apigateway" "1.204.0"
-    "@aws-cdk/aws-cloudfront" "1.204.0"
-    "@aws-cdk/aws-elasticloadbalancingv2" "1.204.0"
-    "@aws-cdk/aws-iam" "1.204.0"
-    "@aws-cdk/aws-s3" "1.204.0"
-    "@aws-cdk/core" "1.204.0"
-    constructs "^3.3.69"
-
-"@aws-cdk/aws-cloudfront@1.204.0", "@aws-cdk/aws-cloudfront@^1.204.0":
+"@aws-cdk/aws-cloudfront@1.204.0":
   version "1.204.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cloudfront/-/aws-cloudfront-1.204.0.tgz#f123cf54dd1fcf7e559dbb8c43ab77c44c04ed37"
   integrity sha512-bgqGsImVjFQJihDvLg0hWRtmq2b+HVj94Fngz/zo4PsB5kTt1QZvHOk2HNBkozNhDK8LXysHtdKvmzpaK29TJQ==
@@ -595,7 +582,7 @@
     "@aws-cdk/cx-api" "1.204.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-route53-targets@1.204.0", "@aws-cdk/aws-route53-targets@^1.204.0":
+"@aws-cdk/aws-route53-targets@1.204.0":
   version "1.204.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-route53-targets/-/aws-route53-targets-1.204.0.tgz#8d4d1d2f7c9043f1d3490bb108209ed88c7d361d"
   integrity sha512-JyILJz/HGRMilpFxrDk/VXv+TN24DoG5Gfdfh8SJoJpptokowN8blaQ2ibf6N0JnFqWSBrs7gMMWB2dR/sXoTQ==
@@ -614,7 +601,7 @@
     "@aws-cdk/region-info" "1.204.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-route53@1.204.0", "@aws-cdk/aws-route53@^1.204.0":
+"@aws-cdk/aws-route53@1.204.0":
   version "1.204.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-route53/-/aws-route53-1.204.0.tgz#bd25387cb8d9c013eb19db3df3b39f976d20fd03"
   integrity sha512-wQpGUXqc2y7yJFTipfuVxWy/VGeshyGlfGl4evusQK9Md0DMpVmG8kRgazLk1myqUSNSfi643UwvDJqNbYmdnA==
