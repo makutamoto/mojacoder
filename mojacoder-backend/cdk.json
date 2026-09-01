@@ -4,6 +4,7 @@
     "@aws-cdk/core:enableStackNameDuplicates": "true",
     "aws-cdk:enableDiffNoFail": "true",
     "@aws-cdk/core:stackRelativeExports": "true",
+    "appsyncWafGeoRestrictionAction": "block",
     "appsyncWafRateLimit": 100000,
     "appsyncWafRateLimitAction": "block",
     "appsyncWafIpReputationAction": "block"

@@ -11,6 +11,7 @@ export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
         const wafConfig = resolveAppSyncWafConfig({
+            appsyncWafGeoRestrictionAction: this.node.tryGetContext('appsyncWafGeoRestrictionAction'),
             appsyncWafRateLimit: this.node.tryGetContext('appsyncWafRateLimit'),
             appsyncWafRateLimitAction: this.node.tryGetContext('appsyncWafRateLimitAction'),
             appsyncWafIpReputationAction: this.node.tryGetContext('appsyncWafIpReputationAction'),

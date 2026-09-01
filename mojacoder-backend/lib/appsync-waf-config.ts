@@ -1,16 +1,19 @@
 import { WafAction } from './appsync-waf';
 
 const DEFAULT_RATE_LIMIT = 300;
+const DEFAULT_GEO_RESTRICTION_ACTION: WafAction = 'count';
 const DEFAULT_RATE_LIMIT_ACTION: WafAction = 'count';
 const DEFAULT_IP_REPUTATION_ACTION: WafAction = 'count';
 
 export interface AppSyncWafContext {
+    appsyncWafGeoRestrictionAction?: unknown
     appsyncWafRateLimit?: unknown
     appsyncWafRateLimitAction?: unknown
     appsyncWafIpReputationAction?: unknown
 }
 
 export interface AppSyncWafConfig {
+    geoRestrictionAction: WafAction
     rateLimit: number
     rateLimitAction: WafAction
     ipReputationAction: WafAction
@@ -18,6 +21,11 @@ export interface AppSyncWafConfig {
 
 export function resolveAppSyncWafConfig(context: AppSyncWafContext = {}): AppSyncWafConfig {
     return {
+        geoRestrictionAction: resolveAction(
+            'appsyncWafGeoRestrictionAction',
+            context.appsyncWafGeoRestrictionAction,
+            DEFAULT_GEO_RESTRICTION_ACTION,
+        ),
         rateLimit: resolveRateLimit(context.appsyncWafRateLimit),
         rateLimitAction: resolveAction(
             'appsyncWafRateLimitAction',
