@@ -12,6 +12,7 @@ interface CloudFormationResource {
 function synthesizeWaf(
     rateLimitAction: WafAction,
     ipReputationAction: WafAction = 'count',
+    geoRestrictionAction: WafAction = 'count',
 ): {[logicalId: string]: CloudFormationResource} {
     const app = new cdk.App();
     const stack = new cdk.Stack(app, 'TestStack');
@@ -21,6 +22,7 @@ function synthesizeWaf(
 
     new AppSyncWaf(stack, 'appsync-waf', {
         api,
+        geoRestrictionAction,
         rateLimit: 300,
         rateLimitAction,
         ipReputationAction,
@@ -51,9 +53,23 @@ test.each([
         expect(webAcl.Properties.DefaultAction).toEqual({ Allow: {} });
         expect(webAcl.Properties.Rules).toEqual([
             expect.objectContaining({
+                Action: { Count: {} },
+                Name: 'RestrictAccessToJapan',
+                Priority: 0,
+                Statement: {
+                    NotStatement: {
+                        Statement: {
+                            GeoMatchStatement: {
+                                CountryCodes: ['JP'],
+                            },
+                        },
+                    },
+                },
+            }),
+            expect.objectContaining({
                 Name: 'AWSManagedRulesAmazonIpReputationList',
                 OverrideAction: { Count: {} },
-                Priority: 0,
+                Priority: 1,
                 Statement: {
                     ManagedRuleGroupStatement: {
                         Name: 'AWSManagedRulesAmazonIpReputationList',
@@ -64,7 +80,7 @@ test.each([
             expect.objectContaining({
                 Action: expectedAction,
                 Name: 'RateLimitPerIp',
-                Priority: 1,
+                Priority: 2,
                 Statement: {
                     RateBasedStatement: {
                         AggregateKeyType: 'IP',
@@ -87,6 +103,22 @@ test.each([
         expect(association.Properties.WebACLArn).toEqual({
             'Fn::GetAtt': [expect.any(String), 'Arn'],
         });
+    },
+);
+
+test.each([
+    ['count', { Count: {} }],
+    ['block', { Block: {} }],
+] as Array<[WafAction, {[key: string]: any}]>)(
+    'creates AppSync WAF with %s Japan geo-restriction action',
+    (geoRestrictionAction, expectedAction) => {
+        const resources = synthesizeWaf('count', 'count', geoRestrictionAction);
+        const webAcl = getResource(resources, 'AWS::WAFv2::WebACL');
+        const geoRestrictionRule = webAcl.Properties.Rules.find(
+            (rule: {[key: string]: any}) => rule.Name === 'RestrictAccessToJapan',
+        );
+
+        expect(geoRestrictionRule.Action).toEqual(expectedAction);
     },
 );
 

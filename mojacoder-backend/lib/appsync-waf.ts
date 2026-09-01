@@ -6,6 +6,7 @@ export type WafAction = 'count' | 'block';
 
 export interface AppSyncWafProps {
     api: IGraphqlApi
+    geoRestrictionAction: WafAction
     rateLimit: number
     rateLimitAction: WafAction
     ipReputationAction: WafAction
@@ -19,7 +20,7 @@ export class AppSyncWaf extends cdk.Construct {
             defaultAction: {
                 allow: {},
             },
-            description: 'Protects the MojaCoder AppSync API from known threats and excessive requests.',
+            description: 'Protects the MojaCoder AppSync API from non-Japanese traffic, known threats, and excessive requests.',
             scope: 'REGIONAL',
             visibilityConfig: {
                 cloudWatchMetricsEnabled: true,
@@ -28,8 +29,31 @@ export class AppSyncWaf extends cdk.Construct {
             },
             rules: [
                 {
-                    name: 'AWSManagedRulesAmazonIpReputationList',
+                    name: 'RestrictAccessToJapan',
                     priority: 0,
+                    action: props.geoRestrictionAction === 'block' ? {
+                        block: {},
+                    } : {
+                        count: {},
+                    },
+                    statement: {
+                        notStatement: {
+                            statement: {
+                                geoMatchStatement: {
+                                    countryCodes: ['JP'],
+                                },
+                            },
+                        },
+                    },
+                    visibilityConfig: {
+                        cloudWatchMetricsEnabled: true,
+                        metricName: 'restrict-access-to-japan',
+                        sampledRequestsEnabled: true,
+                    },
+                },
+                {
+                    name: 'AWSManagedRulesAmazonIpReputationList',
+                    priority: 1,
                     overrideAction: props.ipReputationAction === 'block' ? {
                         none: {},
                     } : {
@@ -49,7 +73,7 @@ export class AppSyncWaf extends cdk.Construct {
                 },
                 {
                     name: 'RateLimitPerIp',
-                    priority: 1,
+                    priority: 2,
                     action: props.rateLimitAction === 'block' ? {
                         block: {},
                     } : {

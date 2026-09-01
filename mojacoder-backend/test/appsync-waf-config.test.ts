@@ -2,6 +2,7 @@ import { resolveAppSyncWafConfig } from '../lib/appsync-waf-config';
 
 test('uses safe WAF defaults when context is absent', () => {
     expect(resolveAppSyncWafConfig()).toEqual({
+        geoRestrictionAction: 'count',
         rateLimit: 300,
         rateLimitAction: 'count',
         ipReputationAction: 'count',
@@ -10,10 +11,12 @@ test('uses safe WAF defaults when context is absent', () => {
 
 test('accepts configured WAF values', () => {
     expect(resolveAppSyncWafConfig({
+        appsyncWafGeoRestrictionAction: 'block',
         appsyncWafRateLimit: '500',
         appsyncWafRateLimitAction: 'block',
         appsyncWafIpReputationAction: 'block',
     })).toEqual({
+        geoRestrictionAction: 'block',
         rateLimit: 500,
         rateLimitAction: 'block',
         ipReputationAction: 'block',
@@ -31,6 +34,7 @@ test.each([
 });
 
 test.each([
+    'appsyncWafGeoRestrictionAction',
     'appsyncWafRateLimitAction',
     'appsyncWafIpReputationAction',
 ] as const)('rejects an invalid %s', contextKey => {
