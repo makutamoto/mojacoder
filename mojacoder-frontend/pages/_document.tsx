@@ -1,15 +1,19 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
+import { ADSENSE_CLIENT } from '../lib/adsense'
+
 class MyDocument extends Document {
     render() {
         return (
             <Html>
                 <Head>
-                    <script
-                        data-ad-client="ca-pub-1558648672247263"
-                        async
-                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-                    ></script>
+                    {process.env.NODE_ENV === 'production' && (
+                        <script
+                            async
+                            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+                            crossOrigin="anonymous"
+                        ></script>
+                    )}
                 </Head>
                 <body>
                     <Main />

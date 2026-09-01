@@ -3,8 +3,10 @@ import { MarkGithubIcon } from '@primer/octicons-react'
 import { Container, Image } from 'react-bootstrap'
 
 import IconWithText from '../components/IconWithText'
+import AdSense from '../components/AdSense'
 import Layout from '../components/Layout'
 import Title from '../components/Title'
+import { ADSENSE_SLOTS } from '../lib/adsense'
 
 const GITHUB_LINK = 'https://github.com/makutamoto/mojacoder'
 const TWITTER_LINK = 'https://twitter.com/makutamoto'
@@ -65,6 +67,13 @@ export const Index: React.FC = () => {
                         <br />
                         フォロワーのみなさんがあなたの問題を楽しんでくれるはずです！
                     </p>
+                </Layout>
+                <Layout>
+                    <AdSense
+                        slot={ADSENSE_SLOTS.footer}
+                        format="fluid"
+                        layout="in-article"
+                    />
                 </Layout>
                 <Layout>
                     <h3>寄付のお願い</h3>
