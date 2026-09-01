@@ -1,3 +1,7 @@
 body {
     background: #F8F9FA;
 }
+
+ins.adsbygoogle[data-ad-status='unfilled'] {
+    display: none !important;
+}
