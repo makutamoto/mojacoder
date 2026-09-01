@@ -21,6 +21,8 @@ describe('AdSense', () => {
         expect(ad?.getAttribute('data-ad-format')).toBe('fluid')
         expect(ad?.getAttribute('data-ad-layout')).toBe('in-article')
         expect(ad?.getAttribute('data-full-width-responsive')).toBe('true')
+        expect(ad?.getAttribute('data-ad-preview')).toBe('true')
+        expect(ad?.textContent).toBe('広告プレビュー')
         expect(window.adsbygoogle).toEqual([{}])
     })
 })

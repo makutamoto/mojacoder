@@ -21,6 +21,8 @@ const AdSense: React.FC<Props> = ({
     layout,
     fullWidthResponsive = true,
 }) => {
+    const preview = process.env.NODE_ENV !== 'production'
+
     useEffect(() => {
         window.adsbygoogle = window.adsbygoogle || []
         window.adsbygoogle.push({})
@@ -38,10 +40,13 @@ const AdSense: React.FC<Props> = ({
             data-ad-slot={slot}
             data-ad-format={format}
             data-ad-layout={layout}
+            data-ad-preview={preview ? 'true' : undefined}
             data-full-width-responsive={
                 fullWidthResponsive ? 'true' : undefined
             }
-        />
+        >
+            {preview ? '広告プレビュー' : null}
+        </ins>
     )
 }
 

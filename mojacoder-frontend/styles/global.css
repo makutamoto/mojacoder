@@ -5,3 +5,16 @@ body {
 ins.adsbygoogle[data-ad-status='unfilled'] {
     display: none !important;
 }
+
+ins.adsbygoogle[data-ad-preview='true'] {
+    display: flex !important;
+    min-height: 120px;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #adb5bd;
+    border-radius: 0.25rem;
+    background: #f1f3f5;
+    color: #6c757d;
+    font-size: 0.875rem;
+    text-decoration: none;
+}
