@@ -29,7 +29,9 @@ jobs:
           done
       - name: Deploy to AWS
         working-directory: mojacoder-backend
-        run: $(yarn global bin)/cdk deploy --require-approval never
+        run: |
+          $(yarn global bin)/cdk deploy JudgeImageRepositoryStack --require-approval never
+          $(yarn global bin)/cdk deploy MojacoderBackendStack --require-approval never
         env:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
