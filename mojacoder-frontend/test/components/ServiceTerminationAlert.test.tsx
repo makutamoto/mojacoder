@@ -8,13 +8,13 @@ const languages = {
     ja: {
         serviceTermination: {
             notice:
-                'MojaCoderは2026年12月31日をもってサービスを終了し、ジャッジシステムを停止します。',
+                'MojaCoderは2026年12月31日をもって、ジャッジシステムを含むすべてのサービスを停止します。終了後はデータの閲覧・ダウンロードができなくなるため、必要なデータはサービス終了前にダウンロードして保存してください。',
         },
     },
     en: {
         serviceTermination: {
             notice:
-                'MojaCoder will discontinue its service and shut down the judging system on December 31, 2026.',
+                'MojaCoder will shut down all services, including the judging system, on December 31, 2026. Please download and save any data you need before the service ends, as you will no longer be able to view or download it afterward.',
         },
     },
 }
@@ -32,7 +32,7 @@ describe('ServiceTerminationAlert', () => {
 
         expect(
             getByText(
-                'MojaCoderは2026年12月31日をもってサービスを終了し、ジャッジシステムを停止します。'
+                'MojaCoderは2026年12月31日をもって、ジャッジシステムを含むすべてのサービスを停止します。終了後はデータの閲覧・ダウンロードができなくなるため、必要なデータはサービス終了前にダウンロードして保存してください。'
             )
         ).toBeTruthy()
         expect(getByRole('alert').classList.contains('alert-danger')).toBe(true)
@@ -43,7 +43,7 @@ describe('ServiceTerminationAlert', () => {
 
         expect(
             getByText(
-                'MojaCoder will discontinue its service and shut down the judging system on December 31, 2026.'
+                'MojaCoder will shut down all services, including the judging system, on December 31, 2026. Please download and save any data you need before the service ends, as you will no longer be able to view or download it afterward.'
             )
         ).toBeTruthy()
     })
