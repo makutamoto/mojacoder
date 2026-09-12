@@ -4,23 +4,11 @@ import { Users } from './users'
 import { Problems } from './problems'
 import { Judge } from './judge'
 import { Contest } from './contests'
-import { AppSyncWaf } from './appsync-waf'
-import { resolveAppSyncWafConfig } from './appsync-waf-config'
 
 export class MojacoderBackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
-        const wafConfig = resolveAppSyncWafConfig({
-            appsyncWafGeoRestrictionAction: this.node.tryGetContext('appsyncWafGeoRestrictionAction'),
-            appsyncWafRateLimit: this.node.tryGetContext('appsyncWafRateLimit'),
-            appsyncWafRateLimitAction: this.node.tryGetContext('appsyncWafRateLimitAction'),
-            appsyncWafIpReputationAction: this.node.tryGetContext('appsyncWafIpReputationAction'),
-        })
         const users = new Users(this, 'users')
-        new AppSyncWaf(this, 'appsync-waf', {
-            api: users.api,
-            ...wafConfig,
-        })
         const problems = new Problems(this, 'problems', {
             api: users.api,
         })
