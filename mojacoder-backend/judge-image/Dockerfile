@@ -2,7 +2,8 @@ FROM ubuntu:22.04
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt update -y
+# The judge, language toolchains and seccomp launcher must all be native ARM64.
+RUN test "$(dpkg --print-architecture)" = arm64 && apt update -y
 
 WORKDIR /tmp
 
@@ -33,33 +34,37 @@ RUN apt install -y g++-12 gcc-12 build-essential m4 wget unzip libgmp-dev  && \
     rm -rf /tmp/*
 
 # Python 3.11
-COPY python_requirements.txt .
+COPY python_requirements.txt python_build_constraints.txt ./
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Tokyo
 RUN apt update && apt install -y tzdata
 RUN add-apt-repository ppa:deadsnakes/ppa && \
     apt update && \
-    apt install -y python3.11 python3.11-dev git && \
+    apt install -y python3.11 python3.11-dev git cmake pkg-config libopenblas-dev && \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.11 get-pip.py && \
-    python3.11 -m pip install -r python_requirements.txt && \
+    python3.11 -m pip install --upgrade pip==26.2.1 wheel==0.48.0 && \
+    MAKE_NPROCS=2 python3.11 -m pip install --build-constraint python_build_constraints.txt -r python_requirements.txt && \
     rm -rf /tmp/*
 
 # PyPy 3.10-v7.3.13
-COPY pypy_requirements.txt pypy_build_constraints.txt ./
+# Reuse CPython's interpreter-independent cppyy-cling wheel instead of rebuilding LLVM.
+COPY pypy_requirements.txt python_build_constraints.txt ./
 RUN apt install libgeos-dev -y && \
-    wget https://downloads.python.org/pypy/pypy3.10-v7.3.13-linux64.tar.bz2 && \
-    tar -xf pypy3.10-v7.3.13-linux64.tar.bz2 -C /usr/local && \
-    /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m ensurepip && \
-    /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m pip install --upgrade pip==26.2.1 wheel==0.48.0 && \
-    /usr/local/pypy3.10-v7.3.13-linux64/bin/pypy3 -m pip install --build-constraint pypy_build_constraints.txt -r pypy_requirements.txt && \
+    wget https://downloads.python.org/pypy/pypy3.10-v7.3.13-aarch64.tar.bz2 && \
+    tar -xf pypy3.10-v7.3.13-aarch64.tar.bz2 -C /usr/local && \
+    /usr/local/pypy3.10-v7.3.13-aarch64/bin/pypy3 -m ensurepip && \
+    /usr/local/pypy3.10-v7.3.13-aarch64/bin/pypy3 -m pip install --upgrade pip==26.2.1 wheel==0.48.0 && \
+    mkdir -p /tmp/cppyy-wheels && \
+    find /root/.cache/pip/wheels -name 'cppyy_cling-*.whl' -exec cp {} /tmp/cppyy-wheels \; && \
+    PIP_FIND_LINKS=/tmp/cppyy-wheels MAKE_NPROCS=2 /usr/local/pypy3.10-v7.3.13-aarch64/bin/pypy3 -m pip install --build-constraint python_build_constraints.txt -r pypy_requirements.txt && \
     rm -rf /tmp/*
-ENV PATH $PATH:/usr/local/pypy3.10-v7.3.13-linux64/bin
+ENV PATH $PATH:/usr/local/pypy3.10-v7.3.13-aarch64/bin
 
 # java openjdk-21 ac-library-java-1.0.0
-RUN wget https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz && \
+RUN wget https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-aarch64_bin.tar.gz && \
     mkdir -p /usr/local/java && \
-    tar -xzf openjdk-21.0.1_linux-x64_bin.tar.gz -C /usr/local/java && \ 
+    tar -xzf openjdk-21.0.1_linux-aarch64_bin.tar.gz -C /usr/local/java && \
     export JAVA_HOME=/usr/local/java/jdk-21.0.1 && \
     export PATH=$JAVA_HOME/bin:$PATH && \
     mkdir -p /usr/local/ac-library-java && \
@@ -83,19 +88,23 @@ RUN apt install -y curl zip && \
 # bf 20041219
 RUN apt install -y bf
 
-# Nim 1.6.16 
-RUN curl https://nim-lang.org/choosenim/init.sh -sSf -o init.sh && \
-    sh init.sh -y && \
-    export PATH=/root/.nimble/bin:$PATH && \
-    choosenim 1.6.16 && \
+# Nim 1.6.16 (choosenim has no Linux ARM64 binary; bootstrap the same release)
+RUN wget https://nim-lang.org/download/nim-1.6.16.tar.xz && \
+    mkdir -p /root/.choosenim/toolchains && \
+    tar -xf nim-1.6.16.tar.xz -C /root/.choosenim/toolchains && \
+    cd /root/.choosenim/toolchains/nim-1.6.16 && \
+    sh build.sh && \
+    bin/nim c -d:release koch && \
+    ./koch nimble && \
+    export PATH=/root/.choosenim/toolchains/nim-1.6.16/bin:$PATH && \
     nimble install neo -y && \
     apt install -y libopenblas-base -y && \
     nimble install https://github.com/zer0-star/Nim-ACL && \
     nimble install bignum -y && \
+    cd /tmp && \
     rm -rf /tmp/*
 ENV NIMBLE_DIR /root/.nimble
-# Use the pinned compiler directly. The choosenim shim under .nimble/bin looks
-# up the active version in HOME, which is intentionally isolated per compile.
+# Use the pinned compiler directly with the isolated HOME used for compilation.
 ENV PATH /root/.choosenim/toolchains/nim-1.6.16/bin:$PATH:/root/.nimble/bin
 
 # Rust 1.75.0

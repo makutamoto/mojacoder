@@ -1,2 +1,4 @@
 # Shapely 2.0.2 and cppyy-backend 1.15.2 require the legacy build APIs.
 setuptools<70
+# cppyy-cling 6.30.0's bundled LLVM/ROOT CMake files predate CMake 4.
+cmake<4
