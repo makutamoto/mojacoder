@@ -162,6 +162,7 @@ export class Problems extends cdk.Construct {
             entry: join(__dirname, '../lambda/s3-posted-problems-created-notification/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             memorySize: 512,
             timeout: Duration.minutes(15),
             environment: {
@@ -184,6 +185,7 @@ export class Problems extends cdk.Construct {
             entry: join(__dirname, '../lambda/issue-problem-upload-url-resolver/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             environment: {
                 POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
             },
@@ -201,6 +203,7 @@ export class Problems extends cdk.Construct {
             entry: join(__dirname, '../lambda/issue-problem-download-url-resolver/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             environment: {
                 POSTED_PROBLEMS_BUCKET_NAME: postedProblems.bucketName,
             },
@@ -224,6 +227,7 @@ export class Problems extends cdk.Construct {
             entry: join(__dirname, '../lambda/in-url-resolver/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             environment: {
                 TESTCASES_FOR_VIEW: testcasesForView.bucketName,
             },
@@ -241,6 +245,7 @@ export class Problems extends cdk.Construct {
             entry: join(__dirname, '../lambda/out-url-resolver/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             environment: {
                 TESTCASES_FOR_VIEW: testcasesForView.bucketName,
             },
@@ -258,6 +263,7 @@ export class Problems extends cdk.Construct {
             entry: join(__dirname, '../lambda/judgecode-url-resolver/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             environment: {
                 JUDGECODES_BUCKET_NAME: this.judgeCodes.bucketName,
             },

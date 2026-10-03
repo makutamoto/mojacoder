@@ -12,10 +12,6 @@ jobs:
     runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@master
-      - name: Enable amd64 emulation for Lambda bundling
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: amd64
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
