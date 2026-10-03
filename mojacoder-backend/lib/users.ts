@@ -68,6 +68,7 @@ export class Users extends cdk.Construct {
             entry: join(__dirname, '../lambda/update-api-key/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             environment: {
                 APPSYNC_API_ID: this.api.apiId,
                 APPSYNC_API_KEY: this.api.apiKey!,
@@ -106,6 +107,7 @@ export class Users extends cdk.Construct {
         const signupTrigger = new NodejsFunction(this, 'signup-trigger', {
             entry: join(__dirname, '../lambda/cognito-pre-signup-trigger/index.ts'),
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             handler: 'handler',
             environment: {
                 USERNAME_TABLE_NAME: usernameTable.tableName,
@@ -119,6 +121,7 @@ export class Users extends cdk.Construct {
         const postConfirmationTrigger = new NodejsFunction(this, 'post-confirmation-trigger', {
             entry: join(__dirname, '../lambda/cognito-post-confirmation-trigger/index.ts'),
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             handler: 'handler',
             environment: {
                 TABLE_NAME: this.userTable.tableName,

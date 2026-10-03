@@ -146,6 +146,7 @@ export class Contest extends cdk.Construct {
             entry: join(__dirname, '../lambda/standings-resolver/index.ts'),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
+            architecture: lambda.Architecture.ARM_64,
             memorySize: 1024,
             timeout: cdk.Duration.seconds(10),
             environment: {
