@@ -292,7 +292,7 @@
     "@aws-cdk/region-info" "1.204.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-ecr-assets@1.204.0":
+"@aws-cdk/aws-ecr-assets@1.204.0", "@aws-cdk/aws-ecr-assets@^1.204.0":
   version "1.204.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-ecr-assets/-/aws-ecr-assets-1.204.0.tgz#c4dd58d08af1e4a37f0b8c41517d600377efa013"
   integrity sha512-2GHD3pZdDoPxq3HhD4czANuI7TMoxpjszbzsQAc2wbdMX1j+K4vIL+PBpj3altfscPqcvy1v70lBjbG5rcBIkQ==

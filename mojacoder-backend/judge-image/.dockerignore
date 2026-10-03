@@ -1,0 +1,4 @@
+# Rebuild architecture-dependent artifacts inside the Linux ARM64 image.
+judge
+rust/target
+rust/rustc-options

@@ -3,7 +3,8 @@ import { Queue } from '@aws-cdk/aws-sqs';
 import { CfnAccessKey, PolicyStatement, User } from '@aws-cdk/aws-iam';
 import { Table, AttributeType, BillingMode } from '@aws-cdk/aws-dynamodb';
 import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
-import { AwsLogDriver, Cluster, ContainerImage, FargateService, FargateTaskDefinition, LinuxParameters } from '@aws-cdk/aws-ecs';
+import { AwsLogDriver, Cluster, ContainerImage, CpuArchitecture, FargatePlatformVersion, FargateService, FargateTaskDefinition, LinuxParameters, OperatingSystemFamily } from '@aws-cdk/aws-ecs';
+import { Platform } from '@aws-cdk/aws-ecr-assets';
 import { Bucket } from '@aws-cdk/aws-s3'
 import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { join } from 'path';
@@ -98,9 +99,15 @@ export class Judge extends cdk.Construct {
         const judgeTask = new FargateTaskDefinition(this, 'judge-task', {
             cpu: 1024,
             memoryLimitMiB: 2048,
+            runtimePlatform: {
+                cpuArchitecture: CpuArchitecture.ARM64,
+                operatingSystemFamily: OperatingSystemFamily.LINUX,
+            },
         });
         judgeTask.addContainer('judge-container', {
-            image: ContainerImage.fromAsset(join(__dirname, '../judge-image')),
+            image: ContainerImage.fromAsset(join(__dirname, '../judge-image'), {
+                platform: Platform.LINUX_ARM64,
+            }),
             logging: new AwsLogDriver({
                 streamPrefix: 'judge-container',
             }),
@@ -129,6 +136,7 @@ export class Judge extends cdk.Construct {
         const judgeService = new FargateService(this, 'judge-service', {
             cluster: judgeCluster,
             taskDefinition: judgeTask,
+            platformVersion: FargatePlatformVersion.VERSION1_4,
             assignPublicIp: true,
             capacityProviderStrategies: [
                 {
