@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS toolchains
 
 SHELL ["/bin/bash", "-c"]
 
@@ -140,8 +140,7 @@ RUN apt install -y gnupg ca-certificates && \
 RUN groupadd -r -g 400 code && useradd -r -u 400 -g 400 code
 
 WORKDIR /usr/src/app
-COPY . .
-RUN go build .
+COPY rust/ ./rust/
 
 WORKDIR /usr/src/app/rust
 RUN cargo build --release && \
@@ -152,8 +151,27 @@ RUN chmod 0711 /root && \
 
 RUN apt install -y curl libseccomp-dev
 
+# Remove build-only data after both Python environments have reused the pip cache.
+# Keep Rust's prebuilt dependencies and Nim's libraries for submitted programs.
+RUN rustup toolchain uninstall stable-aarch64-unknown-linux-gnu && \
+    rm -rf /root/.rustup/toolchains/1.75.0-aarch64-unknown-linux-gnu/share/doc \
+           /root/.choosenim/toolchains/nim-1.6.16/c_code /root/.cache \
+           /root/.sdkman/archives /root/.sdkman/tmp \
+           /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/*
+
+# Copy only the remaining files so deleted data is absent from the final layers.
+# Application changes can reuse this toolchain layer.
+FROM scratch
+COPY --from=toolchains / /
+SHELL ["/bin/bash", "-c"]
+ENV PATH="/root/.choosenim/toolchains/nim-1.6.16/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/go-1.21/bin:/usr/local/pypy3.10-v7.3.13-aarch64/bin:/usr/local/java/jdk-21.0.1/bin:/root/.nimble/bin:/root/.cargo/bin"
+ENV JAVA_HOME="/usr/local/java/jdk-21.0.1" CARGO_HOME="/root/.cargo" RUSTUP_HOME="/root/.rustup" NIMBLE_DIR="/root/.nimble" DEBIAN_FRONTEND="noninteractive" TZ="Asia/Tokyo"
+
 WORKDIR /usr/src/app
-RUN gcc -O2 -Wall -Wextra -Werror sandbox/sandbox.c -lseccomp -o /usr/local/bin/mojacoder-sandbox && \
+COPY . .
+RUN go build . && \
+    go clean -cache -modcache && \
+    gcc -O2 -Wall -Wextra -Werror sandbox/sandbox.c -lseccomp -o /usr/local/bin/mojacoder-sandbox && \
     /usr/local/bin/mojacoder-sandbox --self-test && \
     env -i PATH="$PATH" HOME=/tmp/mojacoder-nim-home NIMBLE_DIR="$NIMBLE_DIR" nim --version | \
     grep -F "Nim Compiler Version 1.6.16"
