@@ -11,12 +11,14 @@ export default SitemapXml
 const GetNewProblems = gql`
     query GetNewProblems {
         newProblems {
-            slug
-            title
-            datetime
-            user {
-                detail {
-                    screenName
+            items {
+                slug
+                title
+                datetime
+                user {
+                    detail {
+                        screenName
+                    }
                 }
             }
         }
