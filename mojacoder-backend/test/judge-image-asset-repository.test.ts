@@ -27,6 +27,31 @@ function synthesizeJudge() {
     return app.synth().getStackByName(stack.stackName);
 }
 
+test('validates languages against the image before either code pipeline has side effects', () => {
+    const assembly = synthesizeJudge();
+    const resources = Object.values(assembly.template.Resources) as CloudFormationResource[];
+    const languages = Object.keys(JSON.parse(readFileSync(
+        join(__dirname, '../judge-image/language-definition.json'), 'utf8',
+    )));
+    const resolvers = resources.filter(resource =>
+        resource.Type === 'AWS::AppSync::Resolver' &&
+        ['submitCode', 'runPlayground'].includes(resource.Properties.FieldName),
+    );
+
+    expect(resolvers).toHaveLength(2);
+    for (const resolver of resolvers) {
+        expect(resolver.Properties.Kind).toBe('PIPELINE');
+        const template = resolver.Properties.RequestMappingTemplate as string;
+        const allowed = template.match(/#set\(\$supportedLanguages = (\[.*\])\)/);
+        expect(allowed).not.toBeNull();
+        expect(JSON.parse(allowed![1])).toEqual(languages);
+        expect(template).not.toContain('%SUPPORTED_LANGUAGES%');
+        expect(template).toContain('#if(!$supportedLanguages.contains($context.arguments.input.lang))');
+        expect(template).toContain('"UnsupportedLanguage"');
+        expect(template.indexOf('"UnsupportedLanguage"')).toBeLessThan(template.indexOf('$util.toJson(null)'));
+    }
+});
+
 test('runs the native ARM64 Judge image on Linux Fargate Spot 1.4.0', () => {
     const assembly = synthesizeJudge();
     const resources = Object.values(assembly.template.Resources) as CloudFormationResource[];

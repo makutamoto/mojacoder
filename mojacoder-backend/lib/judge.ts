@@ -8,6 +8,7 @@ import { Platform } from '@aws-cdk/aws-ecr-assets';
 import { Bucket } from '@aws-cdk/aws-s3'
 import { GraphqlApi, MappingTemplate } from '@aws-cdk/aws-appsync';
 import { join } from 'path';
+import { readFileSync } from 'fs';
 
 export interface JudgeProps {
     api: GraphqlApi
@@ -20,6 +21,13 @@ export class Judge extends cdk.Construct {
     
     constructor(scope: cdk.Construct, id: string, props: JudgeProps) {
         super(scope, id);
+        const supportedLanguages = Object.keys(JSON.parse(readFileSync(
+            join(__dirname, '../judge-image/language-definition.json'), 'utf8',
+        )));
+        const codeRequestTemplate = (operation: 'submitCode' | 'runPlayground') => MappingTemplate.fromString(
+            MappingTemplate.fromFile(join(__dirname, '../graphql', operation, 'request.vtl')).renderTemplate()
+                .replace(/%SUPPORTED_LANGUAGES%/g, JSON.stringify(supportedLanguages)),
+        );
         const JudgeQueueDeadLetterQueue = new Queue(this, 'JudgeQueueDeadLetterQueue');
         const JudgeQueue = new Queue(this, 'JudgeQueue', {
             deadLetterQueue: {
@@ -211,7 +219,7 @@ export class Judge extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'submitCode',
             pipelineConfig: [submitCodePutItemFunction, submitCodePutObjectFunction, submitCodeSendMessageFunction],
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/request.vtl')),
+            requestMappingTemplate: codeRequestTemplate('submitCode'),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/submitCode/response.vtl')),
         });
         submissionTableDataSource.createResolver({
@@ -253,7 +261,7 @@ export class Judge extends cdk.Construct {
             typeName: 'Mutation',
             fieldName: 'runPlayground',
             pipelineConfig: [runPlaygroundPutObjectFunction, runPlaygroundSendMessageFunction],
-            requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/request.vtl')),
+            requestMappingTemplate: codeRequestTemplate('runPlayground'),
             responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '../graphql/runPlayground/response.vtl')),
         });
         const PlaygroundDataSource = props.api.addNoneDataSource('Playground');
