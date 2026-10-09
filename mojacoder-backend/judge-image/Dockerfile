@@ -78,37 +78,11 @@ RUN wget https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a27948
 ENV JAVA_HOME /usr/local/java/jdk-21.0.1
 ENV PATH $PATH:$JAVA_HOME/bin
 
-# Kotlin 1.9.21
-RUN apt install -y curl zip && \
-    curl -s https://get.sdkman.io | bash && \
-    source ~/.sdkman/bin/sdkman-init.sh && \
-    sdk install kotlin 1.9.21 && \
-    rm -rf /tmp/*
-
 # bf 20041219
 RUN apt install -y bf
 
-# Nim 1.6.16 (choosenim has no Linux ARM64 binary; bootstrap the same release)
-RUN wget https://nim-lang.org/download/nim-1.6.16.tar.xz && \
-    mkdir -p /root/.choosenim/toolchains && \
-    tar -xf nim-1.6.16.tar.xz -C /root/.choosenim/toolchains && \
-    cd /root/.choosenim/toolchains/nim-1.6.16 && \
-    sh build.sh && \
-    bin/nim c -d:release koch && \
-    ./koch nimble && \
-    export PATH=/root/.choosenim/toolchains/nim-1.6.16/bin:$PATH && \
-    nimble install neo -y && \
-    apt install -y libopenblas-base -y && \
-    nimble install https://github.com/zer0-star/Nim-ACL && \
-    nimble install bignum -y && \
-    cd /tmp && \
-    rm -rf /tmp/*
-ENV NIMBLE_DIR /root/.nimble
-# Use the pinned compiler directly with the isolated HOME used for compilation.
-ENV PATH /root/.choosenim/toolchains/nim-1.6.16/bin:$PATH:/root/.nimble/bin
-
 # Rust 1.75.0
-RUN apt install -y  libssl-dev && \
+RUN apt install -y curl libssl-dev && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  && \
     /root/.cargo/bin/rustup default 1.75.0 && \
     rm -rf /tmp/*
@@ -127,16 +101,6 @@ RUN apt install -y bison libreadline6-dev libncurses5-dev build-essential libssl
     cd /tmp && \
     rm -rf /tmp/*
 
-# Common Lisp 2.1.11
-RUN apt install -y sbcl
-
-# C# mono6.12.0
-RUN apt install -y gnupg ca-certificates && \
-    gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal/snapshots/6.12.0 main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
-    apt update && \
-    apt install -y mono-devel
-
 RUN groupadd -r -g 400 code && useradd -r -u 400 -g 400 code
 
 WORKDIR /usr/src/app
@@ -147,16 +111,15 @@ RUN cargo build --release && \
     python3.11 rustc_dep_options.py --manifest-path Cargo.toml > rustc-options
 
 RUN chmod 0711 /root && \
-    chmod -R a+rX /root/.cargo /root/.choosenim /root/.nimble /root/.rustup /root/.sdkman /usr/src/app/rust
+    chmod -R a+rX /root/.cargo /root/.rustup /usr/src/app/rust
 
-RUN apt install -y curl libseccomp-dev
+RUN apt install -y libseccomp-dev
 
 # Remove build-only data after both Python environments have reused the pip cache.
-# Keep Rust's prebuilt dependencies and Nim's libraries for submitted programs.
+# Keep Rust's prebuilt dependencies for submitted programs.
 RUN rustup toolchain uninstall stable-aarch64-unknown-linux-gnu && \
     rm -rf /root/.rustup/toolchains/1.75.0-aarch64-unknown-linux-gnu/share/doc \
-           /root/.choosenim/toolchains/nim-1.6.16/c_code /root/.cache \
-           /root/.sdkman/archives /root/.sdkman/tmp \
+           /root/.cache \
            /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/*
 
 # Copy only the remaining files so deleted data is absent from the final layers.
@@ -164,15 +127,13 @@ RUN rustup toolchain uninstall stable-aarch64-unknown-linux-gnu && \
 FROM scratch
 COPY --from=toolchains / /
 SHELL ["/bin/bash", "-c"]
-ENV PATH="/root/.choosenim/toolchains/nim-1.6.16/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/go-1.21/bin:/usr/local/pypy3.10-v7.3.13-aarch64/bin:/usr/local/java/jdk-21.0.1/bin:/root/.nimble/bin:/root/.cargo/bin"
-ENV JAVA_HOME="/usr/local/java/jdk-21.0.1" CARGO_HOME="/root/.cargo" RUSTUP_HOME="/root/.rustup" NIMBLE_DIR="/root/.nimble" DEBIAN_FRONTEND="noninteractive" TZ="Asia/Tokyo"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/go-1.21/bin:/usr/local/pypy3.10-v7.3.13-aarch64/bin:/usr/local/java/jdk-21.0.1/bin:/root/.cargo/bin"
+ENV JAVA_HOME="/usr/local/java/jdk-21.0.1" CARGO_HOME="/root/.cargo" RUSTUP_HOME="/root/.rustup" DEBIAN_FRONTEND="noninteractive" TZ="Asia/Tokyo"
 
 WORKDIR /usr/src/app
 COPY . .
 RUN go build . && \
     go clean -cache -modcache && \
     gcc -O2 -Wall -Wextra -Werror sandbox/sandbox.c -lseccomp -o /usr/local/bin/mojacoder-sandbox && \
-    /usr/local/bin/mojacoder-sandbox --self-test && \
-    env -i PATH="$PATH" HOME=/tmp/mojacoder-nim-home NIMBLE_DIR="$NIMBLE_DIR" nim --version | \
-    grep -F "Nim Compiler Version 1.6.16"
+    /usr/local/bin/mojacoder-sandbox --self-test
 ENTRYPOINT ./judge

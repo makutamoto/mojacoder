@@ -21,16 +21,6 @@
         "compileCommand": "g++-12 -std=gnu++23 -Wall -Wextra -O2 -DONLINE_JUDGE main.cpp -lgmpxx -lgmp",
         "runCommand": "./a.out"
     },
-    "csharp-mono-csc-3.9.0": {
-        "filename": "main.cs",
-        "compileCommand": "csc main.cs",
-        "runCommand": "mono main.exe"
-    },
-    "csharp-mono-mcs-6.12.0": {
-        "filename": "main.cs",
-        "compileCommand": "mcs main.cs",
-        "runCommand": "mono main.exe"
-    },
     "bf-20041219": {
         "filename": "main.bf",
         "runCommand": "bf -c999999999 main.bf"
@@ -58,20 +48,5 @@
         "filename": "Main.java",
         "compileCommand": "javac -cp /usr/local/ac-library-java/ac_library.jar Main.java",
         "runCommand": "java -cp /usr/local/ac-library-java/ac_library.jar: Main"
-    },
-    "kotlin-1.9.21": {
-        "filename": "main.kt",
-        "compileCommand": "~root/.sdkman/candidates/kotlin/current/bin/kotlinc main.kt -include-runtime -d main.jar",
-        "runCommand": "java -jar main.jar"
-    },
-    "commonlisp-2.1.11": {
-        "filename": "main.lisp",
-        "compileCommand": "sbcl --noinform --eval \"(compile-file \\\"main.lisp\\\")\" --quit",
-        "runCommand": "sbcl --script main.fasl"
-    },
-    "nim-1.6.16": {
-        "filename": "Main.nim",
-        "compileCommand": "nim cpp -d:release --opt:speed --multimethods:on --warning[SmallLshouldNotBeUsed]:off --hints:off -o:a.out Main.nim ",
-        "runCommand": "./a.out"
     }
 }
