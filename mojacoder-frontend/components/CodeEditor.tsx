@@ -1,5 +1,7 @@
 import React from 'react'
+import { Alert } from 'react-bootstrap'
 
+import { isSupportedSubmissionLanguage } from '../lib/submission_languages'
 import LanguageSelector from './LanguageSelector'
 import Editor from './Editor'
 
@@ -17,6 +19,11 @@ export interface CodeEditorProps {
 const CodeEditor: React.FC<CodeEditorProps> = (props) => {
     return (
         <div>
+            {!isSupportedSubmissionLanguage(props.value.lang) && (
+                <Alert variant="warning">
+                    この言語は現在利用できません。別の言語を選択してください。
+                </Alert>
+            )}
             <LanguageSelector
                 id={props.id}
                 value={props.value.lang}

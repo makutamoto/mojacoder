@@ -8,6 +8,7 @@ import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
 import { invokeMutation, invokeMutationWithApiKey } from '../lib/backend'
 import { useLocalStorage } from '../lib/localstorage'
+import { isSupportedSubmissionLanguage } from '../lib/submission_languages'
 import ButtonWithSpinner from './ButtonWithSpinner'
 import CodeEditor, { Code } from './CodeEditor'
 
@@ -53,6 +54,9 @@ const SubmissionBox: React.FC<SubmissionBoxProps> = ({
         [setLang]
     )
     const onSubmit = useCallback(() => {
+        if (!isSupportedSubmissionLanguage(lang)) {
+            return
+        }
         if (code.length === 0) {
             setStatus(Status.EmptySubmission)
             return
@@ -91,6 +95,7 @@ const SubmissionBox: React.FC<SubmissionBoxProps> = ({
             />
             <ButtonWithSpinner
                 loading={status === Status.Submitting}
+                disabled={!isSupportedSubmissionLanguage(lang)}
                 onClick={onSubmit}
             >{t`submit`}</ButtonWithSpinner>
         </>
