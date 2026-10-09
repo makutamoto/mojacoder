@@ -27,7 +27,7 @@ func configureSandboxedCommand(cmd *exec.Cmd, homeDir string) {
 			"GOCACHE="+filepath.Join(cacheDir, "go-build"),
 			"XDG_CACHE_HOME="+cacheDir,
 		)
-		for _, name := range []string{"CARGO_HOME", "JAVA_HOME", "NIMBLE_DIR", "RUSTUP_HOME"} {
+		for _, name := range []string{"CARGO_HOME", "JAVA_HOME", "RUSTUP_HOME"} {
 			if value := os.Getenv(name); value != "" {
 				environment = append(environment, name+"="+value)
 			}

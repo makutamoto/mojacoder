@@ -20,7 +20,7 @@ func TestARM64ToolchainBinaries(t *testing.T) {
 	if runtime.GOOS != "linux" || runtime.GOARCH != "arm64" {
 		t.Fatalf("judge tests are running on %s/%s", runtime.GOOS, runtime.GOARCH)
 	}
-	for _, name := range []string{"./judge", SANDBOX_BINARY, "go", "gcc-12", "g++-12", "python3.11", "pypy3", "java", "nim", "rustc", "ruby", "sbcl", "mono"} {
+	for _, name := range []string{"./judge", SANDBOX_BINARY, "go", "gcc-12", "g++-12", "python3.11", "pypy3", "java", "rustc", "ruby"} {
 		t.Run(name, func(t *testing.T) {
 			path, err := exec.LookPath(name)
 			if err != nil {
@@ -65,21 +65,16 @@ func TestAllLanguageToolchains(t *testing.T) {
 		t.Fatal(err)
 	}
 	fixtures := map[string]string{
-		"go-1.21":                "main.go",
-		"python3.11":             "main.py",
-		"gcc-12.3":               "main.c",
-		"g++-12.3":               "main.cpp",
-		"csharp-mono-csc-3.9.0":  "main.cs",
-		"csharp-mono-mcs-6.12.0": "main.cs",
-		"bf-20041219":            "main.bf",
-		"cat":                    "main.txt",
-		"rust-1.74.0":            "main.rs",
-		"pypy3-7.3.13":           "main.py",
-		"ruby-3.2.2":             "main.rb",
-		"java-21":                "Main.java",
-		"kotlin-1.9.21":          "main.kt",
-		"commonlisp-2.1.11":      "main.lisp",
-		"nim-1.6.16":             "Main.nim",
+		"go-1.21":      "main.go",
+		"python3.11":   "main.py",
+		"gcc-12.3":     "main.c",
+		"g++-12.3":     "main.cpp",
+		"bf-20041219":  "main.bf",
+		"cat":          "main.txt",
+		"rust-1.74.0":  "main.rs",
+		"pypy3-7.3.13": "main.py",
+		"ruby-3.2.2":   "main.rb",
+		"java-21":      "Main.java",
 	}
 	if len(definitions) != len(fixtures) {
 		t.Fatalf("language definitions = %d, fixtures = %d", len(definitions), len(fixtures))

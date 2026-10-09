@@ -1,6 +1,10 @@
 #if($context.arguments.input.code.length() == 0)
 $util.error("Empty submissions are not allowed.")
 #end
+#set($supportedLanguages = %SUPPORTED_LANGUAGES%)
+#if(!$supportedLanguages.contains($context.arguments.input.lang))
+$util.error("This language is not supported. Please select another language.", "UnsupportedLanguage")
+#end
 #if($util.isNull($context.identity.sub) && !$util.isNull($context.arguments.input.contestID))
 $util.error("Guest user can't submit to Contest tasks.")
 #end

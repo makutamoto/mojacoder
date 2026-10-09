@@ -6,6 +6,7 @@ import { useI18n } from '../lib/i18n'
 import Auth from '../lib/auth'
 import { useSubscription, invokeMutation } from '../lib/backend'
 import { useLocalStorage } from '../lib/localstorage'
+import { isSupportedSubmissionLanguage } from '../lib/submission_languages'
 import Title from '../components/Title'
 import CodeEditor, { Code } from '../components/CodeEditor'
 import Editor from '../components/Editor'
@@ -60,7 +61,7 @@ const Playground: React.FC = () => {
     const { t } = useI18n('playground')
     const { auth } = Auth.useContainer()
     const { session } = Session.useContainer()
-    const [lang, setLang] = useLocalStorage('code-lang', 'go-1.14')
+    const [lang, setLang] = useLocalStorage('code-lang', 'go-1.21')
     const [code, setCode] = useState('')
     const [stdin, setStdin] = useState('')
     const [result, setResult] = useState<OnResponsePlayground>({
@@ -79,7 +80,7 @@ const Playground: React.FC = () => {
         [setLang]
     )
     const onRun = useCallback(() => {
-        if (!auth) {
+        if (!auth || !isSupportedSubmissionLanguage(lang)) {
             return
         }
         if (code.length === 0) {
@@ -141,7 +142,11 @@ const Playground: React.FC = () => {
                     <Button
                         variant="primary"
                         onClick={onRun}
-                        disabled={!auth || status === Status.Waiting}
+                        disabled={
+                            !auth ||
+                            status === Status.Waiting ||
+                            !isSupportedSubmissionLanguage(lang)
+                        }
                     >
                         {t`run`}
                     </Button>
