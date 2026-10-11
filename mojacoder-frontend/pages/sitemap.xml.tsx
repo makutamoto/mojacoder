@@ -36,9 +36,11 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
         </url>
     `
     newProblems.items.forEach((problem) => {
+        const screenName = encodeURIComponent(problem.user.detail.screenName)
+        const slug = encodeURIComponent(problem.slug)
         sitemap += `
         <url>
-            <loc>${process.env.ORIGIN}/users/${problem.user.detail.screenName}/problems/${problem.slug}</loc>
+            <loc>${process.env.ORIGIN}/users/${screenName}/problems/${slug}</loc>
             <lastmod>${problem.datetime}</lastmod>
             <changefreq>always</changefreq>
         </url>
