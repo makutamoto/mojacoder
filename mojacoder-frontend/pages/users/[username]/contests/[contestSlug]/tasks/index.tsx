@@ -100,7 +100,11 @@ const ContestTasks: React.FC<Props> = ({ contest }) => {
                                         <td className="text-nowrap">{index}</td>
                                         <td className="text-nowrap">
                                             <Link
-                                                href={`/users/${username}/contests/${contestSlug}/tasks/${index}`}
+                                                href={`/users/${encodeURIComponent(
+                                                    username as string
+                                                )}/contests/${encodeURIComponent(
+                                                    contestSlug as string
+                                                )}/tasks/${index}`}
                                                 prefetch={false}
                                             >
                                                 {item.problem.detail.title}
