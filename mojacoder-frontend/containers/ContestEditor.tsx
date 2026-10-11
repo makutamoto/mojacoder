@@ -195,7 +195,11 @@ const ContestEditor: React.FC<ContestEditorProps> = ({ data }) => {
                     })),
                 },
             })
-            router.push(`/users/${auth.screenName}/contests/${contestSlug}`)
+            router.push(
+                `/users/${encodeURIComponent(
+                    auth.screenName
+                )}/contests/${encodeURIComponent(contestSlug)}`
+            )
         }
         create()
     }, [
