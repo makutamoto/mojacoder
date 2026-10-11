@@ -46,6 +46,18 @@ describe('sitemap.xml', () => {
                                 datetime: '2026-10-09T00:00:00Z',
                                 user: { detail: { screenName: 'alice' } },
                             },
+                            {
+                                slug: 'problem#4',
+                                title: 'Problem #4',
+                                datetime: '2026-10-09T00:00:00Z',
+                                user: { detail: { screenName: 'alice' } },
+                            },
+                            {
+                                slug: 'A & B?50% ＃4',
+                                title: 'Reserved characters',
+                                datetime: '2026-10-09T00:00:00Z',
+                                user: { detail: { screenName: 'alice' } },
+                            },
                         ],
                     },
                 },
@@ -93,6 +105,8 @@ describe('sitemap.xml', () => {
             'https://mojacoder.example',
             'https://mojacoder.example/problems',
             'https://mojacoder.example/users/alice/problems/a-plus-b',
+            'https://mojacoder.example/users/alice/problems/problem%234',
+            'https://mojacoder.example/users/alice/problems/A%20%26%20B%3F50%25%20%EF%BC%834',
         ])
         expect(sitemap.querySelector('lastmod')?.textContent).toBe(
             '2026-10-09T00:00:00Z'
