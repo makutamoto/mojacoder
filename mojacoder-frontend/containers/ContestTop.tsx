@@ -29,9 +29,9 @@ const ContestTop: React.FC<ContestTopProps> = ({
     const { query, defaultLocale, locale } = useRouter()
     const basePath = join(
         '/users',
-        (query.username || '') as string,
+        encodeURIComponent((query.username || '') as string),
         'contests',
-        (query.contestSlug || '') as string
+        encodeURIComponent((query.contestSlug || '') as string)
     )
     const start = new Date(contest.startDatetime).getTime()
     const end = start + contest.duration * 1000 // s -> ms
