@@ -33,7 +33,9 @@ export const ContestsTable: React.FC<Props> = ({ contests }) => {
                         </td>
                         <td className="text-nowrap">
                             <Link
-                                href={`/users/${item.user.detail.screenName}/contests/${item.slug}`}
+                                href={`/users/${encodeURIComponent(
+                                    item.user.detail.screenName
+                                )}/contests/${encodeURIComponent(item.slug)}`}
                                 prefetch={false}
                             >
                                 {item.name}
